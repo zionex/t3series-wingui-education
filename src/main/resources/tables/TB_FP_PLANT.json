@@ -1,0 +1,57 @@
+{
+    "name": "TB_FP_PLANT",
+    "useDefaultSchema": "N",
+    "deletes": [ "TB_FP_STAGE" ],
+    "columns": [
+        {
+            "name": "ID",
+            "type": "ID",
+            "update": "N"
+        },
+        {
+            "name": "PLAN_SCOPE",
+            "unique": "Y",
+            "type": "STRING",
+            "header": "PLAN_SCOPE"
+        },
+        {
+            "name": "PLANT_CD",
+            "type": "STRING",
+            "header": "PLANT_CD",
+            "unique": "Y"
+        },
+        {
+            "name": "PLANT_NM",
+            "type": "STRING",
+            "header": "PLANT_NM"
+        },
+        {
+            "name": "SITE_CD",
+            "type": "STRING",
+            "header": "SITE_CD"
+        },
+        {
+            "name": "DESC_TXT",
+            "type": "STRING",
+            "header": "DESC_TXT"
+        },
+        {
+            "name": "CREATED_BY",
+            "type": "USER_ID",
+            "update": "N"
+        },
+        {
+            "name": "CREATED_AT",
+            "type": "NOW",
+            "update": "N"
+        },
+        {
+            "name": "UPDATED_BY",
+            "type": "USER_ID"
+        },
+        {
+            "name": "UPDATED_AT",
+            "type": "NOW"
+        }
+    ]
+}

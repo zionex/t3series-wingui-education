@@ -1,0 +1,125 @@
+:root {
+  --sidebar-width: 350px;
+  --page-padding: 15px;
+  --content-max-width: 1024px;
+  --menu-bar-height: 50px;
+  --obp-icon-color: #ffffff;
+  --obp-icon-background: #0f4c81;
+  --ebp-icon-color: #ffffff;
+  --ebp-icon-background: #981b30;
+}
+
+#body-container>.page-wrapper .content main .table-wrapper table {
+  margin: 0;
+  border-collapse: collapse;
+  width: 100%;
+  white-space: nowrap;
+}
+
+#body-container>.page-wrapper .content main .table-wrapper table thead th {
+  padding: 10px 10px;
+}
+
+#body-container>.page-wrapper .content main .table-wrapper table tbody td {
+  padding: 5px 10px;
+}
+
+#body-container>.page-wrapper .content main .table-wrapper :is(.admonition):is(.tip) {
+  border-color: #006699;
+}
+
+#body-container>.page-wrapper .content main .table-wrapper :is(.admonition):is(.tip) > div {
+  color: #006699;
+}
+
+#body-container>.page-wrapper .content main .table-wrapper :is(.admonition):is(.tip) > div > p {
+  font-weight: bold;
+  font-size: 1.1em;
+}
+
+#body-container>.page-wrapper .content main .table-wrapper :is(.admonition):is(.tip) > div a {
+  color: #006699;
+}
+
+#body-container>.page-wrapper .content main .table-wrapper :is(.admonition):is(.tip) ul > li {
+  list-style-type: ''
+}
+
+#body-container>.page-wrapper .content main .table-wrapper :is(.admonition):is(.tip) ol > li {
+  font-size: 0.9em;
+}
+
+#body-container>.page-wrapper .content main .icon-obp {
+  align-items: center;
+  background: var(--obp-icon-background);
+  border-radius: 0.5em;
+  color: var(--obp-icon-color);
+  display: inline-flex;
+  flex-grow: 0;
+  flex-shrink: 0;
+  font-size: .5em;
+  font-weight: 600;
+  height: 1.5rem;
+  padding: 0 1em;
+  vertical-align: top;
+}
+
+#body-container>.page-wrapper .content main .icon-ebp {
+  align-items: center;
+  background: var(--ebp-icon-background);
+  border-radius: 0.5em;
+  color: var(--ebp-icon-color);
+  display: inline-flex;
+  flex-grow: 0;
+  flex-shrink: 0;
+  font-size: .5em;
+  font-weight: 600;
+  height: 1.5rem;
+  padding: 0 1em;
+  vertical-align: top;
+}
+
+#body-container>.page-wrapper .content main blockquote:has(> ol) {
+  background-color: hsl(258, 34%, 87%);
+  border-top: .1em solid hsl(255, 37%, 63%);
+  border-bottom: .1em solid hsl(255, 37%, 63%);
+}
+
+#body-container>.page-wrapper .content main blockquote > ol {
+  margin: 1.5625em 0 !important;
+  list-style: none;
+  counter-reset: item;
+  padding-left: 0px;
+}
+
+#body-container>.page-wrapper .content main blockquote > ol > li {
+  counter-increment: item;
+  color: #761e86;
+  font-size: .8em;
+  text-indent: -20px;
+  margin-left:  10px;
+  padding-left: 20px;
+  margin-bottom: 5px;
+}
+
+#body-container>.page-wrapper .content main blockquote > ol > li:before {
+  content: counter(item);
+  background: #761e86;
+  border-radius: 100%;
+  color: white;
+  text-align: center;
+  display: inline-block;
+  width: 5px;
+  padding-left: 20px;
+  margin-left: -10px;
+  margin-right: 5px;
+}
+:is(.admonition) div:not(.admonition-title) p {
+  margin: 1.5625em 0 !important;
+}
+:is(.admonition) div:not(.admonition-title) ul {
+  margin: 1.5625em 0 !important;
+}
+:is(.admonition) div:not(.admonition-title) ol {
+  margin: 1.5625em 0 !important;
+}

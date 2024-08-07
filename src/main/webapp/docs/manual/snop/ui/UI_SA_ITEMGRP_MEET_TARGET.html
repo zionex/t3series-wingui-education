@@ -1,0 +1,241 @@
+<!DOCTYPE HTML>
+<html lang="en" class="sidebar-visible no-js light">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>품목군별 목표 부합 분석</title>
+
+
+        <!-- Custom HTML head -->
+        
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <link rel="icon" href="../../favicon.svg">
+        <link rel="shortcut icon" href="../../favicon.png">
+        <link rel="stylesheet" href="../../css/variables.css">
+        <link rel="stylesheet" href="../../css/general.css">
+        <link rel="stylesheet" href="../../css/chrome.css">
+        <link rel="stylesheet" href="../../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../../highlight.css">
+        <link rel="stylesheet" href="../../tomorrow-night.css">
+        <link rel="stylesheet" href="../../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="../../mdbook-admonish.css">
+        <link rel="stylesheet" href="../../mdbook-custom.css">
+
+        <!-- MathJax -->
+        <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('no-js')
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add('js');
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var html = document.querySelector('html');
+            var sidebar = null;
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item affix "><li class="part-title">T³SmartSCM UI 메뉴얼</li><li class="chapter-item expanded "><a href="../../snop/ui/index.html"><strong aria-hidden="true">1.</strong> S&OP</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../snop/ui/UI_SA_EXECUTIVE_DASHBOARD.html"><strong aria-hidden="true">1.1.</strong> 경영 대시보드</a></li><li class="chapter-item expanded "><a href="../../snop/ui/UI_SA_ITEMGRP_MEET_TARGET.html" class="active"><strong aria-hidden="true">1.2.</strong> 품목군별 목표 부합 분석</a></li><li class="chapter-item "><a href="../../snop/ui/UI_SA_DPMP_SIMUL.html"><strong aria-hidden="true">1.3.</strong> S&OP 수요 점검</a></li></ol></li><li class="chapter-item "><a href="../../supplychainmodel/ui/index.html"><strong aria-hidden="true">2.</strong> 공급망 네트워크</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../supplychainmodel/ui/UI_CM_01.html"><strong aria-hidden="true">2.1.</strong> 일반 설정</a></li><li class="chapter-item "><a href="../../supplychainmodel/ui/UI_CM_02.html"><strong aria-hidden="true">2.2.</strong> 거점</a></li><li class="chapter-item "><a href="../../supplychainmodel/ui/UI_CM_18.html"><strong aria-hidden="true">2.3.</strong> 품목</a></li><li class="chapter-item "><a href="../../supplychainmodel/ui/UI_CM_04.html"><strong aria-hidden="true">2.4.</strong> 거점 품목</a></li><li class="chapter-item "><a href="../../supplychainmodel/ui/UI_CM_06.html"><strong aria-hidden="true">2.5.</strong> 거점 BOD</a></li><li class="chapter-item "><a href="../../supplychainmodel/ui/UI_CM_07.html"><strong aria-hidden="true">2.6.</strong> 출하 L/T</a></li><li class="chapter-item "><a href="../../supplychainmodel/ui/UI_CM_08.html"><strong aria-hidden="true">2.7.</strong> 거점 출하 일정</a></li><li class="chapter-item "><a href="../../supplychainmodel/ui/UI_CM_10.html"><strong aria-hidden="true">2.8.</strong> 거점 수송</a></li><li class="chapter-item "><a href="../../supplychainmodel/ui/UI_CM_19.html"><strong aria-hidden="true">2.9.</strong> 품목 출하 일정</a></li><li class="chapter-item "><a href="../../supplychainmodel/ui/UI_CM_14.html"><strong aria-hidden="true">2.10.</strong> 출하 통관 휴무 캘린더</a></li><li class="chapter-item "><a href="../../supplychainmodel/ui/UI_CM_05.html"><strong aria-hidden="true">2.11.</strong> 글로벌 생산 BOM</a></li><li class="chapter-item "><a href="../../supplychainmodel/ui/UI_CM_11.html"><strong aria-hidden="true">2.12.</strong> 글로벌 계획 BOM</a></li><li class="chapter-item "><a href="../../supplychainmodel/ui/UI_CM_12.html"><strong aria-hidden="true">2.13.</strong> 수요 출하지</a></li><li class="chapter-item "><a href="../../supplychainmodel/ui/UI_CM_SUPPLYCHAIN.html"><strong aria-hidden="true">2.14.</strong> 공급망 뷰어</a></li><li class="chapter-item "><a href="../../supplychainmodel/ui/UI_DATA_IMPORT.html"><strong aria-hidden="true">2.15.</strong> 데이터 일괄 처리</a></li><li class="chapter-item "><a href="../../supplychainmodel/ui/UI_DATA_IMPORT_HISTORY.html"><strong aria-hidden="true">2.16.</strong> 데이터 일괄 처리 이력</a></li></ol></li><li class="chapter-item "><a href="../../baselineforecast/ui/index.html"><strong aria-hidden="true">3.</strong> 수요 예측</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../baselineforecast/ui/UI_BF_BASELINE_FORECAST_STATE.html"><strong aria-hidden="true">3.1.</strong> 수요 예측 현황</a></li><li class="chapter-item "><div><strong aria-hidden="true">3.2.</strong> 사전 분석(EDA)</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../baselineforecast/ui/UI_BF_17.html"><strong aria-hidden="true">3.2.1.</strong> 예측 대상 분석</a></li><li class="chapter-item "><a href="../../baselineforecast/ui/UI_BF_58.html"><strong aria-hidden="true">3.2.2.</strong> 실적 분석</a></li><li class="chapter-item "><a href="../../baselineforecast/ui/UI_BF_57.html"><strong aria-hidden="true">3.2.3.</strong> 인자 분석</a></li></ol></li><li class="chapter-item "><div><strong aria-hidden="true">3.3.</strong> 수요 예측</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../baselineforecast/ui/UI_BF_16.html"><strong aria-hidden="true">3.3.1.</strong> 수요 예측</a></li></ol></li><li class="chapter-item "><div><strong aria-hidden="true">3.4.</strong> 보고서</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../baselineforecast/ui/UI_BF_50.html"><strong aria-hidden="true">3.4.1.</strong> 수요 예측 결과</a></li><li class="chapter-item "><a href="../../baselineforecast/ui/UI_BF_51.html"><strong aria-hidden="true">3.4.2.</strong> 예측 에러</a></li><li class="chapter-item "><a href="../../baselineforecast/ui/UI_BF_52.html"><strong aria-hidden="true">3.4.3.</strong> 예측 에러 비교</a></li><li class="chapter-item "><a href="../../baselineforecast/ui/UI_BF_53.html"><strong aria-hidden="true">3.4.4.</strong> 버전별 결과 비교</a></li><li class="chapter-item "><a href="../../baselineforecast/ui/UI_BF_54.html"><strong aria-hidden="true">3.4.5.</strong> 버전별 에러 비교</a></li><li class="chapter-item "><a href="../../baselineforecast/ui/UI_BF_55.html"><strong aria-hidden="true">3.4.6.</strong> 예측 정확도</a></li></ol></li><li class="chapter-item "><div><strong aria-hidden="true">3.5.</strong> 기준 정보</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../baselineforecast/ui/UI_BF_07.html"><strong aria-hidden="true">3.5.1.</strong> 품목별 인자</a></li><li class="chapter-item "><a href="../../baselineforecast/ui/UI_BF_06.html"><strong aria-hidden="true">3.5.2.</strong> 일자별 인자</a></li><li class="chapter-item "><a href="../../baselineforecast/ui/UI_BF_05.html"><strong aria-hidden="true">3.5.3.</strong> 판매 실적 보정</a></li><li class="chapter-item "><a href="../../baselineforecast/ui/UI_BF_13.html"><strong aria-hidden="true">3.5.4.</strong> 예측 대상</a></li><li class="chapter-item "><a href="../../baselineforecast/ui/UI_BF_14.html"><strong aria-hidden="true">3.5.5.</strong> 신-구 품목 매핑</a></li></ol></li><li class="chapter-item "><div><strong aria-hidden="true">3.6.</strong> 설정</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../baselineforecast/ui/UI_BF_01.html"><strong aria-hidden="true">3.6.1.</strong> 환경 설정</a></li><li class="chapter-item "><a href="../../baselineforecast/ui/UI_BF_09.html"><strong aria-hidden="true">3.6.2.</strong> 인자</a></li><li class="chapter-item "><a href="../../baselineforecast/ui/UI_BF_15.html"><strong aria-hidden="true">3.6.3.</strong> Control Board</a></li></ol></li></ol></li><li class="chapter-item "><a href="../../demandplan/ui/index.html"><strong aria-hidden="true">4.</strong> 수요 계획</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../demandplan/ui/UI_DP_SALES_STATE.html"><strong aria-hidden="true">4.1.</strong> 판매 현황</a></li><li class="chapter-item "><a href="../../demandplan/ui/UI_DP_DEMAND_PLAN_STATE.html"><strong aria-hidden="true">4.2.</strong> 수요 계획 현황</a></li><li class="chapter-item "><div><strong aria-hidden="true">4.3.</strong> 버전</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../demandplan/ui/UI_DP_93.html"><strong aria-hidden="true">4.3.1.</strong> Control Board</a></li><li class="chapter-item "><a href="../../demandplan/ui/UI_DP_94.html"><strong aria-hidden="true">4.3.2.</strong> 진행 상태</a></li></ol></li><li class="chapter-item "><div><strong aria-hidden="true">4.4.</strong> 계획</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../demandplan/ui/UI_DP_95.html"><strong aria-hidden="true">4.4.1.</strong> 계획 입력</a></li><li class="chapter-item "><a href="../../demandplan/ui/UI_DP_95_CHART.html"><strong aria-hidden="true">4.4.2.</strong> 계획 입력 (Chart)</a></li><li class="chapter-item "><a href="../../demandplan/ui/UI_DP_96.html"><strong aria-hidden="true">4.4.3.</strong> Demand 보고서</a></li><li class="chapter-item "><a href="../../demandplan/ui/UI_DP_96_CHART.html"><strong aria-hidden="true">4.4.4.</strong> Demand 보고서 (Chart)</a></li><li class="chapter-item "><a href="../../demandplan/ui/UI_DP_ENTRY_NOTIFY.html"><strong aria-hidden="true">4.4.5.</strong> 계획 점검</a></li></ol></li><li class="chapter-item "><div><strong aria-hidden="true">4.5.</strong> 보고서</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../demandplan/ui/UI_DP_28.html"><strong aria-hidden="true">4.5.1.</strong> 판매성과</a></li><li class="chapter-item "><a href="../../demandplan/ui/UI_DP_30.html"><strong aria-hidden="true">4.5.2.</strong> 실적 판매 비교</a></li><li class="chapter-item "><a href="../../demandplan/ui/UI_DP_32.html"><strong aria-hidden="true">4.5.3.</strong> 판매계획 점검(거래처)</a></li><li class="chapter-item "><a href="../../demandplan/ui/UI_DP_33.html"><strong aria-hidden="true">4.5.4.</strong> 판매계획 점검(품목)</a></li><li class="chapter-item "><a href="../../demandplan/ui/UI_DP_31.html"><strong aria-hidden="true">4.5.5.</strong> RTF 분석</a></li><li class="chapter-item "><a href="../../demandplan/ui/UI_DP_40.html"><strong aria-hidden="true">4.5.6.</strong> 버전별 Demand 비교</a></li><li class="chapter-item "><a href="../../demandplan/ui/UI_DP_VER_COMP_PROG.html"><strong aria-hidden="true">4.5.7.</strong> 버전 추이 비교</a></li><li class="chapter-item "><a href="../../demandplan/ui/UI_DP_DMND_ORDER.html"><strong aria-hidden="true">4.5.8.</strong> 수요 결과</a></li></ol></li><li class="chapter-item "><div><strong aria-hidden="true">4.6.</strong> 목표 계획</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../demandplan/ui/UI_BP_93.html"><strong aria-hidden="true">4.6.1.</strong> Control  Board</a></li><li class="chapter-item "><a href="../../demandplan/ui/UI_BP_94.html"><strong aria-hidden="true">4.6.2.</strong> 진행 상태</a></li><li class="chapter-item "><a href="../../demandplan/ui/UI_BP_95.html"><strong aria-hidden="true">4.6.3.</strong> 목표 계획 입력</a></li><li class="chapter-item "><a href="../../demandplan/ui/UI_BP_95_CHART.html"><strong aria-hidden="true">4.6.4.</strong> 목표 계획 입력 (Chart)</a></li><li class="chapter-item "><a href="../../demandplan/ui/UI_BP_96.html"><strong aria-hidden="true">4.6.5.</strong> 목표 계획 주문 정보</a></li><li class="chapter-item "><a href="../../demandplan/ui/UI_BP_96_CHART.html"><strong aria-hidden="true">4.6.6.</strong> 목표 계획 주문 정보 (Chart)</a></li></ol></li><li class="chapter-item "><div><strong aria-hidden="true">4.7.</strong> 운영 데이터</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../demandplan/ui/UI_DP_42.html"><strong aria-hidden="true">4.7.1.</strong> 판매 실적</a></li></ol></li><li class="chapter-item "><div><strong aria-hidden="true">4.8.</strong> 기준 정보</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../demandplan/ui/UI_DP_05.html"><strong aria-hidden="true">4.8.1.</strong> 기준 정보 검증</a></li><li class="chapter-item "><a href="../../demandplan/ui/UI_DP_02.html"><strong aria-hidden="true">4.8.2.</strong> 레벨</a></li><li class="chapter-item "><a href="../../demandplan/ui/UI_DP_08.html"><strong aria-hidden="true">4.8.3.</strong> 품목 계층</a></li><li class="chapter-item "><a href="../../demandplan/ui/UI_DP_09.html"><strong aria-hidden="true">4.8.4.</strong> 품목</a></li><li class="chapter-item "><a href="../../demandplan/ui/UI_DP_10.html"><strong aria-hidden="true">4.8.5.</strong> 판매 계층</a></li><li class="chapter-item "><a href="../../demandplan/ui/UI_DP_11.html"><strong aria-hidden="true">4.8.6.</strong> 거래처</a></li><li class="chapter-item "><a href="../../demandplan/ui/UI_DP_12.html"><strong aria-hidden="true">4.8.7.</strong> 관리자-판매 관계</a></li><li class="chapter-item "><a href="../../demandplan/ui/UI_DP_USER_LEVEL_MAP.html"><strong aria-hidden="true">4.8.8.</strong> 사용자-레벨 관계</a></li><li class="chapter-item "><a href="../../demandplan/ui/UI_DP_15.html"><strong aria-hidden="true">4.8.9.</strong> 사용자-품목-거래처 관계</a></li><li class="chapter-item "><a href="../../demandplan/ui/UI_DP_21.html"><strong aria-hidden="true">4.8.10.</strong> 단위 가격</a></li><li class="chapter-item "><a href="../../demandplan/ui/UI_DP_07.html"><strong aria-hidden="true">4.8.11.</strong> 환율</a></li><li class="chapter-item "><a href="../../demandplan/ui/UI_DP_41.html"><strong aria-hidden="true">4.8.12.</strong> Measure 데이터</a></li><li class="chapter-item "><a href="../../demandplan/ui/UI_DP_16.html"><strong aria-hidden="true">4.8.13.</strong> Dimenension 데이터</a></li></ol></li><li class="chapter-item "><div><strong aria-hidden="true">4.9.</strong> 설정</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../demandplan/ui/UI_DP_01.html"><strong aria-hidden="true">4.9.1.</strong> 환경 설정</a></li><li class="chapter-item "><a href="../../demandplan/ui/UI_DP_17.html"><strong aria-hidden="true">4.9.2.</strong> Meausure</a></li><li class="chapter-item "><a href="../../demandplan/ui/UI_DP_18.html"><strong aria-hidden="true">4.9.3.</strong> Dimension 설정</a></li><li class="chapter-item "><a href="../../demandplan/ui/UI_DP_19.html"><strong aria-hidden="true">4.9.4.</strong> Meausure 설정</a></li><li class="chapter-item "><a href="../../demandplan/ui/UI_DP_36.html"><strong aria-hidden="true">4.9.5.</strong> 계획 정책</a></li><li class="chapter-item "><a href="../../demandplan/ui/UI_DP_22.html"><strong aria-hidden="true">4.9.6.</strong> Control Board 기준</a></li></ol></li></ol></li><li class="chapter-item "><a href="../../supplyorder/ui/index.html"><strong aria-hidden="true">5.</strong> 공급주문관리</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../supplyorder/ui/UI_SO_DPANALYSIS.html"><strong aria-hidden="true">5.1.</strong> 수요계획분석</a></li><li class="chapter-item "><a href="../../supplyorder/ui/UI_SO_TRANSFORM.html"><strong aria-hidden="true">5.2.</strong> 공급주문변환</a></li><li class="chapter-item "><a href="../../supplyorder/ui/UI_SO_ANALYSIS.html"><strong aria-hidden="true">5.3.</strong> 공급주문분석</a></li><li class="chapter-item "><a href="../../supplyorder/ui/UI_SO_ADJUST.html"><strong aria-hidden="true">5.4.</strong> 공급주문보정</a></li><li class="chapter-item "><a href="../../supplyorder/ui/UI_SO_ITEMTREND.html"><strong aria-hidden="true">5.5.</strong> 품목별공급주문추이</a></li></ol></li><li class="chapter-item "><a href="../../inventoryplan/ui/index.html"><strong aria-hidden="true">6.</strong> 재고 관리</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../inventoryplan/ui/UI_IM_INVENTORY_STATE.html"><strong aria-hidden="true">6.1.</strong> 재고 현황</a></li><li class="chapter-item "><a href="../../inventoryplan/ui/UI_IM_LOCATION_INVENTORY_STATE.html"><strong aria-hidden="true">6.2.</strong> 거점 재고 현황</a></li><li class="chapter-item "><div><strong aria-hidden="true">6.3.</strong> 재고 분석</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../inventoryplan/ui/UI_IM_INVENTORY_DETAIL.html"><strong aria-hidden="true">6.3.1.</strong> 재고 현황 상세</a></li><li class="chapter-item "><a href="../../inventoryplan/ui/UI_IM_SLOWMOVING_STATE.html"><strong aria-hidden="true">6.3.2.</strong> 부진 재고 현황</a></li><li class="chapter-item "><a href="../../inventoryplan/ui/UI_IM_OBSOLETE_STATE.html"><strong aria-hidden="true">6.3.3.</strong> 불용 재고 현황</a></li></ol></li><li class="chapter-item "><div><strong aria-hidden="true">6.4.</strong> ABC-XYZ</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../inventoryplan/ui/UI_IM_ABCXYZ_CLASSIFICATION.html"><strong aria-hidden="true">6.4.1.</strong> ABC-XYZ 분류</a></li><li class="chapter-item "><a href="../../inventoryplan/ui/UI_IM_ABCXYZ_ANALYSIS.html"><strong aria-hidden="true">6.4.2.</strong> ABC-XYZ 분석 상세</a></li><li class="chapter-item "><a href="../../inventoryplan/ui/UI_IM_SALES_SHIPPING_HISTORY_CHECK.html"><strong aria-hidden="true">6.4.3.</strong> 판매 (출하) 실적 점검</a></li></ol></li><li class="chapter-item "><div><strong aria-hidden="true">6.5.</strong> 시뮬레이션</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../inventoryplan/ui/UI_IM_TARGET_INVENTORY_SIMULATION.html"><strong aria-hidden="true">6.5.1.</strong> 목표 재고 시뮬레이션</a></li><li class="chapter-item "><a href="../../inventoryplan/ui/UI_IM_TARGET_INVENTORY_RESULT.html"><strong aria-hidden="true">6.5.2.</strong> 목표 재고 시뮬레이션 결과</a></li></ol></li><li class="chapter-item "><div><strong aria-hidden="true">6.6.</strong> 운영 데이터</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../inventoryplan/ui/UI_IM_12.html"><strong aria-hidden="true">6.6.1.</strong> 창고 재고</a></li><li class="chapter-item "><a href="../../inventoryplan/ui/UI_IM_13.html"><strong aria-hidden="true">6.6.2.</strong> 이동중 재고</a></li><li class="chapter-item "><a href="../../inventoryplan/ui/UI_IM_SHIPPING_ACTUAL.html"><strong aria-hidden="true">6.6.3.</strong> 출하 실적</a></li></ol></li><li class="chapter-item "><div><strong aria-hidden="true">6.7.</strong> 설정</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../inventoryplan/ui/UI_IM_02.html"><strong aria-hidden="true">6.7.1.</strong> 환경 설정</a></li><li class="chapter-item "><a href="../../inventoryplan/ui/UI_IM_03.html"><strong aria-hidden="true">6.7.2.</strong> 등급 산정 대상</a></li></ol></li></ol></li><li class="chapter-item "><a href="../../replenishmentplan/ui/index.html"><strong aria-hidden="true">7.</strong> 보충 계획</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><div><strong aria-hidden="true">7.1.</strong> 사전 분석</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../replenishmentplan/ui/UI_RP_07.html"><strong aria-hidden="true">7.1.1.</strong> 공급 주문</a></li><li class="chapter-item "><a href="../../replenishmentplan/ui/UI_RP_30.html"><strong aria-hidden="true">7.1.2.</strong> 공급 주문 분포</a></li><li class="chapter-item "><a href="../../replenishmentplan/ui/UI_RP_POLICY.html"><strong aria-hidden="true">7.1.3.</strong> 보충 발주 정책</a></li></ol></li><li class="chapter-item "><div><strong aria-hidden="true">7.2.</strong> 시뮬레이션</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../replenishmentplan/ui/UI_RP_09.html"><strong aria-hidden="true">7.2.1.</strong> 보충 계획 시뮬레이션</a></li><li class="chapter-item "><a href="../../replenishmentplan/ui/UI_RP_08.html"><strong aria-hidden="true">7.2.2.</strong> 계획 정책</a></li><li class="chapter-item "><a href="../../replenishmentplan/ui/UI_RP_28.html"><strong aria-hidden="true">7.2.3.</strong> 계획 시나리오</a></li></ol></li><li class="chapter-item "><div><strong aria-hidden="true">7.3.</strong> 보고서</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../replenishmentplan/ui/UI_RP_10.html"><strong aria-hidden="true">7.3.1.</strong> 주문 추적</a></li><li class="chapter-item "><a href="../../replenishmentplan/ui/UI_RP_14.html"><strong aria-hidden="true">7.3.2.</strong> 보충 계획 비교</a></li><li class="chapter-item "><a href="../../replenishmentplan/ui/UI_RP_15.html"><strong aria-hidden="true">7.3.3.</strong> 보충 계획 결과</a></li><li class="chapter-item "><a href="../../replenishmentplan/ui/UI_RP_25.html"><strong aria-hidden="true">7.3.4.</strong> 발주 리스트</a></li></ol></li><li class="chapter-item "><div><strong aria-hidden="true">7.4.</strong> 기준 정보</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../replenishmentplan/ui/UI_RP_01.html"><strong aria-hidden="true">7.4.1.</strong> 보충 계획 대상</a></li><li class="chapter-item "><a href="../../replenishmentplan/ui/UI_RP_04.html"><strong aria-hidden="true">7.4.2.</strong> 발주 주기 캘린더</a></li><li class="chapter-item "><a href="../../replenishmentplan/ui/UI_RP_17.html"><strong aria-hidden="true">7.4.3.</strong> 발주 휴무 캘린더</a></li></ol></li></ol></li><li class="chapter-item "><a href="../../masterplan/ui/index.html"><strong aria-hidden="true">8.</strong> 공급 계획</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../masterplan/ui/UI_MP_MASTER_PLAN_STATE.html"><strong aria-hidden="true">8.1.</strong> 공급 계획 현황</a></li><li class="chapter-item "><div><strong aria-hidden="true">8.2.</strong> 사전 분석</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../masterplan/ui/UI_MP_19.html"><strong aria-hidden="true">8.2.1.</strong> 공급 주문</a></li><li class="chapter-item "><a href="../../masterplan/ui/UI_MP_44.html"><strong aria-hidden="true">8.2.2.</strong> 공급 주문 분포</a></li><li class="chapter-item "><a href="../../masterplan/ui/UI_MP_02.html"><strong aria-hidden="true">8.2.3.</strong> 재공</a></li></ol></li><li class="chapter-item "><div><strong aria-hidden="true">8.3.</strong> 시뮬레이션</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../masterplan/ui/UI_MP_21.html"><strong aria-hidden="true">8.3.1.</strong> 공급 계획 시뮬레이션</a></li><li class="chapter-item "><a href="../../masterplan/ui/UI_MP_20.html"><strong aria-hidden="true">8.3.2.</strong> 계획 정책</a></li><li class="chapter-item "><a href="../../masterplan/ui/UI_MP_43.html"><strong aria-hidden="true">8.3.3.</strong> 계획 시나리오</a></li></ol></li><li class="chapter-item "><div><strong aria-hidden="true">8.4.</strong> 보고서</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../masterplan/ui/UI_MP_27.html"><strong aria-hidden="true">8.4.1.</strong> 공급 계획 결과 (PSI)</a></li><li class="chapter-item "><a href="../../masterplan/ui/UI_MP_32.html"><strong aria-hidden="true">8.4.2.</strong> 공급 주문 계획 결과</a></li><li class="chapter-item "><a href="../../masterplan/ui/UI_MP_22.html"><strong aria-hidden="true">8.4.3.</strong> 공급 주문 추적</a></li><li class="chapter-item "><a href="../../masterplan/ui/UI_MP_26.html"><strong aria-hidden="true">8.4.4.</strong> 공급 계획 비교</a></li><li class="chapter-item "><a href="../../masterplan/ui/UI_MP_25.html"><strong aria-hidden="true">8.4.5.</strong> 부족 / 지연 사유</a></li><li class="chapter-item "><a href="../../masterplan/ui/UI_MP_34.html"><strong aria-hidden="true">8.4.6.</strong> 문제 현황 비교</a></li><li class="chapter-item "><a href="../../masterplan/ui/UI_MP_29.html"><strong aria-hidden="true">8.4.7.</strong> 자원 생산 계획</a></li><li class="chapter-item "><a href="../../masterplan/ui/UI_MP_31.html"><strong aria-hidden="true">8.4.8.</strong> 자원 부하 분석</a></li><li class="chapter-item "><a href="../../masterplan/ui/UI_MP_42.html"><strong aria-hidden="true">8.4.9.</strong> 자원 현황</a></li><li class="chapter-item "><a href="../../masterplan/ui/UI_MP_GANTT_RESOURCE.html"><strong aria-hidden="true">8.4.10.</strong> 자원 간트 차트</a></li><li class="chapter-item "><a href="../../masterplan/ui/UI_MP_41.html"><strong aria-hidden="true">8.4.11.</strong> 품목 현황</a></li><li class="chapter-item "><a href="../../masterplan/ui/UI_MP_30.html"><strong aria-hidden="true">8.4.12.</strong> 반제품 / 자재 소요 계획</a></li></ol></li><li class="chapter-item "><div><strong aria-hidden="true">8.5.</strong> 운영 데이터</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../masterplan/ui/UI_MP_18.html"><strong aria-hidden="true">8.5.1.</strong> 자재 입고 예정</a></li></ol></li><li class="chapter-item "><div><strong aria-hidden="true">8.6.</strong> 기준 정보</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../masterplan/ui/UI_MP_DATA_VALIDATION.html"><strong aria-hidden="true">8.6.1.</strong> 기준 정보 검증</a></li><li class="chapter-item "><a href="../../masterplan/ui/UI_MP_05.html"><strong aria-hidden="true">8.6.2.</strong> 자재 제약</a></li><li class="chapter-item "><a href="../../masterplan/ui/UI_MP_06.html"><strong aria-hidden="true">8.6.3.</strong> 자원</a></li><li class="chapter-item "><a href="../../masterplan/ui/UI_MP_38.html"><strong aria-hidden="true">8.6.4.</strong> 공정</a></li><li class="chapter-item "><a href="../../masterplan/ui/UI_MP_08.html"><strong aria-hidden="true">8.6.5.</strong> 품목기준 자원 우선순위</a></li><li class="chapter-item "><a href="../../masterplan/ui/UI_MP_09.html"><strong aria-hidden="true">8.6.6.</strong> 품목기준 자원 생산능력</a></li><li class="chapter-item "><a href="../../masterplan/ui/UI_MP_11.html"><strong aria-hidden="true">8.6.7.</strong> 공장 / 자원 캘린더</a></li><li class="chapter-item "><a href="../../masterplan/ui/UI_MP_17.html"><strong aria-hidden="true">8.6.8.</strong> 품목기준 생산 운영 캘린더</a></li><li class="chapter-item "><a href="../../masterplan/ui/UI_CM_03.html"><strong aria-hidden="true">8.6.9.</strong> 품목 분류</a></li><li class="chapter-item "><a href="../../masterplan/ui/UI_MP_14.html"><strong aria-hidden="true">8.6.10.</strong> 생산주기 & 연속생산</a></li><li class="chapter-item "><a href="../../masterplan/ui/UI_MP_15.html"><strong aria-hidden="true">8.6.11.</strong> 혼합생산 (최소할당)</a></li><li class="chapter-item "><a href="../../masterplan/ui/UI_MP_16.html"><strong aria-hidden="true">8.6.12.</strong> 혼합생산 (최대할당)</a></li><li class="chapter-item "><a href="../../masterplan/ui/UI_MP_ROUTE_CLASSIFICATION.html"><strong aria-hidden="true">8.6.13.</strong> 공정 분류</a></li><li class="chapter-item "><a href="../../masterplan/ui/UI_MP_35.html"><strong aria-hidden="true">8.6.14.</strong> 최대 운영 자원</a></li><li class="chapter-item "><a href="../../masterplan/ui/UI_MP_23.html"><strong aria-hidden="true">8.6.15.</strong> 작업 교체 시간</a></li><li class="chapter-item "><a href="../../masterplan/ui/UI_MP_13.html"><strong aria-hidden="true">8.6.16.</strong> 선행 생산 제약</a></li></ol></li><li class="chapter-item "><div><strong aria-hidden="true">8.7.</strong> 설정</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../masterplan/ui/UI_MP_01.html"><strong aria-hidden="true">8.7.1.</strong> 환경 설정</a></li></ol></li></ol></li><li class="chapter-item "><a href="../../factoryorder/ui/index.html"><strong aria-hidden="true">9.</strong> 생산 주문 관리</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../factoryorder/ui/UI_FO_REQUEST_ANALYSIS.html"><strong aria-hidden="true">9.1.</strong> 생산 요청 분석</a></li><li class="chapter-item "><a href="../../factoryorder/ui/UI_FO_ORDER_CREATION.html"><strong aria-hidden="true">9.2.</strong> 생산 주문 생성</a></li><li class="chapter-item "><a href="../../factoryorder/ui/UI_FO_ORDER_ADJUSTMENT.html"><strong aria-hidden="true">9.3.</strong> 생산 주문 분석 및 조정</a></li><li class="chapter-item "><a href="../../factoryorder/ui/UI_FO_MRP.html"><strong aria-hidden="true">9.4.</strong> 생산 요청 납기 기준 자재 소요량</a></li></ol></li><li class="chapter-item "><a href="../../factoryplan/ui/index.html"><strong aria-hidden="true">10.</strong> 생산 계획</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../factoryplan/ui/UI_FP_PRODUCTION_PERFORMANCE.html"><strong aria-hidden="true">10.1.</strong> 생산 실적 분석</a></li><li class="chapter-item "><a href="../../factoryplan/ui/UI_FP_PLAN_VS_PERFORMANCE.html"><strong aria-hidden="true">10.2.</strong> 계획 대비 실적</a></li><li class="chapter-item "><a href="../../factoryplan/ui/UI_FP_INPUT_ORDER_CHECK.html"><strong aria-hidden="true">10.3.</strong> 투입 오더 점검</a></li><li class="chapter-item "><div><strong aria-hidden="true">10.4.</strong> 시뮬레이션</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../factoryplan/ui/UI_FP_SIMULATION.html"><strong aria-hidden="true">10.4.1.</strong> 생산 계획 시뮬레이션</a></li><li class="chapter-item "><a href="../../factoryplan/ui/UI_FP_SIMUL_SCENARIO.html"><strong aria-hidden="true">10.4.2.</strong> 시뮬레이션 시나리오</a></li><li class="chapter-item "><a href="../../factoryplan/ui/UI_FP_SIMUL_STEP.html"><strong aria-hidden="true">10.4.3.</strong> 시뮬레이션 절차</a></li></ol></li><li class="chapter-item "><div><strong aria-hidden="true">10.5.</strong> 보고서</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../factoryplan/ui/UI_FP_SIMUL_KPI.html"><strong aria-hidden="true">10.5.1.</strong> 계획 결과 요약</a></li><li class="chapter-item "><a href="../../factoryplan/ui/UI_FP_SIMUL_COMPARE.html"><strong aria-hidden="true">10.5.2.</strong> 계획 결과 비교</a></li><li class="chapter-item "><a href="../../factoryplan/ui/UI_FP_PLAN_RESULT.html"><strong aria-hidden="true">10.5.3.</strong> 공정(라인)별 계획 결과</a></li><li class="chapter-item "><a href="../../factoryplan/ui/UI_FP_PLAN_PROBLEM.html"><strong aria-hidden="true">10.5.4.</strong> 문제 현황</a></li><li class="chapter-item "><a href="../../factoryplan/ui/UI_FP_RESRC_UTILIZATION.html"><strong aria-hidden="true">10.5.5.</strong> 자원 가동률</a></li><li class="chapter-item "><a href="../../factoryplan/ui/UI_FP_STOCK_RESULT.html"><strong aria-hidden="true">10.5.6.</strong> 재고 사용 현황</a></li><li class="chapter-item "><a href="../../factoryplan/ui/UI_FP_MATERIAL_PSI.html"><strong aria-hidden="true">10.5.7.</strong> 자재 소요 계획</a></li><li class="chapter-item "><a href="../../factoryplan/ui/UI_FP_GANTT_RESOURCE.html"><strong aria-hidden="true">10.5.8.</strong> 자원 간트 차트</a></li><li class="chapter-item "><a href="../../factoryplan/ui/UI_FP_GANTT_ORDER.html"><strong aria-hidden="true">10.5.9.</strong> 주문 간트 차트</a></li><li class="chapter-item "><a href="../../factoryplan/ui/UI_FP_ORDER_TRACKING.html"><strong aria-hidden="true">10.5.10.</strong> 주문 추적</a></li><li class="chapter-item "><a href="../../factoryplan/ui/UI_FP_ITEM_LEAD_TIME.html"><strong aria-hidden="true">10.5.11.</strong> 품목별 L/T 분석</a></li><li class="chapter-item "><a href="../../factoryplan/ui/UI_FP_JC_TIME_INFO.html"><strong aria-hidden="true">10.5.12.</strong> 작업 교체 정보</a></li></ol></li><li class="chapter-item "><div><strong aria-hidden="true">10.6.</strong> 기준 정보</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../factoryplan/ui/UI_FP_VALIDATION.html"><strong aria-hidden="true">10.6.1.</strong> 기준 정보 검증</a></li><li class="chapter-item "><a href="../../factoryplan/ui/UI_FP_ITEM.html"><strong aria-hidden="true">10.6.2.</strong> 품목</a></li><li class="chapter-item "><a href="../../factoryplan/ui/UI_FP_ROUTE.html"><strong aria-hidden="true">10.6.3.</strong> 공정</a></li><li class="chapter-item "><a href="../../factoryplan/ui/UI_FP_BOM.html"><strong aria-hidden="true">10.6.4.</strong> BOM</a></li><li class="chapter-item "><a href="../../factoryplan/ui/UI_FP_RESOURCE.html"><strong aria-hidden="true">10.6.5.</strong> 자원</a></li><li class="chapter-item "><a href="../../factoryplan/ui/UI_FP_BOR.html"><strong aria-hidden="true">10.6.6.</strong> BOR</a></li><li class="chapter-item "><a href="../../factoryplan/ui/UI_FP_RESOURCE_CALENDAR.html"><strong aria-hidden="true">10.6.7.</strong> 자원 캘린더</a></li><li class="chapter-item "><a href="../../factoryplan/ui/UI_FP_JC_TIME.html"><strong aria-hidden="true">10.6.8.</strong> 작업 교체 시간</a></li><li class="chapter-item "><a href="../../factoryplan/ui/UI_FP_STOCK.html"><strong aria-hidden="true">10.6.9.</strong> 재고</a></li><li class="chapter-item "><a href="../../factoryplan/ui/UI_FP_WIP.html"><strong aria-hidden="true">10.6.10.</strong> 재공</a></li><li class="chapter-item "><a href="../../factoryplan/ui/UI_FP_ORDER.html"><strong aria-hidden="true">10.6.11.</strong> 주문</a></li></ol></li></ol></li><li class="chapter-item "><a href="../../system/ui/index.html"><strong aria-hidden="true">11.</strong> 시스템</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><div><strong aria-hidden="true">11.1.</strong> 사용자 및 권한</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../system/ui/UI_AD_02.html"><strong aria-hidden="true">11.1.1.</strong> 사용자</a></li><li class="chapter-item "><a href="../../system/ui/UI_AD_03.html"><strong aria-hidden="true">11.1.2.</strong> 사용자 그룹</a></li><li class="chapter-item "><a href="../../system/ui/UI_AD_05.html"><strong aria-hidden="true">11.1.3.</strong> 사용자 권한</a></li><li class="chapter-item "><a href="../../system/ui/UI_AD_04.html"><strong aria-hidden="true">11.1.4.</strong> 사용자 그룹 권한</a></li><li class="chapter-item "><a href="../../system/ui/UI_AD_18.html"><strong aria-hidden="true">11.1.5.</strong> 사용자 위임</a></li><li class="chapter-item "><a href="../../system/ui/UI_AD_22.html"><strong aria-hidden="true">11.1.6.</strong> 통합 권한 조회</a></li></ol></li><li class="chapter-item "><div><strong aria-hidden="true">11.2.</strong> 환경</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../system/ui/UI_AD_01.html"><strong aria-hidden="true">11.2.1.</strong> 공통 코드</a></li><li class="chapter-item "><a href="../../system/ui/UI_AD_07.html"><strong aria-hidden="true">11.2.2.</strong> 다국어</a></li><li class="chapter-item "><a href="../../system/ui/UI_AD_GROUP_PREF.html"><strong aria-hidden="true">11.2.3.</strong> 개인화 기준정보</a></li><li class="chapter-item "><a href="../../system/ui/UI_AD_21.html"><strong aria-hidden="true">11.2.4.</strong> 메뉴 뱃지</a></li><li class="chapter-item "><a href="../../system/ui/UI_AD_THEME_MGMT.html"><strong aria-hidden="true">11.2.5.</strong> 테마 설정</a></li></ol></li><li class="chapter-item "><div><strong aria-hidden="true">11.3.</strong> 관리</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../system/ui/UI_AD_15.html"><strong aria-hidden="true">11.3.1.</strong> 서버 현황</a></li><li class="chapter-item "><a href="../../system/ui/UI_AD_06.html"><strong aria-hidden="true">11.3.2.</strong> 라이선스</a></li><li class="chapter-item "><a href="../../system/ui/UI_AD_10.html"><strong aria-hidden="true">11.3.3.</strong> 사용자 접속 이력</a></li></ol></li><li class="chapter-item "><div><strong aria-hidden="true">11.4.</strong> 부가 서비스</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../system/ui/UI_UT_01.html"><strong aria-hidden="true">11.4.1.</strong> 게시판</a></li><li class="chapter-item "><a href="../../system/ui/UI_AD_SCHEDULER_JOB_MGMT.html"><strong aria-hidden="true">11.4.2.</strong> 작업 일정</a></li><li class="chapter-item "><a href="../../system/ui/UI_AD_SCHEDULER_JOB_HISTORY.html"><strong aria-hidden="true">11.4.3.</strong> 작업 일정 실행 이력</a></li></ol></li></ol></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky bordered">
+                    <div class="left-buttons">
+                        <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title"></h1>
+
+                    <div class="right-buttons">
+                        <a href="../../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="품목군별-목표-부합-분석"><a class="header" href="#품목군별-목표-부합-분석">품목군별 목표 부합 분석</a></h1>
+<div id="admonition-default" class="admonition tip">
+<div>
+<ul>
+<li>월 단위 경영 목표와 판매 계획(또는 실적)을 품목(군) 단위로 빠르게 파악합니다.</li>
+<li>감지된 판매 계획 위험 요소는 S&amp;OP 수요 점검 및 조정을 통하여 목표 달성이 가능하도록 돕습니다.</li>
+</ul>
+</div>
+</div>
+<h3 id="사용법"><a class="header" href="#사용법">사용법</a></h3>
+<p><img src="images/item-meet-target-full-screen.svg" alt="" /></p>
+<blockquote>
+<ol>
+<li>목표 달성 여부 점검 대상 년월을 선택합니다. <br>
+현재 날짜가 포함된 년월보다 과거이면 목표 대비 실적을 비교하고, <br>
+현재 날짜가 포함된 년월보다 미래이면 목표 대비 계획을 비교합니다. <br>
+현재 날짜가 포함된 년월의 데이터 집계는 최하단 설명을 참고하세요.</li>
+<li>목표 달성 여부 점검은 품목 계층의 품목군 단위로 진행합니다. <br>
+단, 품목 계층의 최상위 레벨(<strong>Item All</strong>)을 선택하면 아무런 액션도 취하지 않습니다.</li>
+<li>품목군에 속한 개별 품목의 금액 또는 수량의 비율 분포를 트리맵으로 보여줍니다.</li>
+<li>품목군에 속한 개별 품목의 금액 또는 수량을 월별 목표 대비 계획(또는 실적)과 비교할 수 있도록 툴팁으로 제공합니다. <br>
+계획(또는 실적)이 목표에 부합하면 초록색 계열로, 그렇지 않으면 붉은색 계열로 표시하여 위험을 빠르게 감지할 수 있습니다.</li>
+<li>월별 목표에 미달하는 품목군의 경우, <a href="UI_SA_DPMP_SIMUL.html">S&amp;OP 수요 점검</a> 화면으로 전환하여 목표 달성을 위한 수요 조정을 할 수 있습니다.</li>
+<li>품목(군)별 목표 달성 여부를 금액 또는 수량으로 파악할 수 있습니다.</li>
+</ol>
+</blockquote>
+<div id="admonition-현재-월의-데이터-집계" class="admonition info">
+<div class="admonition-title">
+<p>현재 월의 데이터 집계</p>
+<p><a class="admonition-anchor-link" href="#admonition-현재-월의-데이터-집계"></a></p>
+</div>
+<div>
+<ul>
+<li>현재 월의 데이터는 판매 실적과 수요 계획의 데이터를 합산하여 보여줍니다.</li>
+<li>화면 검색 날짜의 주차보다 이전 주차는 판매 실적으로, <br>
+화면 검색 날짜의 주차 포함 이후 주차는 수요 계획 데이터를 집계합니다.</li>
+</ul>
+</div>
+</div>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../snop/ui/UI_SA_EXECUTIVE_DASHBOARD.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next" href="../../snop/ui/UI_SA_DPMP_SIMUL.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../snop/ui/UI_SA_EXECUTIVE_DASHBOARD.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next" href="../../snop/ui/UI_SA_DPMP_SIMUL.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../../elasticlunr.min.js"></script>
+        <script src="../../mark.min.js"></script>
+        <script src="../../searcher.js"></script>
+
+        <script src="../../clipboard.min.js"></script>
+        <script src="../../highlight.js"></script>
+        <script src="../../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

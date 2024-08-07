@@ -1,0 +1,85 @@
+{
+    "name": "TB_DP_DIMENSION_DATA",
+    "useDefaultSchema": "N",
+    "columns": [{
+            "name": "ID",
+            "type": "ID",
+            "update": "N"
+        },
+        {
+            "name": "ACCOUNT_ID",
+            "unique": "Y",
+            "import_column": "ID",
+            "import_table": "TB_DP_ACCOUNT_MST",
+            "exports": [{
+                "header": "ACCOUNT_CD",
+                "type": "STRING",
+                "column": "ACCOUNT_CD"
+            }]
+        },
+        {
+            "name": "ITEM_MST_ID",
+            "unique": "Y",
+            "import_column": "ID",
+            "import_table": "TB_CM_ITEM_MST",
+            "exports": [{
+                "header": "ITEM_CD",
+                "type": "STRING",
+                "column": "ITEM_CD"
+            }]
+        },
+        {
+            "name": "SALES_1M",
+            "type": "NUMBER",
+            "default": "1",
+            "not_null": "Y",
+            "header": "SALES_1M"
+        },
+        {
+            "name": "SALES_3M",
+            "type": "NUMBER",
+            "default": "1",
+            "not_null": "Y",
+            "header": "SALES_3M"
+        },
+        {
+            "name": "SALES_6M",
+            "type": "NUMBER",
+            "default": "1",
+            "not_null": "Y",
+            "header": "SALES_6M"
+        },
+        {
+            "name": "BF_ACCURACY",
+            "type": "NUMBER",
+            "default": "1",
+            "not_null": "Y",
+            "header": "BF_ACCURACY"
+        },
+        {
+            "name": "BF_MODEL",
+            "type": "STRING",
+            "default": "",
+            "not_null": "Y",
+            "header": "BF_MODEL"
+        },
+        {
+            "name": "CREATE_BY",
+            "type": "USER_ID",
+            "update": "N"
+        },
+        {
+            "name": "CREATE_DTTM",
+            "type": "NOW",
+            "update": "N"
+        },
+        {
+            "name": "MODIFY_BY",
+            "type": "USER_ID"
+        },
+        {
+            "name": "MODIFY_DTTM",
+            "type": "NOW"
+        }
+    ]
+}

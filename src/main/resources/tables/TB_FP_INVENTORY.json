@@ -1,0 +1,97 @@
+{
+    "name": "TB_FP_INVENTORY",
+    "useDefaultSchema": "N",
+    "deletes": [ "TB_FP_INVENTORY" ],
+    "columns": [
+        {
+            "name": "ID",
+            "type": "ID",
+            "update": "N"
+        },
+        {
+            "name": "PLAN_SCOPE",
+            "unique": "Y",
+            "type": "STRING",
+            "header": "PLAN_SCOPE"
+        },
+        {
+            "name": "INVENTORY_CD",
+            "unique": "Y",
+            "type": "STRING",
+            "header": "INVENTORY_CD"
+        },
+        {
+            "name": "INVENTORY_NM",
+            "type": "STRING",
+            "header": "INVENTORY_NM"
+        },
+        {
+            "name": "INVENTORY_GRP_CD",
+            "type": "STRING",
+            "header": "INVENTORY_GRP_CD"
+        },
+        {
+            "name": "STAGE_CD",
+            "type": "STRING",
+            "header": "STAGE_CD"
+        },
+        {
+            "name": "ITEM_CD",
+            "type": "STRING",
+            "header": "ITEM_CD"
+        },
+        {
+            "name": "ITEM_TP_CD",
+            "type": "STRING",
+            "header": "ITEM_TP_CD"
+        },
+        {
+            "name": "INV_KEEPING_TIME",
+            "type": "NUMBER",
+            "header": "INV_KEEPING_TIME"
+        },
+        {
+            "name": "INV_FENCE_TIME",
+            "type": "NUMBER",
+            "header": "INV_FENCE_TIME"
+        },
+        {
+            "name": "TIME_UOM",
+            "type": "STRING",
+            "header": "TIME_UOM"
+        },
+        {
+            "name": "STOCK_SPLIT_COMBINATION",
+            "type": "STRING",
+            "header": "STOCK_SPLIT_COMBINATION"
+        },
+        {
+            "name": "ALT_ROUTE_POLICY",
+            "type": "STRING",
+            "header": "ALT_ROUTE_POLICY"
+        },
+        {
+            "name": "STOCK_SELECT_TP_CD",
+            "type": "STRING",
+            "header": "STOCK_SELECT_TP_CD"
+        },
+        {
+            "name": "CREATED_BY",
+            "type": "USER_ID",
+            "update": "N"
+        },
+        {
+            "name": "CREATED_AT",
+            "type": "NOW",
+            "update": "N"
+        },
+        {
+            "name": "UPDATED_BY",
+            "type": "USER_ID"
+        },
+        {
+            "name": "UPDATED_AT",
+            "type": "NOW"
+        }
+    ]
+}

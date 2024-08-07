@@ -1,0 +1,54 @@
+
+@import 'variables.css';
+
+[data-role="documentViewer"]>html {
+    scrollbar-color: var(--scrollbar) var(--bg);
+}
+
+[data-role="documentViewer"]>#searchresults a,
+[data-role="documentViewer"]>.content a:link,
+[data-role="documentViewer"]>a:visited,
+[data-role="documentViewer"]>a>.hljs {
+    color: var(--links);
+}
+
+/*
+    body-container is necessary because mobile browsers don't seem to like
+    overflow-x on the body tag when there is a <meta name="viewport"> tag.
+*/
+[data-role="documentViewer"] #body-container {
+    /*
+        This is used when the sidebar pushes the body content off the side of
+        the screen on small screens. Without it, dragging on mobile Safari
+        will want to reposition the viewport in a weird way.
+    */
+    overflow-x: clip;
+}
+
+[data-role="documentViewer"]>.icon-button {
+    border: none;
+    background: none;
+    padding: 0;
+    color: inherit;
+}
+
+[data-role="documentViewer"]>.icon-button i {
+    margin: 0;
+}
+
+[data-role="documentViewer"]>.right-buttons {
+    margin: 0 15px;
+}
+
+[data-role="documentViewer"]>.right-buttons a {
+    text-decoration: none;
+}
+
+[data-role="documentViewer"]>.left-buttons {
+    display: flex;
+    margin: 0 5px;
+}
+
+[data-role="documentViewer"]>.no-js .left-buttons {
+    display: none;
+}

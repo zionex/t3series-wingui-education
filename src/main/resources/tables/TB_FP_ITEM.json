@@ -1,0 +1,122 @@
+{
+    "name": "TB_FP_ITEM",
+    "useDefaultSchema": "N",
+    "deletes": [ "TB_FP_ITEM" ],
+    "columns": [
+        {
+            "name": "ID",
+            "type": "ID",
+            "update": "N"
+        },
+        {
+            "name": "PLAN_SCOPE",
+            "unique": "Y",
+            "type": "STRING",
+            "header": "PLAN_SCOPE"
+        },
+        {
+            "name": "ITEM_CD",
+            "unique": "Y",
+            "type": "STRING",
+            "header": "ITEM_CD"
+        },
+        {
+            "name": "ITEM_NM",
+            "type": "STRING",
+            "header": "ITEM_NM"
+        },
+        {
+            "name": "ITEM_PARENT_GRP_CD",
+            "type": "STRING",
+            "header": "ITEM_PARENT_GRP_CD"
+        },
+        {
+            "name": "ITEM_GRP_CD",
+            "type": "STRING",
+            "header": "ITEM_GRP_CD"
+        },
+        {
+            "name": "ITEM_CLASS_CD",
+            "type": "STRING",
+            "header": "ITEM_CLASS_CD"
+        },
+        {
+            "name": "ITEM_UOM",
+            "type": "STRING",
+            "header": "ITEM_UOM"
+        },
+        {
+            "name": "PRIORITY",
+            "type": "NUMBER",
+            "header": "PRIORITY"
+        },
+        {
+            "name": "WO_SIZE_MIN",
+            "type": "NUMBER",
+            "header": "WO_SIZE_MIN"
+        },
+        {
+            "name": "WO_SIZE_MAX",
+            "type": "NUMBER",
+            "header": "WO_SIZE_MAX"
+        },
+        {
+            "name": "WO_SIZE_MULTIPLR",
+            "type": "NUMBER",
+            "header": "WO_SIZE_MULTIPLR"
+        },
+        {
+            "name": "BASE_LT",
+            "type": "NUMBER",
+            "header": "BASE_LT"
+        },
+        {
+            "name": "NPI",
+            "type": "DATE",
+            "header": "NPI"
+        },
+        {
+            "name": "EOL",
+            "type": "DATE",
+            "header": "EOL"
+        },
+        {
+            "name": "PRODTN_LIMIT_CD",
+            "type": "STRING",
+            "header": "PRODTN_LIMIT_CD"
+        },
+        {
+            "name": "DISPLAY_COLOR",
+            "type": "STRING",
+            "header": "DISPLAY_COLOR"
+        },
+        {
+            "name": "DISPLAY_SEQ",
+            "type": "NUMBER",
+            "header": "DISPLAY_SEQ"
+        },
+        {
+            "name": "DESC_TXT",
+            "type": "STRING",
+            "header": "DESC_TXT"
+        },
+        {
+            "name": "CREATED_BY",
+            "type": "USER_ID",
+            "update": "N"
+        },
+        {
+            "name": "CREATED_AT",
+            "type": "NOW",
+            "update": "N"
+        },
+        {
+            "name": "UPDATED_BY",
+            "type": "USER_ID"
+        },
+        {
+            "name": "UPDATED_AT",
+            "type": "NOW"
+        }
+    ]
+}

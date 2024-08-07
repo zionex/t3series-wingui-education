@@ -1,0 +1,154 @@
+{
+  "MODULES": [
+    {
+      "seq": 1,
+      "moduleCd": "CM",
+      "levels": [
+        {
+          "level": 1,
+          "langKey": "UI_CM_STD_CD"
+        },
+        {
+          "level": 2,
+          "langKey": "UI_CM_MST_OPERATION"
+        },
+        {
+          "level": 3,
+          "langKey": "UI_CM_DATA_VALIDATION"
+        }
+      ]
+    },
+    {
+      "seq": 2,
+      "moduleCd": "BF",
+      "levels": [
+        {
+          "level": 1,
+          "langKey": "UI_CM_MST_OPERATION"
+        },
+        {
+          "level": 2,
+          "langKey": "UI_CM_REQUIRED_MST_OPERATION"
+        },
+        {
+          "level": 3,
+          "langKey": "UI_CM_CONST_AUXILIARY_MST_OPERATION"
+        },
+        {
+          "level": 4,
+          "langKey": "UI_CM_DATA_VALIDATION"
+        }
+      ]
+    },
+    {
+      "seq": 3,
+      "moduleCd": "DP",
+      "levels": [
+        {
+          "level": 1,
+          "langKey": "UI_CM_MST_OPERATION"
+        },
+        {
+          "level": 2,
+          "langKey": "UI_CM_REQUIRED_MST_OPERATION"
+        },
+        {
+          "level": 3,
+          "langKey": "UI_CM_CONST_AUXILIARY_MST_OPERATION"
+        },
+        {
+          "level": 4,
+          "langKey": "UI_CM_DATA_VALIDATION"
+        }
+      ]
+    },
+    {
+      "seq": 4,
+      "moduleCd": "IM",
+      "levels": [
+        {
+          "level": 1,
+          "langKey": "UI_CM_MST_OPERATION"
+        },
+        {
+          "level": 2,
+          "langKey": "UI_CM_REQUIRED_MST_OPERATION"
+        },
+        {
+          "level": 3,
+          "langKey": "UI_CM_CONST_AUXILIARY_MST_OPERATION"
+        },
+        {
+          "level": 4,
+          "langKey": "UI_CM_DATA_VALIDATION"
+        }
+      ]
+    },
+    {
+      "seq": 5,
+      "moduleCd": "RP",
+      "levels": [
+        {
+          "level": 1,
+          "langKey": "UI_CM_MST_OPERATION"
+        },
+        {
+          "level": 2,
+          "langKey": "UI_CM_REQUIRED_MST_OPERATION"
+        },
+        {
+          "level": 3,
+          "langKey": "UI_CM_CONST_AUXILIARY_MST_OPERATION"
+        },
+        {
+          "level": 4,
+          "langKey": "UI_CM_DATA_VALIDATION"
+        }
+      ]
+    },
+    {
+      "seq": 6,
+      "moduleCd": "MP",
+      "levels": [
+        {
+          "level": 1,
+          "langKey": "UI_CM_MST_OPERATION"
+        },
+        {
+          "level": 2,
+          "langKey": "UI_CM_REQUIRED_MST_OPERATION"
+        },
+        {
+          "level": 3,
+          "langKey": "UI_CM_CONST_AUXILIARY_MST_OPERATION"
+        },
+        {
+          "level": 4,
+          "langKey": "UI_CM_DATA_VALIDATION"
+        }
+      ]
+    },
+    {
+      "seq": 7,
+      "moduleCd": "FP",
+      "levels": [
+        {
+          "level": 1,
+          "langKey": "UI_CM_MST_OPERATION"
+        },
+        {
+          "level": 2,
+          "langKey": "UI_CM_REQUIRED_MST_OPERATION"
+        },
+        {
+          "level": 3,
+          "langKey": "UI_CM_CONST_AUXILIARY_MST_OPERATION"
+        },
+        {
+          "level": 4,
+          "langKey": "UI_CM_DATA_VALIDATION"
+        }
+      ]
+    }
+  ]
+}

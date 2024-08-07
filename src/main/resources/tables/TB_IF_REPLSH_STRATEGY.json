@@ -1,0 +1,67 @@
+{
+    "name": "TB_IF_REPLSH_STRATEGY",
+    "useDefaultSchema": "Y",
+    "deletes": ["TB_RP_REPLSH_STRATEGY"],
+    "procedure": [{
+            "sequence": "1",
+            "method": "{call SP_UI_RP_REPLSH_STRATEGY_BATCH(?, ?, ?, ?)}",
+            "description": "보충 발주 정책"
+        }
+    ],
+    "columns": [{
+            "name": "LOCAT_CD",
+            "type": "STRING",
+            "header": "LOCAT_CD",
+            "unique": "Y"
+        },
+        {
+            "name": "ITEM_CD",
+            "type": "STRING",
+            "header": "ITEM_CD",
+            "unique": "Y"
+        },
+        {
+            "name": "INV_MGMT_SYSTEM_TP_CD",
+            "type": "STRING",
+            "header": "INV_MGMT_SYSTEM_TP_CD"
+        },
+        {
+            "name": "PO_CYCLE_CALENDAR_CD",
+            "type": "STRING",
+            "header": "PO_CYCLE_CALENDAR_CD"
+        },
+        {
+            "name": "MIN_ORDER_QTY",
+            "type": "NUMBER",
+            "header": "MIN_ORDER_QTY"
+        },
+        {
+            "name": "MAX_ORDER_QTY",
+            "type": "NUMBER",
+            "header": "MAX_ORDER_QTY"
+        },
+        {
+            "name": "MULTIPLIER_ORDER_QTY",
+            "type": "NUMBER",
+            "header": "MULTIPLIER_ORDER_QTY"
+        },
+        {
+            "name": "CREATE_BY",
+            "type": "USER_ID",
+            "update": "N"
+        },
+        {
+            "name": "CREATE_DTTM",
+            "type": "NOW",
+            "update": "N"
+        },
+        {
+            "name": "MODIFY_BY",
+            "type": "USER_ID"
+        },
+        {
+            "name": "MODIFY_DTTM",
+            "type": "NOW"
+        }
+    ]
+}

@@ -1,0 +1,97 @@
+{
+    "name": "TB_FP_ROUTE",
+    "useDefaultSchema": "N",
+    "deletes": [ "TB_FP_ROUTE" ],
+    "columns": [
+        {
+            "name": "ID",
+            "type": "ID",
+            "update": "N"
+        },
+        {
+            "name": "PLAN_SCOPE",
+            "unique": "Y",
+            "type": "STRING",
+            "header": "PLAN_SCOPE"
+        },
+        {
+            "name": "ROUTE_CD",
+            "unique": "Y",
+            "type": "STRING",
+            "header": "ROUTE_CD"
+        },
+        {
+            "name": "ROUTE_NM",
+            "type": "STRING",
+            "header": "ROUTE_NM"
+        },
+        {
+            "name": "ROUTE_GRP_CD",
+            "type": "STRING",
+            "header": "ROUTE_GRP_CD"
+        },
+        {
+            "name": "STAGE_CD",
+            "type": "STRING",
+            "header": "STAGE_CD"
+        },
+        {
+            "name": "CANDIDATE_PERIOD_CNT",
+            "type": "NUMBER",
+            "header": "CANDIDATE_PERIOD_CNT"
+        },
+        {
+            "name": "DIVIDE_TP_CD",
+            "type": "STRING",
+            "header": "DIVIDE_TP_CD"
+        },
+        {
+            "name": "BATCH_ROUTE_YN",
+            "type": "STRING",
+            "header": "BATCH_ROUTE_YN"
+        },
+        {
+            "name": "LAZY_JC_TIME_YN",
+            "type": "STRING",
+            "header": "LAZY_JC_TIME_YN"
+        },
+        {
+            "name": "LOT_SIZE_MIN",
+            "type": "NUMBER",
+            "header": "LOT_SIZE_MIN"
+        },
+        {
+            "name": "LOT_SIZE_MAX",
+            "type": "NUMBER",
+            "header": "LOT_SIZE_MAX"
+        },
+        {
+            "name": "LOT_SIZE_MULTIPLR",
+            "type": "NUMBER",
+            "header": "LOT_SIZE_MULTIPLR"
+        },
+        {
+            "name": "DESC_TXT",
+            "type": "STRING",
+            "header": "DESC_TXT"
+        },
+        {
+            "name": "CREATED_BY",
+            "type": "USER_ID",
+            "update": "N"
+        },
+        {
+            "name": "CREATED_AT",
+            "type": "NOW",
+            "update": "N"
+        },
+        {
+            "name": "UPDATED_BY",
+            "type": "USER_ID"
+        },
+        {
+            "name": "UPDATED_AT",
+            "type": "NOW"
+        }
+    ]
+}

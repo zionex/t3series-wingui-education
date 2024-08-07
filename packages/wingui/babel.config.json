@@ -1,0 +1,26 @@
+{
+  "presets": [
+    [
+      "@babel/preset-env",
+      {
+        "useBuiltIns": "usage",
+        "shippedProposals": true,
+        "corejs": 3,
+        "targets": {
+          "browsers": ["last 2 versions", "safari >= 7", "ie >= 7"]
+        }
+      }
+    ]
+  ],
+  "plugins": [
+    "@babel/syntax-dynamic-import",
+    "@babel/plugin-transform-async-generator-functions",
+    "@babel/plugin-transform-private-methods",
+    [
+      "@babel/plugin-proposal-class-properties",
+      {
+        "loose": false
+      }
+    ]
+  ]
+}

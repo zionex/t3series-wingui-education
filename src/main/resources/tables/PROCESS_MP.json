@@ -1,0 +1,173 @@
+{
+  "TABLES": [
+    {
+      "module": "MP",
+      "table": "TB_CM_ITEM_MST",
+      "langKey": "UI_CM_18",
+      "level": 1,
+      "step": 1,
+      "multiple": "Y",
+      "essential": "Y",
+      "importable": "Y"
+    },
+    {
+      "module": "MP",
+      "table": "TB_DP_ACCOUNT_MST",
+      "langKey": "UI_DP_11",
+      "level": 1,
+      "step": 2,
+      "multiple": "Y",
+      "essential": "Y",
+      "importable": "Y"
+    },
+    {
+      "module": "MP",
+      "table": "TB_IF_SITE",
+      "langKey": "UI_CM_02",
+      "level": 2,
+      "step": 1,
+      "multiple": "Y",
+      "essential": "Y",
+      "importable": "Y"
+    },
+    {
+      "module": "MP",
+      "table": "TB_IF_MTRL_CONST",
+      "langKey": "UI_MP_05",
+      "level": 2,
+      "step": 2,
+      "multiple": "Y",
+      "essential": "Y",
+      "importable": "Y"
+    },
+    {
+      "module": "MP",
+      "table": "TB_IF_BOM",
+      "langKey": "UI_CM_05",
+      "level": 2,
+      "step": 3,
+      "multiple": "Y",
+      "essential": "Y",
+      "importable": "Y"
+    },
+    {
+      "module": "MP",
+      "table": "TB_IF_SITE_ITEM",
+      "langKey": "UI_CM_04",
+      "level": 2,
+      "step": 4,
+      "multiple": "Y",
+      "essential": "Y",
+      "importable": "Y"
+    },
+    {
+      "module": "MP",
+      "table": "TB_IF_SHIP_LT",
+      "langKey": "UI_CM_07",
+      "level": 2,
+      "step": 5,
+      "multiple": "Y",
+      "essential": "Y",
+      "importable": "Y"
+    },
+    {
+      "module": "MP",
+      "table": "TB_IF_BOD",
+      "langKey": "UI_CM_06",
+      "level": 2,
+      "step": 6,
+      "multiple": "Y",
+      "essential": "Y",
+      "importable": "Y"
+    },
+    {
+      "module": "MP",
+      "table": "TB_IF_DMND_SHPP_MAP",
+      "langKey": "UI_CM_12",
+      "level": 2,
+      "step": 7,
+      "multiple": "Y",
+      "essential": "Y",
+      "importable": "Y"
+    },
+    {
+      "module": "MP",
+      "table": "TB_IF_RESOURCE",
+      "langKey": "UI_MP_06",
+      "level": 2,
+      "step": 8,
+      "multiple": "Y",
+      "essential": "Y",
+      "importable": "Y"
+    },
+    {
+      "module": "MP",
+      "table": "TB_IF_ROUTING",
+      "langKey": "UI_MP_38",
+      "level": 2,
+      "step": 9,
+      "multiple": "Y",
+      "essential": "Y",
+      "importable": "Y"
+    },
+    {
+      "module": "MP",
+      "table": "TB_IF_BOR",
+      "langKey": "UI_MP_BOR",
+      "level": 2,
+      "step": 10,
+      "multiple": "Y",
+      "essential": "Y",
+      "importable": "Y"
+    },
+    {
+      "module": "MP",
+      "table": "TB_IF_WAREHOUSE_STOCK",
+      "langKey": "UI_IM_12",
+      "level": 2,
+      "step": 11,
+      "multiple": "Y",
+      "essential": "Y",
+      "importable": "Y"
+    },
+    {
+      "module": "MP",
+      "table": "TB_IF_INTRANSIT_STOCK",
+      "langKey": "UI_IM_13",
+      "level": 2,
+      "step": 12,
+      "multiple": "Y",
+      "essential": "Y",
+      "importable": "Y"
+    },
+    {
+      "module": "MP",
+      "table": "TB_IF_MAT_SUPPLY_CALENDAR",
+      "langKey": "UI_MP_18_RST_CPT_01",
+      "level": 2,
+      "step": 13,
+      "multiple": "Y",
+      "essential": "Y",
+      "importable": "Y"
+    },
+    {
+      "module": "MP",
+      "table": "TB_IF_DEMAND",
+      "langKey": "UI_MP_19",
+      "level": 2,
+      "step": 14,
+      "multiple": "Y",
+      "essential": "Y",
+      "importable": "Y"
+    },
+    {
+      "module": "MP",
+      "level": 4,
+      "step": 1,
+      "type": "VALIDATION",
+      "url": "#/dataintegration/masterplan/validation",
+      "table": "TB_MP_VALIDATION",
+      "langKey": "UI_CM_DATA_VALIDATION"
+    }
+  ]
+}

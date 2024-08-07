@@ -1,0 +1,149 @@
+{
+    "name": "TB_IF_TARGET_INV_VERSION",
+    "useDefaultSchema": "Y",
+    "procedure": [{
+            "sequence": "1",
+            "method": "{call SP_UI_IM_TARGET_INV_BATCH(?, ?, ?, ?)}",
+            "description": "목표 재고 시뮬레이션"
+        }
+    ],
+    "columns": [{
+            "name": "SNRIO_DESCRIP",
+            "type": "STRING",
+            "header": "SNRIO_DESCRIP"
+        },
+        {
+            "name": "EVAL_STRT_DT",
+            "type": "STRING",
+            "header": "EVAL_STRT_DT"
+        },
+        {
+            "name": "EVAL_END_DT",
+            "type": "STRING",
+            "header": "EVAL_END_DT"
+        },
+        {
+            "name": "EVAL_UOM_CD",
+            "type": "STRING",
+            "header": "EVAL_UOM_CD"
+        },
+        {
+            "name": "CLASS_VER_CD",
+            "type": "STRING",
+            "header": "CLASS_VER_CD"
+        },
+        {
+            "name": "AX_POLICY_CD",
+            "type": "STRING",
+            "header": "AX_POLICY_CD"
+        },
+        {
+            "name": "AY_POLICY_CD",
+            "type": "STRING",
+            "header": "AY_POLICY_CD"
+        },
+        {
+            "name": "AZ_POLICY_CD",
+            "type": "STRING",
+            "header": "AZ_POLICY_CD"
+        },
+        {
+            "name": "BX_POLICY_CD",
+            "type": "STRING",
+            "header": "BX_POLICY_CD"
+        },
+        {
+            "name": "BY_POLICY_CD",
+            "type": "STRING",
+            "header": "BY_POLICY_CD"
+        },
+        {
+            "name": "BZ_POLICY_CD",
+            "type": "STRING",
+            "header": "BZ_POLICY_CD"
+        },
+        {
+            "name": "CX_POLICY_CD",
+            "type": "STRING",
+            "header": "CX_POLICY_CD"
+        },
+        {
+            "name": "CY_POLICY_CD",
+            "type": "STRING",
+            "header": "CY_POLICY_CD"
+        },
+        {
+            "name": "CZ_POLICY_CD",
+            "type": "STRING",
+            "header": "CZ_POLICY_CD"
+        },
+        {
+            "name": "AX_POLICY_VAL",
+            "type": "NUMBER",
+            "header": "AX_POLICY_VAL"
+        },
+        {
+            "name": "AY_POLICY_VAL",
+            "type": "NUMBER",
+            "header": "AY_POLICY_VAL"
+        },
+        {
+            "name": "AZ_POLICY_VAL",
+            "type": "NUMBER",
+            "header": "AZ_POLICY_VAL"
+        },
+        {
+            "name": "BX_POLICY_VAL",
+            "type": "NUMBER",
+            "header": "BX_POLICY_VAL"
+        },
+        {
+            "name": "BY_POLICY_VAL",
+            "type": "NUMBER",
+            "header": "BY_POLICY_VAL"
+        },
+        {
+            "name": "BZ_POLICY_VAL",
+            "type": "NUMBER",
+            "header": "BZ_POLICY_VAL"
+        },
+        {
+            "name": "CX_POLICY_VAL",
+            "type": "NUMBER",
+            "header": "CX_POLICY_VAL"
+        },
+        {
+            "name": "CY_POLICY_VAL",
+            "type": "NUMBER",
+            "header": "CY_POLICY_VAL"
+        },
+        {
+            "name": "CZ_POLICY_VAL",
+            "type": "NUMBER",
+            "header": "CZ_POLICY_VAL"
+        },
+        {
+            "name": "ACTV_YN",
+            "type": "STRING",
+            "header": "ACTV_YN"
+        },
+        {
+            "name": "CREATE_BY",
+            "type": "USER_ID",
+            "update": "N"
+        },
+        {
+            "name": "CREATE_DTTM",
+            "type": "NOW",
+            "update": "N"
+        },
+        {
+            "name": "MODIFY_BY",
+            "type": "USER_ID"
+        },
+        {
+            "name": "MODIFY_DTTM",
+            "type": "NOW"
+        }
+    ]
+}

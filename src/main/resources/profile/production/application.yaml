@@ -1,0 +1,150 @@
+spring:
+  profiles:
+    active: mssql
+  quartz:
+    auto-startup: false
+    job-store-type: jdbc
+    timezone: Asia/Seoul
+  datasource:
+    name: T3SERIES
+    hikari:
+      minimum-idle: 20
+      maximum-pool-size: 20
+      pool-name: SpringBootJPAHikariCP
+      idle-timeout: 10000
+      connection-timeout: 30000
+      validation-timeout: 5000
+      max-lifetime: 1800000
+  sql:
+    init:
+      mode: never
+  jpa:
+    open-in-view: false
+    hibernate:
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    properties:
+      hibernate:
+        id:
+          new_generator_mappings: false
+        proc:
+          param_null_passing: true
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 1024MB
+      max-request-size: 1024MB
+
+# logging:
+#   level:
+#     com.zaxxer.hikari.HikariConfig: DEBUG
+#     com.zaxxer.hikari: TRACE
+
+server:
+  port: 8080
+  compression:
+    enabled: true
+  tomcat:
+    max-http-form-post-size: 1024MB
+  error:
+    whitelabel:
+      enabled: false
+  servlet:
+    context-real-path:
+    context-path: /
+    session:
+      cookie:
+        name: T3SESSIONID
+
+app:
+  languages:
+    - en
+    - ja
+    - ko
+    - zh
+  authentication:
+    login-url: login
+    default-url: home
+    cors-allow-url:
+      - http://localhost:3000
+    cors-allow-path: /sso/**
+    password-policy:
+      usable-username: false
+      min-length: 8
+      max-repeat: 3
+      lcredit: 1
+      ucredit: 1
+      dcredit: 1
+      ocredit: 1
+    login-policy:
+      max-failure-count: 5
+      long-term-unvisited-days: 0
+      max-password-days: 0
+    account:
+      system-admins:
+        - admin
+    initial-password: T3SmartSCM!
+  service:
+    file:
+      external-path: C:/Wingui/
+      name: file
+      category:
+        system: system
+        noticeboard: noticeboard
+        temporary: temporary
+        excel: upload-excel
+        issue: issue
+        calendar: calendar
+      temporary-clean-fixed-rate: 86400000
+    mailing:
+      polling-rate: 50000
+      smtp:
+        host: 127.0.0.1
+        port: 25
+        username: 
+        password: 
+        encoding: UTF-8
+        mailagentip: nomail
+        protocols: TLSv1.2
+        trust: 
+  cache:
+    enable: true
+  session:
+    token-valid-timeout: 43200
+    timeout: 3600
+
+  # kafka-info:
+  #   enable: true
+  #   bootstrap-server:
+  #     - localhost:9092
+
+--- # MSSQL
+spring:
+  config:
+    activate:
+      on-profile: mssql
+  datasource:
+    url: jdbc:sqlserver://59.19.252.148:21433;database=T3SMARTSCM_EDUCATION
+    username: education1
+    password: T3SmartSCM_education!
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.SQLServer2012Dialect
+
+--- # ORACLE
+spring:
+  config:
+    activate:
+      on-profile: oracle
+  sql:
+    init:
+      platform: oracle
+  datasource:
+    url: jdbc:oracle:thin:@192.168.3.22:1521:zionex
+    username: T3SMARTSCM
+    password: T3SMARTSCM
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.Oracle12cDialect

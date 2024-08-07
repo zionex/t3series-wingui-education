@@ -1,0 +1,6 @@
+.grid-btn-disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+  background-color: #EEEEEE;
+  pointer-events: none;
+}

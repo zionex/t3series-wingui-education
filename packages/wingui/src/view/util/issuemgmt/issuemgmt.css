@@ -1,0 +1,24 @@
+.issueCloseStatus {
+  color: gainsboro;
+}
+
+.issueOpenStatus {
+  font-weight:800;
+  color: crimson
+}
+
+.issue-mgmt .rg-root .rg-table tbody tr {
+  height: 35px;
+}
+
+.issue-mgmt .rg-data-row {
+  height: 35px;
+}
+
+#contentInner-UI_UT_ISSUE_MGMT {
+  margin-top: 10px
+}
+
+#contentInner-UI_UT_ISSUE_MGMT .wingui-pagination {
+  margin: 10px 0 36px 0;
+}

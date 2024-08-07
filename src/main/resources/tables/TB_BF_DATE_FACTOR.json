@@ -1,0 +1,58 @@
+{
+    "name": "TB_BF_DATE_FACTOR",
+    "useDefaultSchema": "Y",
+    "columns": [{
+            "name": "ID",
+            "type": "ID",
+            "update": "N"
+        },
+        {
+            "name": "BASE_DATE",
+            "unique": "Y",
+            "type": "DATE",
+            "header": "BASE_DATE"
+        },
+        {
+            "name": "FACTOR1",
+            "type": "NUMBER",
+            "header": "FACTOR1"
+        },
+        {
+            "name": "FACTOR2",
+            "type": "NUMBER",
+            "header": "FACTOR2"
+        },
+        {
+            "name": "FACTOR3",
+            "type": "NUMBER",
+            "header": "FACTOR3"
+        },
+        {
+            "name": "FACTOR4",
+            "type": "NUMBER",
+            "header": "FACTOR4"
+        },
+        {
+            "name": "FACTOR5",
+            "type": "NUMBER",
+            "header": "FACTOR5"
+        },        {
+            "name": "CREATE_BY",
+            "type": "USER_ID",
+            "update": "N"
+        },
+        {
+            "name": "CREATE_DTTM",
+            "type": "NOW",
+            "update": "N"
+        },
+        {
+            "name": "MODIFY_BY",
+            "type": "USER_ID"
+        },
+        {
+            "name": "MODIFY_DTTM",
+            "type": "NOW"
+        }
+    ]
+}

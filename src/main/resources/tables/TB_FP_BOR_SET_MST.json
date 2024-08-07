@@ -1,0 +1,47 @@
+{
+    "name": "TB_FP_BOR_SET_MST",
+    "useDefaultSchema": "N",
+    "deletes": [ "TB_FP_BOR_SET_MST" ],
+    "columns": [
+        {
+            "name": "ID",
+            "type": "ID",
+            "update": "N"
+        },
+        {
+            "name": "PLAN_SCOPE",
+            "unique": "Y",
+            "type": "STRING",
+            "header": "PLAN_SCOPE"
+        },
+        {
+            "name": "BOR_SET_CD",
+            "unique": "Y",
+            "type": "STRING",
+            "header": "BOR_SET_CD"
+        },
+        {
+            "name": "DESC_TXT",
+            "type": "STRING",
+            "header": "DESC_TXT"
+        },
+        {
+            "name": "CREATED_BY",
+            "type": "USER_ID",
+            "update": "N"
+        },
+        {
+            "name": "CREATED_AT",
+            "type": "NOW",
+            "update": "N"
+        },
+        {
+            "name": "UPDATED_BY",
+            "type": "USER_ID"
+        },
+        {
+            "name": "UPDATED_AT",
+            "type": "NOW"
+        }
+    ]
+}

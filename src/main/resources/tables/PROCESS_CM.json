@@ -1,0 +1,143 @@
+{
+  "TABLES": [
+    {
+      "module": "CM",
+      "level": 1,
+      "step": 1,
+      "table": "TB_AD_COMN_GRP",
+      "langKey": "COMMON_CODE_GROUP",
+      "multiple": "Y",
+      "essential": "Y",
+      "importable": "N"
+    },
+    {
+      "module": "CM",
+      "level": 1,
+      "step": 2,
+      "table": "TB_AD_COMN_CODE",
+      "langKey": "UI_AD_01",
+      "multiple": "Y",
+      "essential": "Y",
+      "importable": "N"
+    },
+    {
+      "module": "CM",
+      "level": 1,
+      "step": 3,
+      "table": "TB_CM_CONFIGURATION",
+      "langKey": "UI_CM_CONFIG",
+      "multiple": "Y",
+      "essential": "Y",
+      "importable": "N"
+    },
+    {
+      "module": "CM",
+      "level": 1,
+      "step": 4,
+      "table": "TB_CM_COMM_CONFIG",
+      "langKey": "UI_CM_CONFIG_DETAIL",
+      "multiple": "Y",
+      "essential": "Y",
+      "importable": "N"
+    },
+    {
+      "module": "CM",
+      "level": 1,
+      "step": 5,
+      "table": "TB_CM_CALENDAR",
+      "langKey": "UI_CM_CALENDAR",
+      "multiple": "Y",
+      "essential": "Y",
+      "importable": "N"
+    },
+    {
+      "module": "CM",
+      "level": 1,
+      "step": 6,
+      "table": "TB_CM_CHANNEL_TYPE",
+      "langKey": "UI_CM_CHANNEL_TP",
+      "multiple": "Y",
+      "essential": "Y",
+      "importable": "N"
+    },
+    {
+      "module": "CM",
+      "level": 1,
+      "step": 7,
+      "table": "TB_CM_UOM",
+      "langKey": "UI_CM_UOM",
+      "multiple": "Y",
+      "essential": "Y",
+      "importable": "N"
+    },
+    {
+      "module": "CM",
+      "level": 2,
+      "step": 1,
+      "table": "TB_CM_LEVEL_MGMT",
+      "langKey": "UI_DP_02",
+      "multiple": "Y",
+      "essential": "Y",
+      "importable": "N"
+    },
+    {
+      "module": "CM",
+      "level": 2,
+      "step": 2,
+      "table": "TB_CM_ITEM_LEVEL_MGMT",
+      "langKey": "UI_DP_08",
+      "multiple": "N",
+      "essential": "Y",
+      "importable": "Y"
+    },
+    {
+      "module": "CM",
+      "level": 2,
+      "step": 3,
+      "table": "TB_CM_ITEM_MST",
+      "langKey": "UI_DP_09",
+      "multiple": "Y",
+      "essential": "Y",
+      "importable": "Y"
+    },
+    {
+      "module": "CM",
+      "table": "TB_DP_SALES_LEVEL_MGMT",
+      "langKey": "UI_DP_10",
+      "level": 2,
+      "step": 4,
+      "multiple": "N",
+      "essential": "Y",
+      "importable": "Y"
+    },
+    {
+      "module": "CM",
+      "table": "TB_DP_ACCOUNT_MST",
+      "langKey": "UI_DP_11",
+      "level": 2,
+      "step": 5,
+      "multiple": "Y",
+      "essential": "Y",
+      "importable": "Y"
+    },
+    {
+      "module": "CM",
+      "table": "TB_CM_ACTUAL_SALES",
+      "langKey": "UI_DP_42",
+      "level": 2,
+      "step": 6,
+      "multiple": "Y",
+      "essential": "Y",
+      "importable": "Y"
+    },
+    {
+      "module": "CM",
+      "level": 3,
+      "step": 1,
+      "type": "VALIDATION",
+      "url": "#/dataintegration/masterplan/validation",
+      "table": "TB_MP_VALIDATION",
+      "langKey": "UI_CM_DATA_VALIDATION"
+    }
+  ]
+}

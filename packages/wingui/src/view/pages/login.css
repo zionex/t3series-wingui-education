@@ -1,0 +1,11 @@
+.login-main {
+  display: flex;
+  width: 100vw;
+  min-width: 0;
+  height: 100vh;
+  /* min-height: 100vh; */
+  transition: margin-left .35s ease-in-out, left .35s ease-in-out, margin-right .35s ease-in-out, right .35s ease-in-out;
+  /*background: #fff;*/
+  flex-direction: column;
+  overflow: hidden;
+}
