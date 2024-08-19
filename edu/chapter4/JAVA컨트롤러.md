@@ -1,6 +1,7 @@
 ## Java controller
 **샘플 파일명:**  `Practice02.jsx`,`PracticeController.java`
 
+>이 샘플에서는 Java 컨트롤러에서 저장 프로시저(SP)와 SQL 쿼리문을 호출하는 방법을 실습해볼 수 있습니다. SQL 쿼리문 호출 시 반드시 PreparedStatement를 사용해야 합니다. 또한, queryHandler의 save 메서드는 P_RT_ROLLBACK_FLAG와 P_RT_MSG 두 가지 OUTPUT 파라미터를 기본으로 포함하고 있으므로, 저장 프로시저에서도 이를 구현해야 합니다.
 
 ### 실행권한 체크 
  - ExecPermission annotation 사용 

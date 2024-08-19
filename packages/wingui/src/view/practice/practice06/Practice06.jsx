@@ -207,14 +207,12 @@ function Practice06() {
   }
   
   const confirmNamePopup = (dataRows) => {
-    console.log(dataRows);
     let itemIndex = grid1.gridView.getCurrent().itemIndex;
     grid1.gridView.beginUpdateRow();  
     grid1.gridView.setValue(itemIndex, "KORNAME", dataRows[0].NAME);
   }
 
   const confirmNamePopup2 = (dataRows) => {
-    console.log(dataRows);
     setValue('action', dataRows[0].NAME);
   }
 

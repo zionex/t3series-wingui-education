@@ -1,7 +1,9 @@
 ## Inputs
-**샘플 파일명:**  `Sample06.jsx`
+>솔루션에서 사용하는 다양한 input 스타일들을 모아 놓았습니다.
 
-- input type : text, number, select, multiSelect, autocomplete, check, radio, datetime, time, dataeRange, popover, action, custom
+**파일명:**  `Sample06.jsx`
+
+- type : text, number, select, multiSelect, autocomplete, check, radio, datetime, time, dataeRange, popover, action, custom
 
 ### input type
 #### 1. text: **텍스트 입력 (Text Input)**
@@ -14,18 +16,18 @@
 - **설명**: 입력 필드에 버튼을 포함하여 특정 작업을 실행할 수 있는 필드입니다. 
 
 #### 4. select: **선택 입력 (Select Input)**
-- **설명**: 드롭다운 메뉴를 통해 여러 옵션 중 하나를 선택할 수 있는 필드입니다.
+- **설명**: 드롭다운 메뉴를 통해 여러 옵션 중 하나를 선택할 수 있는 필드입니다. 특정 옵션에 색을 표시하는 등의 `스타일 추가`가 필요할때는 class 를 통해 제어할 수 있습니다. (샘플에 구현 되어있음)
 
 #### 5. autocomplete: **자동 완성 입력 (AutoComplete)**
 - **설명**: 사용자가 입력을 시작하면 추천 옵션을 제공하는 입력 필드입니다.
 
 #### 6. multiSelect: **다중 선택 입력 (MultiSelect)**
-- **설명**: 여러 개의 항목을 동시에 선택할 수 있는 필드입니다.
+- **설명**: 여러 개의 항목을 동시에 선택할 수 있는 필드입니다. value 값이 배열 형태 입니다.
 - props
   - max: 선택 갯수 제한
 
 #### 7. datetime, daterange, time: **날짜 및 시간 입력 (DateTime, DateRange)**
-- **설명**: 날짜, 시간 또는 날짜 범위를 선택할 수 있는 입력 필드입니다.
+- **설명**: 날짜, 시간 또는 날짜 범위를 선택할 수 있는 입력 필드입니다. 
 
 #### 8. check: **체크박스 입력 (Checkbox)**
 - **설명**: 여러 개의 옵션 중 원하는 항목을 선택할 수 있는 체크박스 형태의 필드입니다.

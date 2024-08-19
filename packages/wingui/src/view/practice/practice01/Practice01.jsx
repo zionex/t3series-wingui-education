@@ -12,6 +12,7 @@ let grid1Items = [
       {name: "GENDER", dataType: "text", headerText :"GENDER" , visible: true, editable: true, width: 100, useDropdown: true, lookupDisplay: true},
     ]
   },
+  {name: "MODULE_CD", dataType: "text", headerText :"MODULE_CD" , visible: true, editable: true, width: 100, useDropdown: true, lookupDisplay: true},
   {name: "AGE", dataType: "number", headerText :"AGE" , visible: true, editable: true, width: 100},
   {name: "PHONE", dataType: "text", headerText :"PHONE" , visible: true, editable: true, width: 100},
   {name: "PRODUCTID", dataType: "text", headerText :"PRODUCTID" , visible: false, editable: true, width: 100},
@@ -30,6 +31,7 @@ function Practice01() {
 
   // SearchArea
   const [genderOption, setGenderOption] = useState([]);
+  const [moduleCdOption, setModuleCdOption] = useState([]);
 
   // grid
   const [grid1, setGrid1] = useState(null);
@@ -79,15 +81,15 @@ function Practice01() {
     setValue("gender", genderArr.length > 0 ? genderArr[0].value : "");
 
     //db 호출
-    const plant = await loadComboList({
-      PROCEDURE_NAME: "SP_AK_COMM_SRH_COMBO_LIST_Q",
+    const moduleArr = await loadComboList({
+      PROCEDURE_NAME: "SP_COMM_SRH_COMBO_LIST_Q",
       URL: "common/data",
       CODE_KEY: "CODE",
       CODE_VALUE: "NAME",
       PARAM: {
-        P_CODE: "AK_CM_PLANT", 
+        P_CODE: "MODULE_TP", 
         P_ALL_GBN: "",
-        P_ATTR1: "Y",
+        P_ATTR1: "",
         P_ATTR2: "",
         P_ATTR3: "",
         P_ATTR4: "",
@@ -95,8 +97,8 @@ function Practice01() {
       },
     });
 
-    setPlantCdOption(plant);
-    setValue("gender2", plant.length > 0 ? plant[0].value : "");
+    setModuleCdOption(moduleArr);
+    setValue("module", moduleArr.length > 0 ? moduleArr[0].value : "");
   };
 
 
@@ -119,13 +121,12 @@ function Practice01() {
       URL: "common/data",
       CODE_VALUE: "CODE",
       CODE_LABEL: "NAME",
-      COLUMN: "PLNT_CD",
+      COLUMN: "MODULE_CD",
       PROP: "lookupData",
-      PARAM_KEY: ["PROCEDURE_NAME", "P_CODE", "P_ATTR1"],
-      PARAM_VALUE: ["SP_AK_COMM_SRH_COMBO_LIST_Q", "AK_CM_PLANT", "Y"],
+      PARAM_KEY: ["PROCEDURE_NAME", "P_CODE"],
+      PARAM_VALUE: ["SP_COMM_SRH_COMBO_LIST_Q", "MODULE_TP"],
       TRANSLANG_LABEL: false,
     });
-
   };
 
   const afterGrid1Create = (gridObj, gridView, dataProvider) => {
@@ -229,6 +230,7 @@ function Practice01() {
     <ContentInner>
       <SearchArea>
         <InputField type="select" name="gender" control={control} label={transLangKey('GENDER')} options={genderOption} />
+        <InputField type="select" name="module" control={control} label={transLangKey('MODULE_CD')} options={moduleCdOption} />
         <InputField type="datetime" name="startDt" control={control} label={transLangKey('START_DT')} dateformat="yyyy-MM-dd"/>
       </SearchArea>
       <WorkArea>
