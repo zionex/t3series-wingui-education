@@ -110,7 +110,7 @@ function Practice03() {
         value: "CODE",
         label: "NAME",
         list: [
-          {NAME: "전체", vaCODElue: "ALL"},
+          {NAME: "전체", CODE: "ALL"},
           {NAME: "남자", CODE: "남"},
           {NAME: "여자", CODE: "여"},
         ]

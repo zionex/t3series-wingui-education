@@ -33,6 +33,7 @@ function Practice04() {
 
   // SearchArea
   const [genderOption, setGenderOption] = useState([]);
+  const [moduleCdOption, setModuleCdOption] = useState([]);
 
   // grid
   const [grid1, setGrid1] = useState(null);
@@ -112,7 +113,7 @@ function Practice04() {
         value: "CODE",
         label: "NAME",
         list: [
-          {NAME: "전체", vaCODElue: "ALL"},
+          {NAME: "전체", CODE: "ALL"},
           {NAME: "남자", CODE: "남"},
           {NAME: "여자", CODE: "여"},
         ]
