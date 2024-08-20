@@ -167,3 +167,69 @@ function setCrossTabGridData(dateHeaders, data) {
 }
 ```
  
+#### pivot 저장
+
+- **`getUpdatedCells`** : 지정된 행의 수정된 셀 데이터들을 확인한다.
+
+
+```javascript
+function saveData() {
+    grid1.gridView.commit(true);
+    showMessage(transLangKey('MSG_CONFIRM'), transLangKey('MSG_SAVE'), function (answer) {
+    if (answer) {
+      let changeRowData = [];
+      let changes = [];
+
+      changes = changes.concat(
+        grid1.dataProvider.getAllStateRows().created,
+        grid1.dataProvider.getAllStateRows().updated,
+        grid1.dataProvider.getAllStateRows().deleted,
+        grid1.dataProvider.getAllStateRows().createAndDeleted
+      );
+
+      changes.forEach(function (row) {
+        let data = grid1.dataProvider.getJsonRow(row);
+        changeRowData.push(data);
+      });
+
+      if (changeRowData.length === 0) {
+        //저장 할 내용이 없습니다.
+        showMessage(transLangKey('MSG_CONFIRM'), transLangKey('MSG_5039'), { close: false });
+      } else {
+        if (answer) {
+          let arrUpdateData = [];
+          if(changes.length > 0){
+            changes.forEach(function (row) {
+              let rowData = grid1.dataProvider.getJsonRow(row);
+              const updatedCells = grid1.dataProvider.getUpdatedCells([row]);
+              let headerGrps = [];
+              updatedCells.map(cellRow => {
+                const cells = cellRow.updatedCells
+                cells.map(field => {
+                  let date = field.fieldName;
+                  if(headerGrps.indexOf(date) == -1) {
+                    headerGrps.push(date);
+                  }
+                });
+              });
+
+              headerGrps.map(field => {
+                let updData = {
+                  PLANT_ID: rowData['PLANT_ID'],
+                  DEMAND_ID: rowData['DEMAND_ID'],
+                  ROUTE_CODE: rowData['ROUTE_CODE'],
+                  RESOURCE_CODE: rowData['RESOURCE_CODE'],
+                  BASE_DATE: field,
+                  QTY: rowData[field],
+                }; 
+                arrUpdateData.push(updData);
+              });
+            });
+          }
+          console.log("arrUpdateData", arrUpdateData);
+        }
+      }
+    }
+    });
+  }
+```
