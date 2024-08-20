@@ -53,6 +53,7 @@ function Practice09() {
     
     if(grid1){
       loadGridCombo(); 
+      setLookups();
       loadData();
     }
   }, [grid1]);
@@ -89,8 +90,6 @@ function Practice09() {
           }
       };
     };
-
-    setLookups(gridObj)
   };
 
 
