@@ -115,7 +115,17 @@ const loadData = () => {
 };
 ```
  
-- **`zAxios`** : axiso 기반으로 만든 서버에 요청을 보내는 비동기 함수입니다.
+- **`zAxios`** : axios 기반으로 만든 서버에 요청을 보내는 비동기 함수입니다.
+  - <u>waitOn: false, 옵션을 추가하면 progress 가 나타나지 않습니다.</u>
+  ```javascript
+  zAxios({
+    method: 'post',
+    header: { 'content-type': 'application/json' },
+    url: baseURI() + 'practice/q3',  // 요청을 보낼 서버 URL
+    data: param,
+    waitOn: false
+  })
+  ```
   
 2. 동적 컬럼 생성 (`makeCrossTabFieldsAndColumns` 함수)** 
 이 함수는 서버로부터 받아온 헤더 데이터를 기반으로 그리드에 동적 컬럼을 추가합니다. 각 날짜별로 새로운 컬럼을 생성하고, 그 컬럼을 그리드에 추가합니다.
