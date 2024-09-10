@@ -1,0 +1,310 @@
+<!DOCTYPE HTML>
+<html lang="ko" class="light" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>realgrid event - T³SmartSCM UI Education</title>
+
+
+        <!-- Custom HTML head -->
+        
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+    </head>
+    <body class="sidebar-visible no-js">
+    <div id="body-container">
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('light')
+            html.classList.add(theme);
+            var body = document.querySelector('body');
+            body.classList.remove('no-js')
+            body.classList.add('js');
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var body = document.querySelector('body');
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            body.classList.remove('sidebar-visible');
+            body.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded "><a href="../chapter1/사전지식.html"><strong aria-hidden="true">1.</strong> 사전 지식</a></li><li class="chapter-item expanded affix "><li class="part-title">개발 표준</li><li class="chapter-item expanded "><a href="../chapter2/indentation.html"><strong aria-hidden="true">2.</strong> indentation</a></li><li class="chapter-item expanded "><a href="../chapter2/파일및폴더구조가이드라인.html"><strong aria-hidden="true">3.</strong> 파일 및 폴더구조</a></li><li class="chapter-item expanded affix "><li class="part-title">화면 구성</li><li class="chapter-item expanded "><a href="../chapter3/레이아웃.html"><strong aria-hidden="true">4.</strong> 레이아웃 구성</a></li><li class="chapter-item expanded "><a href="../chapter3/INPUTS.html"><strong aria-hidden="true">5.</strong> InputField</a></li><li class="chapter-item expanded "><a href="../chapter3/Tab.html"><strong aria-hidden="true">6.</strong> Tab</a></li><li class="chapter-item expanded "><a href="../chapter3/Dashboard.html"><strong aria-hidden="true">7.</strong> Dashboard</a></li><li class="chapter-item expanded affix "><li class="part-title">튜토리얼</li><li class="chapter-item expanded "><a href="../chapter4/메뉴생성및연결.html"><strong aria-hidden="true">8.</strong> 메뉴생성 및 연결</a></li><li class="chapter-item expanded "><a href="../chapter4/그리드생성및데이터불러오기.html"><strong aria-hidden="true">9.</strong> 그리드 생성 및 데이터 불러오기</a></li><li class="chapter-item expanded "><a href="../chapter4/JAVA컨트롤러.html"><strong aria-hidden="true">10.</strong> Java Controller</a></li><li class="chapter-item expanded "><a href="../chapter4/리얼그리드이벤트.html" class="active"><strong aria-hidden="true">11.</strong> realgrid event</a></li><li class="chapter-item expanded "><a href="../chapter4/CRUD.html"><strong aria-hidden="true">12.</strong> CRUD</a></li><li class="chapter-item expanded "><a href="../chapter4/pivot그리드.html"><strong aria-hidden="true">13.</strong> pivot그리드</a></li><li class="chapter-item expanded "><a href="../chapter4/팝업.html"><strong aria-hidden="true">14.</strong> 팝업</a></li><li class="chapter-item expanded "><a href="../chapter4/유효성검사.html"><strong aria-hidden="true">15.</strong> 유효성 검사</a></li><li class="chapter-item expanded "><a href="../chapter4/차트.html"><strong aria-hidden="true">16.</strong> 차트</a></li><li class="chapter-item expanded "><a href="../chapter4/다국어.html"><strong aria-hidden="true">17.</strong> 다국어</a></li><li class="chapter-item expanded "><a href="../chapter4/LookupTree.html"><strong aria-hidden="true">18.</strong> LookupTree</a></li><li class="chapter-item expanded affix "><li class="part-title">build</li><li class="chapter-item expanded "><a href="../chapter6/build.html"><strong aria-hidden="true">19.</strong> build</a></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <!-- Track and set sidebar scroll position -->
+        <script>
+            var sidebarScrollbox = document.querySelector('#sidebar .sidebar-scrollbox');
+            sidebarScrollbox.addEventListener('click', function(e) {
+                if (e.target.tagName === 'A') {
+                    sessionStorage.setItem('sidebar-scroll', sidebarScrollbox.scrollTop);
+                }
+            }, { passive: true });
+            var sidebarScrollTop = sessionStorage.getItem('sidebar-scroll');
+            sessionStorage.removeItem('sidebar-scroll');
+            if (sidebarScrollTop) {
+                // preserve sidebar scroll position when navigating via links within sidebar
+                sidebarScrollbox.scrollTop = sidebarScrollTop;
+            } else {
+                // scroll sidebar to current active section when navigating via "next/previous chapter" buttons
+                var activeSection = document.querySelector('#sidebar .active');
+                if (activeSection) {
+                    activeSection.scrollIntoView({ block: 'center' });
+                }
+            }
+        </script>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">T³SmartSCM UI Education</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h2 id="realgrid-event"><a class="header" href="#realgrid-event">realgrid event</a></h2>
+<p><strong>샘플 파일명:</strong>  <code>Practice03.jsx</code>, <code>Practice03.css</code></p>
+<ul>
+<li>개발자 도구를 키고 console 탭을 확인하면 그리드 동작 이벤트마다 console이 찍히는 것을 확인할 수 있습니다.</li>
+<li>보통 Master Detail 구조의 grid 에서는 detail grid데이터를 master grid의  onCellClicked 이벤트로 구현합니다.</li>
+<li><U>dataProvider 와 gridView 의 차이점을 반드시 아셔야합니다. 아래 링크를 꼭 확인해주세요. </U></li>
+</ul>
+<pre><code>dataRow = data 고유의 row id 
+itemIndex = 화면에서 보이는 현재 id (정렬이나 필터에 따라 달라질 수 있음)
+itemIndex ---------- gridView
+dataRow ----------- dataProvider
+
+# 올바른 사용법
+dataProvider.getValue(index.itemIndex, "컬럼명") 
+gridView.getValue(index.dataRow, "컬럼명")
+
+# 틀린사용법
+dataProvider.getValue(index.itemIndex, "컬럼명") (틀린 사용법)
+gridView.getValue(index.dataRow, "컬럼명") (틀린 사용법)
+</code></pre>
+<ul>
+<li>
+<p><a href="https://help.realgrid.com/tutorial/a11/">Data와 Item의 다른점</a></p>
+</li>
+<li>
+<p><a href="https://docs.realgrid.com/guides/events/event-order">이벤트 발생 순서</a></p>
+</li>
+<li>
+<p><a href="https://docs.realgrid.com/guides/events/click-event">클릭 이벤트</a></p>
+</li>
+<li>
+<p><a href="https://docs.realgrid.com/guides/events/data-load-complete">렌더링 완료 이벤트</a></p>
+</li>
+<li>
+<p><U>리얼 그리드 기능 자체에 대한 건 리얼 그리드 홈페이지 및 고객지원센터를 적극 활용하시면 됩니다.</U></p>
+</li>
+<li>
+<p><a href="https://support.realgrid.com/">리얼그리드 고객지원</a></p>
+</li>
+</ul>
+<h3 id="realgrid-stylecallback-이벤트와-css-설정"><a class="header" href="#realgrid-stylecallback-이벤트와-css-설정">realgrid styleCallback 이벤트와 css 설정</a></h3>
+<ul>
+<li>styleCallback: 스타일을 지정하기 위한 콜백
+StyleCallback을 지정하면, 기본 스타일 외의 다른 스타일들이 초기화되어 스타일을 다시 지정해야 합니다. StyleCallback을 통해 지정하는 스타일은 클래스(class) 방식으로만 적용할 수 있습니다. React에서 클래스(class)를 지정할 때, CacheRoute 방식 때문에 다른 화면에 영향을 미칠 수 있으므로, CSS를 작성할 때 #화면아이디 .className {} 형태로 구성해야 합니다. css파일은 보통 화면파일명과 동일하게 설정합니다.
+#화면아이디 는 #contentInner-activeViewId(메뉴ID) 입니다.</li>
+</ul>
+<pre><code class="language-css">#contentInner-UI_PRACTICE_03 .red {
+  color: #fa0017;
+}
+</code></pre>
+<ul>
+<li>
+<p>리얼 그리드의 기본 정렬은 <strong>가운데 정렬</strong> 입니다. 아래 설정들은 dataType 에 따라 정렬 설정을 해주기 위해 wingui 에서 커스텀으로 만든 class 입니다.</p>
+<ul>
+<li>
+<p><strong>숫자:</strong> 오른쪽 정렬  <code>column-textAlign-far</code></p>
+</li>
+<li>
+<p><strong>텍스트:</strong>  왼쪽 정렬 <code>column-textAlign-near</code></p>
+</li>
+<li>
+<p><strong>수정 가능:</strong>  <code>editable-column</code></p>
+</li>
+</ul>
+</li>
+<li>
+<p><U>리얼 그리드의 styleCallback 라는 기능을 사용하여 style class 를 추가할때 wingui 커스텀 class가 <code>초기화</code> 되므로 타입과 editable 여부에 따라 <code>재지정</code> 해줘야합니다.</U></p>
+</li>
+</ul>
+<pre><code class="language-javascript">{name: "AGE", dataType: "number", headerText :"AGE" , visible: true, editable: true, width: 100,
+    styleCallback: function (grid, dataCell) {
+      let ret = {};
+      let age = grid.getValue(dataCell.index.itemIndex, "AGE");
+      if(age &gt; 40){
+        ret.styleName = `${dataCell.dataColumn.styleName} red`;
+        ret.editable = true;
+      }else{
+        ret.editable = false;
+      }
+      return ret;
+    }
+  }, 
+</code></pre>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../chapter4/JAVA컨트롤러.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../chapter4/CRUD.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../chapter4/JAVA컨트롤러.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../chapter4/CRUD.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

@@ -1,0 +1,461 @@
+<!DOCTYPE HTML>
+<html lang="ko" class="light" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>사전 지식 - T³SmartSCM UI Education</title>
+
+
+        <!-- Custom HTML head -->
+        
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+    </head>
+    <body class="sidebar-visible no-js">
+    <div id="body-container">
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('light')
+            html.classList.add(theme);
+            var body = document.querySelector('body');
+            body.classList.remove('no-js')
+            body.classList.add('js');
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var body = document.querySelector('body');
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            body.classList.remove('sidebar-visible');
+            body.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded "><a href="../chapter1/사전지식.html" class="active"><strong aria-hidden="true">1.</strong> 사전 지식</a></li><li class="chapter-item expanded affix "><li class="part-title">개발 표준</li><li class="chapter-item expanded "><a href="../chapter2/indentation.html"><strong aria-hidden="true">2.</strong> indentation</a></li><li class="chapter-item expanded "><a href="../chapter2/파일및폴더구조가이드라인.html"><strong aria-hidden="true">3.</strong> 파일 및 폴더구조</a></li><li class="chapter-item expanded affix "><li class="part-title">화면 구성</li><li class="chapter-item expanded "><a href="../chapter3/레이아웃.html"><strong aria-hidden="true">4.</strong> 레이아웃 구성</a></li><li class="chapter-item expanded "><a href="../chapter3/INPUTS.html"><strong aria-hidden="true">5.</strong> InputField</a></li><li class="chapter-item expanded "><a href="../chapter3/Tab.html"><strong aria-hidden="true">6.</strong> Tab</a></li><li class="chapter-item expanded "><a href="../chapter3/Dashboard.html"><strong aria-hidden="true">7.</strong> Dashboard</a></li><li class="chapter-item expanded affix "><li class="part-title">튜토리얼</li><li class="chapter-item expanded "><a href="../chapter4/메뉴생성및연결.html"><strong aria-hidden="true">8.</strong> 메뉴생성 및 연결</a></li><li class="chapter-item expanded "><a href="../chapter4/그리드생성및데이터불러오기.html"><strong aria-hidden="true">9.</strong> 그리드 생성 및 데이터 불러오기</a></li><li class="chapter-item expanded "><a href="../chapter4/JAVA컨트롤러.html"><strong aria-hidden="true">10.</strong> Java Controller</a></li><li class="chapter-item expanded "><a href="../chapter4/리얼그리드이벤트.html"><strong aria-hidden="true">11.</strong> realgrid event</a></li><li class="chapter-item expanded "><a href="../chapter4/CRUD.html"><strong aria-hidden="true">12.</strong> CRUD</a></li><li class="chapter-item expanded "><a href="../chapter4/pivot그리드.html"><strong aria-hidden="true">13.</strong> pivot그리드</a></li><li class="chapter-item expanded "><a href="../chapter4/팝업.html"><strong aria-hidden="true">14.</strong> 팝업</a></li><li class="chapter-item expanded "><a href="../chapter4/유효성검사.html"><strong aria-hidden="true">15.</strong> 유효성 검사</a></li><li class="chapter-item expanded "><a href="../chapter4/차트.html"><strong aria-hidden="true">16.</strong> 차트</a></li><li class="chapter-item expanded "><a href="../chapter4/다국어.html"><strong aria-hidden="true">17.</strong> 다국어</a></li><li class="chapter-item expanded "><a href="../chapter4/LookupTree.html"><strong aria-hidden="true">18.</strong> LookupTree</a></li><li class="chapter-item expanded affix "><li class="part-title">build</li><li class="chapter-item expanded "><a href="../chapter6/build.html"><strong aria-hidden="true">19.</strong> build</a></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <!-- Track and set sidebar scroll position -->
+        <script>
+            var sidebarScrollbox = document.querySelector('#sidebar .sidebar-scrollbox');
+            sidebarScrollbox.addEventListener('click', function(e) {
+                if (e.target.tagName === 'A') {
+                    sessionStorage.setItem('sidebar-scroll', sidebarScrollbox.scrollTop);
+                }
+            }, { passive: true });
+            var sidebarScrollTop = sessionStorage.getItem('sidebar-scroll');
+            sessionStorage.removeItem('sidebar-scroll');
+            if (sidebarScrollTop) {
+                // preserve sidebar scroll position when navigating via links within sidebar
+                sidebarScrollbox.scrollTop = sidebarScrollTop;
+            } else {
+                // scroll sidebar to current active section when navigating via "next/previous chapter" buttons
+                var activeSection = document.querySelector('#sidebar .active');
+                if (activeSection) {
+                    activeSection.scrollIntoView({ block: 'center' });
+                }
+            }
+        </script>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">T³SmartSCM UI Education</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h2 id="wingui"><a class="header" href="#wingui">wingui</a></h2>
+<ul>
+<li><a href="https://url.kr/w25r2c">Wingui Introduction</a></li>
+<li><a href="https://url.kr/53idnd">Wingui Design Guide</a></li>
+</ul>
+<h2 id="react"><a class="header" href="#react">React</a></h2>
+<h3 id="개요"><a class="header" href="#개요">개요</a></h3>
+<p>Facebook에서 개발한 오픈 소스 JavaScript 라이브러리. 사용자 인터페이스 구축에 사용. 컴포넌트 기반 아키텍처 제공, UI를 작은 재사용 가능한 컴포넌트로 나눌 수 있음.</p>
+<h3 id="기존-ui-개발과의-차이점"><a class="header" href="#기존-ui-개발과의-차이점">기존 UI 개발과의 차이점</a></h3>
+<ol>
+<li>
+<p><strong>컴포넌트 기반 아키텍처</strong> : UI를 독립적이고 재사용 가능한 컴포넌트로 분할하여 관리.</p>
+</li>
+<li>
+<p><strong>Virtual DOM</strong> : 실제 DOM을 직접 조작하는 대신, Virtual DOM을 사용하여 변경사항을 메모리에서 먼저 처리한 후 최소한의 변경만 실제 DOM에 적용. 성능 최적화.</p>
+</li>
+<li>
+<p><strong>단방향 데이터 흐름</strong> : 데이터는 부모에서 자식 컴포넌트로 단방향으로 흐름. 데이터 변화 예측 가능하고 디버깅 용이.</p>
+</li>
+</ol>
+<hr />
+<h3 id="react-context-api"><a class="header" href="#react-context-api">React Context API</a></h3>
+<h4 id="개요-1"><a class="header" href="#개요-1">개요</a></h4>
+<p>전역 상태 관리를 위해 제공되는 기능. props를 통해 데이터를 일일이 전달하지 않고도 컴포넌트 트리 전체에서 데이터 공유 가능.</p>
+<h4 id="사용-사례"><a class="header" href="#사용-사례">사용 사례</a></h4>
+<ul>
+<li>
+<p>테마 설정 (예: 다크 모드, 라이트 모드)</p>
+</li>
+<li>
+<p>사용자 인증 정보</p>
+</li>
+<li>
+<p>다국어 지원</p>
+</li>
+</ul>
+<h4 id="장점"><a class="header" href="#장점">장점</a></h4>
+<p>props drilling을 방지하여 코드의 가독성과 유지보수성 높임.</p>
+<hr />
+<h3 id="zustand"><a class="header" href="#zustand">Zustand</a></h3>
+<h4 id="개요-2"><a class="header" href="#개요-2">개요</a></h4>
+<p>간단하고 가벼운 상태 관리 라이브러리. 전역 상태 관리 쉽게 할 수 있음. Redux와 비교하여 설정 간편하고 보일러플레이트 코드 적음.</p>
+<h4 id="특징"><a class="header" href="#특징">특징</a></h4>
+<ul>
+<li>
+<p><strong>간단한 API</strong> : 최소한의 코드로 상태 관리 구현 가능.</p>
+</li>
+<li>
+<p><strong>서버 사이드 렌더링 지원</strong> : Next.js와 같은 프레임워크와 잘 동작.</p>
+</li>
+<li>
+<p><strong>미들웨어 지원</strong> : 상태 관리 로직 확장 가능.</p>
+</li>
+</ul>
+<h4 id="사용-방법"><a class="header" href="#사용-방법">사용 방법</a></h4>
+<ol>
+<li>상태 정의: <code>create</code> 함수 사용하여 상태 정의.</li>
+</ol>
+<pre><code class="language-javascript">import create from 'zustand';
+
+const useStore = create(set =&gt; ({
+  count: 0,
+  increment: () =&gt; set(state =&gt; ({ count: state.count + 1 })),
+}));
+</code></pre>
+<ol start="2">
+<li>상태 사용: 정의된 상태와 함수 컴포넌트에서 사용.</li>
+</ol>
+<pre><code class="language-javascript">function Counter() {
+  const { count, increment } = useStore();
+  return (
+    &lt;div&gt;
+      &lt;span&gt;{count}&lt;/span&gt;
+      &lt;button onClick={increment}&gt;Increment&lt;/button&gt;
+    &lt;/div&gt;
+  );
+}
+</code></pre>
+<h3 id="react-hook-form"><a class="header" href="#react-hook-form">React Hook Form</a></h3>
+<h4 id="소개"><a class="header" href="#소개">소개</a></h4>
+<p><strong>React Hook Form</strong>은 React에서 폼을 간편하게 관리하고 검증할 수 있게 도와주는 라이브러리입니다. <code>react-hook-form</code>은 기존의 폼 관리 방식보다 더 가볍고 빠르며, 제어 컴포넌트와 비제어 컴포넌트 모두에 사용할 수 있습니다.</p>
+<h4 id="주요-기능-및-장점"><a class="header" href="#주요-기능-및-장점">주요 기능 및 장점</a></h4>
+<ul>
+<li><strong>간단한 API</strong>: 코드의 양이 줄어들고 직관적인 API를 제공합니다.</li>
+<li><strong>빠른 렌더링</strong>: 리렌더링 횟수가 적어 애플리케이션의 성능이 향상됩니다.</li>
+<li><strong>유연한 유효성 검사</strong>: 내장된 유효성 검사 기능을 제공하며, 외부 검증 라이브러리와도 쉽게 통합 가능합니다.</li>
+<li><strong>비제어 컴포넌트 지원</strong>: <code>useRef</code>를 사용하여 비제어 컴포넌트를 관리할 수 있으며, 제어 컴포넌트와 비교해 더 나은 성능을 보입니다.</li>
+<li><strong>타입스크립트 지원</strong>: 강력한 타입스크립트 지원을 통해 타입 안전성을 보장합니다.</li>
+</ul>
+<hr />
+<h3 id="webpack"><a class="header" href="#webpack">webpack</a></h3>
+<h4 id="개요-3"><a class="header" href="#개요-3">개요</a></h4>
+<p>모듈 번들러. 여러 파일과 모듈을 하나의 번들 파일로 결합하여 웹 애플리케이션 최적화.</p>
+<h4 id="주요-기능"><a class="header" href="#주요-기능">주요 기능</a></h4>
+<ul>
+<li>
+<p><strong>모듈 번들링</strong> : JavaScript 파일 외에도 CSS, 이미지 등의 리소스를 하나의 파일로 결합 가능.</p>
+</li>
+<li>
+<p><strong>코드 스플리팅</strong> : 애플리케이션을 여러 개의 청크로 나누어 필요한 시점에 로드 가능.</p>
+</li>
+<li>
+<p><strong>로더</strong> : JavaScript 외의 파일들을 처리 가능. 예를 들어, Babel 로더를 사용하면 최신 JavaScript 문법을 구형 브라우저에서도 사용 가능하게 변환.</p>
+</li>
+<li>
+<p><strong>플러그인</strong> : 번들링 과정에서 추가적인 기능 수행 가능. 예를 들어, HTML 파일 생성, 파일 압축 등.</p>
+</li>
+</ul>
+<hr />
+<h3 id="material-ui-mui"><a class="header" href="#material-ui-mui">Material-UI (MUI)</a></h3>
+<h4 id="개요-4"><a class="header" href="#개요-4">개요</a></h4>
+<p>Material-UI(MUI)는 React를 위한 인기 있는 UI 프레임워크. Google의 Material Design 가이드라인을 기반으로 한 컴포넌트 제공.</p>
+<h4 id="주요-기능-1"><a class="header" href="#주요-기능-1">주요 기능</a></h4>
+<ul>
+<li>
+<p><strong>풍부한 컴포넌트</strong> : 버튼, 다이얼로그, 아이콘, 레이아웃 등 다양한 UI 컴포넌트 제공.</p>
+</li>
+<li>
+<p><strong>스타일링</strong> : ThemeProvider를 사용하여 전체 애플리케이션의 테마 쉽게 관리 가능.</p>
+</li>
+<li>
+<p><strong>커스터마이징</strong> : 스타일 오버라이드하거나 커스텀 컴포넌트 쉽게 만들 수 있음.</p>
+</li>
+<li>
+<p><strong>반응형 디자인</strong> : 다양한 화면 크기에 대응할 수 있는 반응형 디자인 지원.</p>
+</li>
+</ul>
+<h4 id="사용-예시"><a class="header" href="#사용-예시">사용 예시</a></h4>
+<pre><code class="language-javascript">import React from 'react';
+import { Button } from '@mui/material';
+
+function App() {
+  return (
+    &lt;div&gt;
+      &lt;Button variant="contained" color="primary"&gt;
+        Hello, MUI!
+      &lt;/Button&gt;
+    &lt;/div&gt;
+  );
+}
+
+export default App;
+</code></pre>
+<hr />
+<h3 id="jpa-java-persistence-api"><a class="header" href="#jpa-java-persistence-api">JPA (Java Persistence API)</a></h3>
+<h4 id="개요-5"><a class="header" href="#개요-5">개요</a></h4>
+<p>Java 애플리케이션에서 관계형 데이터베이스를 쉽게 다룰 수 있게 해주는 표준 API. ORM(Object-Relational Mapping)을 통해 객체와 데이터베이스 테이블을 매핑.</p>
+<h4 id="주요-특징"><a class="header" href="#주요-특징">주요 특징</a></h4>
+<ul>
+<li>
+<p><strong>ORM 지원</strong> : 객체와 데이터베이스 테이블을 자동으로 매핑. SQL을 직접 작성하지 않아도 데이터베이스 연동 가능.</p>
+</li>
+<li>
+<p><strong>데이터베이스 독립성</strong> : JPA 인터페이스 사용하여 특정 데이터베이스에 종속되지 않음.</p>
+</li>
+<li>
+<p><strong>트랜잭션 관리</strong> : 트랜잭션 처리를 간편하게 관리할 수 있는 기능 제공.</p>
+</li>
+<li>
+<p><strong>JPQL (Java Persistence Query Language)</strong> : 객체지향 쿼리 언어 사용하여 데이터베이스 질의 가능.</p>
+</li>
+</ul>
+<h4 id="사용-예시-1"><a class="header" href="#사용-예시-1">사용 예시</a></h4>
+<pre><code class="language-java">import javax.persistence.*;
+
+@Entity
+public class User {
+    @Id @GeneratedValue
+    private Long id;
+    private String name;
+    private String email;
+
+    // getters and setters
+}
+</code></pre>
+<pre><code class="language-java">EntityManagerFactory emf = Persistence.createEntityManagerFactory("example-unit");
+EntityManager em = emf.createEntityManager();
+
+em.getTransaction().begin();
+User user = new User();
+user.setName("John Doe");
+user.setEmail("john@example.com");
+em.persist(user);
+em.getTransaction().commit();
+
+em.close();
+emf.close();
+</code></pre>
+<hr />
+<h3 id="realgrid"><a class="header" href="#realgrid">RealGrid</a></h3>
+<h4 id="개요-6"><a class="header" href="#개요-6">개요</a></h4>
+<p>웹 애플리케이션에서 고성능 데이터 그리드를 제공하는 UI 컴포넌트 라이브러리. 대량의 데이터를 빠르고 효율적으로 처리 및 표시 가능.</p>
+<h4 id="주요-특징-1"><a class="header" href="#주요-특징-1">주요 특징</a></h4>
+<ul>
+<li>
+<p><strong>고성능</strong> : 대량의 데이터도 빠르게 로드하고 스크롤 가능.</p>
+</li>
+<li>
+<p><strong>다양한 기능</strong> : 필터링, 정렬, 그룹화, 피벗 등 다양한 데이터 처리 기능 제공.</p>
+</li>
+<li>
+<p><strong>사용자 정의 가능</strong> : 셀 스타일링, 에디터, 포맷터 등 커스터마이징 가능.</p>
+</li>
+<li>
+<p><strong>반응형 디자인</strong> : 다양한 화면 크기에 대응하는 반응형 디자인 지원.</p>
+</li>
+</ul>
+<h4 id="사용-예시-2"><a class="header" href="#사용-예시-2">사용 예시</a></h4>
+<pre><code class="language-javascript">import RealGrid from "realgrid";
+
+const ds = new RealGrid.LocalDataProvider();
+const gridView = new RealGrid.GridView("realgrid-container");
+gridView.setDataSource(ds);
+
+ds.setFields([
+    { fieldName: "id", dataType: "number" },
+    { fieldName: "name", dataType: "text" },
+    { fieldName: "age", dataType: "number" }
+]);
+
+ds.setRows([
+    { id: 1, name: "John Doe", age: 30 },
+    { id: 2, name: "Jane Smith", age: 25 }
+]);
+
+gridView.setColumns([
+    { name: "id", fieldName: "id", type: "data" },
+    { name: "name", fieldName: "name", type: "data" },
+    { name: "age", fieldName: "age", type: "data" }
+]);
+</code></pre>
+<hr />
+<h3 id="참고사이트-모음"><a class="header" href="#참고사이트-모음">참고사이트 모음</a></h3>
+<ul>
+<li><a href="https://gmlwjd9405.github.io/2019/08/04/what-is-jpa.html">JPA</a></li>
+<li><a href="https://ingg.dev/zustand-work/">ZUSTAND</a></li>
+<li><a href="https://react-hook-form.com/">react hook form</a></li>
+<li><a href="https://docs.realgrid.com/">realgrid</a></li>
+<li><a href="https://mui.com/material-ui/getting-started/">MUI</a></li>
+</ul>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+
+                            <a rel="next prefetch" href="../chapter2/indentation.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+
+                    <a rel="next prefetch" href="../chapter2/indentation.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

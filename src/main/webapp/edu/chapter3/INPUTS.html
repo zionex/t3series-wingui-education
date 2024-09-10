@@ -1,0 +1,325 @@
+<!DOCTYPE HTML>
+<html lang="ko" class="light" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>InputField - T³SmartSCM UI Education</title>
+
+
+        <!-- Custom HTML head -->
+        
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+    </head>
+    <body class="sidebar-visible no-js">
+    <div id="body-container">
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('light')
+            html.classList.add(theme);
+            var body = document.querySelector('body');
+            body.classList.remove('no-js')
+            body.classList.add('js');
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var body = document.querySelector('body');
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            body.classList.remove('sidebar-visible');
+            body.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded "><a href="../chapter1/사전지식.html"><strong aria-hidden="true">1.</strong> 사전 지식</a></li><li class="chapter-item expanded affix "><li class="part-title">개발 표준</li><li class="chapter-item expanded "><a href="../chapter2/indentation.html"><strong aria-hidden="true">2.</strong> indentation</a></li><li class="chapter-item expanded "><a href="../chapter2/파일및폴더구조가이드라인.html"><strong aria-hidden="true">3.</strong> 파일 및 폴더구조</a></li><li class="chapter-item expanded affix "><li class="part-title">화면 구성</li><li class="chapter-item expanded "><a href="../chapter3/레이아웃.html"><strong aria-hidden="true">4.</strong> 레이아웃 구성</a></li><li class="chapter-item expanded "><a href="../chapter3/INPUTS.html" class="active"><strong aria-hidden="true">5.</strong> InputField</a></li><li class="chapter-item expanded "><a href="../chapter3/Tab.html"><strong aria-hidden="true">6.</strong> Tab</a></li><li class="chapter-item expanded "><a href="../chapter3/Dashboard.html"><strong aria-hidden="true">7.</strong> Dashboard</a></li><li class="chapter-item expanded affix "><li class="part-title">튜토리얼</li><li class="chapter-item expanded "><a href="../chapter4/메뉴생성및연결.html"><strong aria-hidden="true">8.</strong> 메뉴생성 및 연결</a></li><li class="chapter-item expanded "><a href="../chapter4/그리드생성및데이터불러오기.html"><strong aria-hidden="true">9.</strong> 그리드 생성 및 데이터 불러오기</a></li><li class="chapter-item expanded "><a href="../chapter4/JAVA컨트롤러.html"><strong aria-hidden="true">10.</strong> Java Controller</a></li><li class="chapter-item expanded "><a href="../chapter4/리얼그리드이벤트.html"><strong aria-hidden="true">11.</strong> realgrid event</a></li><li class="chapter-item expanded "><a href="../chapter4/CRUD.html"><strong aria-hidden="true">12.</strong> CRUD</a></li><li class="chapter-item expanded "><a href="../chapter4/pivot그리드.html"><strong aria-hidden="true">13.</strong> pivot그리드</a></li><li class="chapter-item expanded "><a href="../chapter4/팝업.html"><strong aria-hidden="true">14.</strong> 팝업</a></li><li class="chapter-item expanded "><a href="../chapter4/유효성검사.html"><strong aria-hidden="true">15.</strong> 유효성 검사</a></li><li class="chapter-item expanded "><a href="../chapter4/차트.html"><strong aria-hidden="true">16.</strong> 차트</a></li><li class="chapter-item expanded "><a href="../chapter4/다국어.html"><strong aria-hidden="true">17.</strong> 다국어</a></li><li class="chapter-item expanded "><a href="../chapter4/LookupTree.html"><strong aria-hidden="true">18.</strong> LookupTree</a></li><li class="chapter-item expanded affix "><li class="part-title">build</li><li class="chapter-item expanded "><a href="../chapter6/build.html"><strong aria-hidden="true">19.</strong> build</a></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <!-- Track and set sidebar scroll position -->
+        <script>
+            var sidebarScrollbox = document.querySelector('#sidebar .sidebar-scrollbox');
+            sidebarScrollbox.addEventListener('click', function(e) {
+                if (e.target.tagName === 'A') {
+                    sessionStorage.setItem('sidebar-scroll', sidebarScrollbox.scrollTop);
+                }
+            }, { passive: true });
+            var sidebarScrollTop = sessionStorage.getItem('sidebar-scroll');
+            sessionStorage.removeItem('sidebar-scroll');
+            if (sidebarScrollTop) {
+                // preserve sidebar scroll position when navigating via links within sidebar
+                sidebarScrollbox.scrollTop = sidebarScrollTop;
+            } else {
+                // scroll sidebar to current active section when navigating via "next/previous chapter" buttons
+                var activeSection = document.querySelector('#sidebar .active');
+                if (activeSection) {
+                    activeSection.scrollIntoView({ block: 'center' });
+                }
+            }
+        </script>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">T³SmartSCM UI Education</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h2 id="inputs"><a class="header" href="#inputs">Inputs</a></h2>
+<blockquote>
+<p>솔루션에서 사용하는 다양한 input 스타일들을 모아 놓았습니다.</p>
+</blockquote>
+<p><strong>파일명:</strong>  <code>Sample06.jsx</code></p>
+<ul>
+<li>type : text, number, select, multiSelect, autocomplete, check, radio, datetime, time, dataeRange, popover, action, custom</li>
+</ul>
+<h3 id="input-type"><a class="header" href="#input-type">input type</a></h3>
+<h4 id="1-text-텍스트-입력-text-input"><a class="header" href="#1-text-텍스트-입력-text-input">1. text: <strong>텍스트 입력 (Text Input)</strong></a></h4>
+<ul>
+<li><strong>설명</strong>: 기본적인 텍스트 입력 필드로, 사용자가 문자열을 입력할 수 있습니다.</li>
+</ul>
+<h4 id="2-number-숫자-입력-number-input"><a class="header" href="#2-number-숫자-입력-number-input">2. number: <strong>숫자 입력 (Number Input)</strong></a></h4>
+<ul>
+<li><strong>설명</strong>: 숫자를 입력받는 필드로, 숫자 데이터를 처리할 때 사용됩니다.</li>
+</ul>
+<h4 id="3-action-액션-버튼-action-button"><a class="header" href="#3-action-액션-버튼-action-button">3. action: <strong>액션 버튼 (Action Button)</strong></a></h4>
+<ul>
+<li><strong>설명</strong>: 입력 필드에 버튼을 포함하여 특정 작업을 실행할 수 있는 필드입니다.</li>
+</ul>
+<h4 id="4-select-선택-입력-select-input"><a class="header" href="#4-select-선택-입력-select-input">4. select: <strong>선택 입력 (Select Input)</strong></a></h4>
+<ul>
+<li><strong>설명</strong>: 드롭다운 메뉴를 통해 여러 옵션 중 하나를 선택할 수 있는 필드입니다. 특정 옵션에 색을 표시하는 등의 <code>스타일 추가</code>가 필요할때는 class 를 통해 제어할 수 있습니다. (샘플에 구현 되어있음)</li>
+</ul>
+<h4 id="5-autocomplete-자동-완성-입력-autocomplete"><a class="header" href="#5-autocomplete-자동-완성-입력-autocomplete">5. autocomplete: <strong>자동 완성 입력 (AutoComplete)</strong></a></h4>
+<ul>
+<li><strong>설명</strong>: 사용자가 입력을 시작하면 추천 옵션을 제공하는 입력 필드입니다.</li>
+</ul>
+<h4 id="6-multiselect-다중-선택-입력-multiselect"><a class="header" href="#6-multiselect-다중-선택-입력-multiselect">6. multiSelect: <strong>다중 선택 입력 (MultiSelect)</strong></a></h4>
+<ul>
+<li><strong>설명</strong>: 여러 개의 항목을 동시에 선택할 수 있는 필드입니다. value 값이 배열 형태 입니다.</li>
+<li>props
+<ul>
+<li>max: 선택 갯수 제한</li>
+</ul>
+</li>
+</ul>
+<h4 id="7-datetime-daterange-time-날짜-및-시간-입력-datetime-daterange"><a class="header" href="#7-datetime-daterange-time-날짜-및-시간-입력-datetime-daterange">7. datetime, daterange, time: <strong>날짜 및 시간 입력 (DateTime, DateRange)</strong></a></h4>
+<ul>
+<li><strong>설명</strong>: 날짜, 시간 또는 날짜 범위를 선택할 수 있는 입력 필드입니다.</li>
+</ul>
+<h4 id="8-check-체크박스-입력-checkbox"><a class="header" href="#8-check-체크박스-입력-checkbox">8. check: <strong>체크박스 입력 (Checkbox)</strong></a></h4>
+<ul>
+<li><strong>설명</strong>: 여러 개의 옵션 중 원하는 항목을 선택할 수 있는 체크박스 형태의 필드입니다.</li>
+</ul>
+<h4 id="9-radio-라디오-버튼-입력-radio-button"><a class="header" href="#9-radio-라디오-버튼-입력-radio-button">9. radio: <strong>라디오 버튼 입력 (Radio Button)</strong></a></h4>
+<ul>
+<li><strong>설명</strong>: 여러 개의 옵션 중 하나만 선택할 수 있는 라디오 버튼 형태의 필드입니다.</li>
+</ul>
+<h4 id="10-popover-팝오버-입력-popover-input"><a class="header" href="#10-popover-팝오버-입력-popover-input">10. popover: <strong>팝오버 입력 (Popover Input)</strong></a></h4>
+<ul>
+<li><strong>설명</strong>: 팝업 창을 통해 추가적인 입력 또는 선택을 할 수 있는 필드입니다.</li>
+</ul>
+<h4 id="11-레이블-텍스트-입력-labeltext"><a class="header" href="#11-레이블-텍스트-입력-labeltext">11. <strong>레이블 텍스트 입력 (LabelText)</strong></a></h4>
+<ul>
+<li><strong>설명</strong>: 레이블과 함께 텍스트 또는 다른 타입의 입력을 받을 수 있는 필드입니다. 표준 스타일은 아니지만 필요한 경우 사용할 수 있습니다.</li>
+</ul>
+<hr />
+<p><strong>속성</strong> :</p>
+<ul>
+<li>
+<p><code>name</code>: 폼 필드의 이름.</p>
+</li>
+<li>
+<p><code>label</code>: 필드 레이블 텍스트.</p>
+</li>
+<li>
+<p><code>control</code>: <code>react-hook-form</code>의 <code>control</code> 객체.</p>
+</li>
+<li>
+<p><code>value</code>: 초기값 설정.</p>
+</li>
+<li>
+<p><code>dateformat</code>: 날짜 포맷 지정.</p>
+</li>
+<li>
+<p><code>options</code>: 선택 가능한 옵션 배열.</p>
+</li>
+<li>
+<p><code>startAdornment</code>: 필드 앞에 붙는 텍스트 또는 기호.</p>
+</li>
+<li>
+<p><code>childComponent</code>: 팝업 내에 렌더링할 컴포넌트.</p>
+</li>
+<li>
+<p><code>readOnly</code>: true 로 설정시 입력 필드를 읽기 전용으로 설정.</p>
+</li>
+<li>
+<p><code>disabled</code>: true 로 설정시 입력 필드를 비활성화 상태로 설정. 기본 HTML의 disabled 속성과 달리, react-hook-form에서는 비활성화된 필드의 값도 폼 제출 시 포함됨.</p>
+</li>
+<li>
+<p><code>validationText</code>: 유효성 검사 시 표시할 메시지.</p>
+</li>
+<li>
+<p><code>rules</code>: 유효성 검사 규칙 설정.</p>
+</li>
+</ul>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../chapter3/레이아웃.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../chapter3/Tab.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../chapter3/레이아웃.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../chapter3/Tab.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

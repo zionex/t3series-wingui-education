@@ -1,0 +1,319 @@
+<!DOCTYPE HTML>
+<html lang="ko" class="light" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Java Controller - T³SmartSCM UI Education</title>
+
+
+        <!-- Custom HTML head -->
+        
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+    </head>
+    <body class="sidebar-visible no-js">
+    <div id="body-container">
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('light')
+            html.classList.add(theme);
+            var body = document.querySelector('body');
+            body.classList.remove('no-js')
+            body.classList.add('js');
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var body = document.querySelector('body');
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            body.classList.remove('sidebar-visible');
+            body.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded "><a href="../chapter1/사전지식.html"><strong aria-hidden="true">1.</strong> 사전 지식</a></li><li class="chapter-item expanded affix "><li class="part-title">개발 표준</li><li class="chapter-item expanded "><a href="../chapter2/indentation.html"><strong aria-hidden="true">2.</strong> indentation</a></li><li class="chapter-item expanded "><a href="../chapter2/파일및폴더구조가이드라인.html"><strong aria-hidden="true">3.</strong> 파일 및 폴더구조</a></li><li class="chapter-item expanded affix "><li class="part-title">화면 구성</li><li class="chapter-item expanded "><a href="../chapter3/레이아웃.html"><strong aria-hidden="true">4.</strong> 레이아웃 구성</a></li><li class="chapter-item expanded "><a href="../chapter3/INPUTS.html"><strong aria-hidden="true">5.</strong> InputField</a></li><li class="chapter-item expanded "><a href="../chapter3/Tab.html"><strong aria-hidden="true">6.</strong> Tab</a></li><li class="chapter-item expanded "><a href="../chapter3/Dashboard.html"><strong aria-hidden="true">7.</strong> Dashboard</a></li><li class="chapter-item expanded affix "><li class="part-title">튜토리얼</li><li class="chapter-item expanded "><a href="../chapter4/메뉴생성및연결.html"><strong aria-hidden="true">8.</strong> 메뉴생성 및 연결</a></li><li class="chapter-item expanded "><a href="../chapter4/그리드생성및데이터불러오기.html"><strong aria-hidden="true">9.</strong> 그리드 생성 및 데이터 불러오기</a></li><li class="chapter-item expanded "><a href="../chapter4/JAVA컨트롤러.html" class="active"><strong aria-hidden="true">10.</strong> Java Controller</a></li><li class="chapter-item expanded "><a href="../chapter4/리얼그리드이벤트.html"><strong aria-hidden="true">11.</strong> realgrid event</a></li><li class="chapter-item expanded "><a href="../chapter4/CRUD.html"><strong aria-hidden="true">12.</strong> CRUD</a></li><li class="chapter-item expanded "><a href="../chapter4/pivot그리드.html"><strong aria-hidden="true">13.</strong> pivot그리드</a></li><li class="chapter-item expanded "><a href="../chapter4/팝업.html"><strong aria-hidden="true">14.</strong> 팝업</a></li><li class="chapter-item expanded "><a href="../chapter4/유효성검사.html"><strong aria-hidden="true">15.</strong> 유효성 검사</a></li><li class="chapter-item expanded "><a href="../chapter4/차트.html"><strong aria-hidden="true">16.</strong> 차트</a></li><li class="chapter-item expanded "><a href="../chapter4/다국어.html"><strong aria-hidden="true">17.</strong> 다국어</a></li><li class="chapter-item expanded "><a href="../chapter4/LookupTree.html"><strong aria-hidden="true">18.</strong> LookupTree</a></li><li class="chapter-item expanded affix "><li class="part-title">build</li><li class="chapter-item expanded "><a href="../chapter6/build.html"><strong aria-hidden="true">19.</strong> build</a></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <!-- Track and set sidebar scroll position -->
+        <script>
+            var sidebarScrollbox = document.querySelector('#sidebar .sidebar-scrollbox');
+            sidebarScrollbox.addEventListener('click', function(e) {
+                if (e.target.tagName === 'A') {
+                    sessionStorage.setItem('sidebar-scroll', sidebarScrollbox.scrollTop);
+                }
+            }, { passive: true });
+            var sidebarScrollTop = sessionStorage.getItem('sidebar-scroll');
+            sessionStorage.removeItem('sidebar-scroll');
+            if (sidebarScrollTop) {
+                // preserve sidebar scroll position when navigating via links within sidebar
+                sidebarScrollbox.scrollTop = sidebarScrollTop;
+            } else {
+                // scroll sidebar to current active section when navigating via "next/previous chapter" buttons
+                var activeSection = document.querySelector('#sidebar .active');
+                if (activeSection) {
+                    activeSection.scrollIntoView({ block: 'center' });
+                }
+            }
+        </script>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">T³SmartSCM UI Education</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h2 id="java-controller"><a class="header" href="#java-controller">Java controller</a></h2>
+<p><strong>샘플 파일명:</strong>  <code>Practice02.jsx</code>,<code>PracticeController.java</code></p>
+<blockquote>
+<p>이 샘플에서는 Java 컨트롤러에서 저장 프로시저(SP)와 SQL 쿼리문을 호출하는 방법을 실습해볼 수 있습니다. SQL 쿼리문 호출 시 반드시 PreparedStatement를 사용해야 합니다. 또한, queryHandler의 save 메서드는 P_RT_ROLLBACK_FLAG와 P_RT_MSG 두 가지 OUTPUT 파라미터를 기본으로 포함하고 있으므로, 저장 프로시저에서도 이를 구현해야 합니다.</p>
+</blockquote>
+<h3 id="실행권한-체크"><a class="header" href="#실행권한-체크">실행권한 체크</a></h3>
+<ul>
+<li>ExecPermission annotation 사용
+<ul>
+<li>menuCd: 화면 ID</li>
+<li>type : 조회권한 타입 ( PERMISSION_TYPE_READ, PERMISSION_TYPE_UPDATE, PERMISSION_TYPE_DELETE )</li>
+</ul>
+</li>
+</ul>
+<h3 id="조회"><a class="header" href="#조회">조회</a></h3>
+<pre><code class="language-java"> @ExecPermission(menuCd = "UI_PRACTICE_01", type = ServiceConstants.PERMISSION_TYPE_READ)
+  @PostMapping("/practice/q1")
+  public List&lt;Map&lt;String, Object&gt;&gt; getData1(@RequestBody Map&lt;String, Object&gt; params, HttpServletRequest request) throws Exception {
+    return queryHandler.getList("SP_UI_PRACTICE_01Q", params);
+  }
+</code></pre>
+<h3 id="저장"><a class="header" href="#저장">저장</a></h3>
+<pre><code class="language-java"> @ExecPermission(menuCd = "UI_PRACTICE_01", type = ServiceConstants.PERMISSION_TYPE_UPDATE)
+  @PostMapping("/practice/s1")
+  public Map&lt;String, Object&gt; saveData1(@RequestBody List&lt;Map&lt;String, Object&gt;&gt; changes, HttpServletRequest request) throws Exception {
+    String username = userService.getUserDetails().getUsername();
+    Map&lt;String, Object&gt; resultMap = new HashMap&lt;&gt;();
+    for (Map&lt;String, Object&gt; params : changes) {
+      Map&lt;String, Object&gt; param = new HashMap&lt;&gt;();
+      param.put("P_ID", new Object[] { params.get("ID"), String.class, ParameterMode.IN });
+      param.put("P_KORNAME", new Object[] { params.get("KORNAME"), String.class, ParameterMode.IN });
+      param.put("P_GENDER", new Object[] { params.get("GENDER"), String.class, ParameterMode.IN });
+      param.put("P_AGE", new Object[] { params.get("AGE"), Integer.class, ParameterMode.IN });
+      param.put("P_USERNAME", new Object[] { username, String.class, ParameterMode.IN });
+      Map&lt;String, Object&gt; result = queryHandler.save("SP_UI_PRACTICE_01S", param);
+
+      resultMap.putAll(result);
+    }
+    return resultMap;
+  }
+</code></pre>
+<h3 id="삭제"><a class="header" href="#삭제">삭제</a></h3>
+<pre><code class="language-java"> @ExecPermission(menuCd = "UI_PRACTICE_01", type = ServiceConstants.PERMISSION_TYPE_DELETE)
+  @PostMapping("/practice/d1")
+  public Map&lt;String, Object&gt; deleteData1(@RequestBody List&lt;Map&lt;String, Object&gt;&gt; changes, HttpServletRequest request) throws Exception {
+    String username = userService.getUserDetails().getUsername();
+
+    Map&lt;String, Object&gt; resultMap = new HashMap&lt;&gt;();
+    for (Map&lt;String, Object&gt; params : changes) {
+      Map&lt;String, Object&gt; param = new HashMap&lt;&gt;();
+      
+      param.put("P_ID", new Object[] { params.get("ID"), String.class, ParameterMode.IN });
+      param.put("P_USERNAME", new Object[] { username, String.class, ParameterMode.IN });
+      Map&lt;String, Object&gt; result = queryHandler.save("SP_UI_PRACTICE_01D", param);
+      resultMap.putAll(result);
+    }
+    return resultMap;
+  }
+</code></pre>
+<h3 id="native-sql"><a class="header" href="#native-sql">native sql</a></h3>
+<ul>
+<li>sql 문을 직접 호출 할 수 있지만 프로시저 사용을 권장함.</li>
+</ul>
+<pre><code class="language-java">@ExecPermission(menuCd = "UI_PRACTICE_01", type = ServiceConstants.PERMISSION_TYPE_READ)
+  @PostMapping("/practice/q2")
+  public List&lt;?&gt; getData2(@RequestBody Map&lt;String, Object&gt; params, HttpServletRequest request) throws Exception {
+      String sqlQuery = 
+      "SELECT '쿼리-박OO' AS KORNAME, '남' AS GENDER, '71' AS AGE, '(025)6563-2802' AS PHONE, " +
+      "'198160731-00008' AS PRODUCTID, '모잠비크' AS KORCOUNTRY, '2021-01-16' AS ORDERDATE, 'Y' AS ACTIVE " +
+      "UNION ALL " +
+      "SELECT '쿼리-조OO', '남', '62', '(093)8809-8696', " +
+      "'571215854-00001', '캐나다', '2019-07-29', 'Y' " +
+      "UNION ALL " +
+      "SELECT '쿼리-김OO', '남', '45', '(010)1234-5678', " +
+      "'123456789-00003', '한국', '2020-05-23', 'N' " +
+      "UNION ALL " +
+      "SELECT '쿼리-이OO', '여', '32', '(010)8765-4321', " +
+      "'987654321-00004', '미국', '2020-11-11', 'Y' " +
+      "UNION ALL " +
+      "SELECT '쿼리-한OO', '여', '29', '(010)5555-6666', " +
+      "'55556666-00005', '호주', '2021-03-14', 'Y' " +
+      "UNION ALL " +
+      "SELECT '쿼리-장OO', '남', '39', '(010)7777-8888', " +
+      "'77778888-00006', '영국', '2018-09-17', 'N' " +
+      "UNION ALL " +
+      "SELECT '쿼리-송OO', '여', '35', '(010)9999-0000', " +
+      "'99990000-00007', '프랑스', '2021-06-21', 'N';";
+
+    return queryHandler.getNativeQueryData(sqlQuery);
+  }
+
+</code></pre>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../chapter4/그리드생성및데이터불러오기.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../chapter4/리얼그리드이벤트.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../chapter4/그리드생성및데이터불러오기.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../chapter4/리얼그리드이벤트.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

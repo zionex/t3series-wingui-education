@@ -1,0 +1,508 @@
+<!DOCTYPE HTML>
+<html lang="ko" class="light" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>pivot그리드 - T³SmartSCM UI Education</title>
+
+
+        <!-- Custom HTML head -->
+        
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+    </head>
+    <body class="sidebar-visible no-js">
+    <div id="body-container">
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('light')
+            html.classList.add(theme);
+            var body = document.querySelector('body');
+            body.classList.remove('no-js')
+            body.classList.add('js');
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var body = document.querySelector('body');
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            body.classList.remove('sidebar-visible');
+            body.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded "><a href="../chapter1/사전지식.html"><strong aria-hidden="true">1.</strong> 사전 지식</a></li><li class="chapter-item expanded affix "><li class="part-title">개발 표준</li><li class="chapter-item expanded "><a href="../chapter2/indentation.html"><strong aria-hidden="true">2.</strong> indentation</a></li><li class="chapter-item expanded "><a href="../chapter2/파일및폴더구조가이드라인.html"><strong aria-hidden="true">3.</strong> 파일 및 폴더구조</a></li><li class="chapter-item expanded affix "><li class="part-title">화면 구성</li><li class="chapter-item expanded "><a href="../chapter3/레이아웃.html"><strong aria-hidden="true">4.</strong> 레이아웃 구성</a></li><li class="chapter-item expanded "><a href="../chapter3/INPUTS.html"><strong aria-hidden="true">5.</strong> InputField</a></li><li class="chapter-item expanded "><a href="../chapter3/Tab.html"><strong aria-hidden="true">6.</strong> Tab</a></li><li class="chapter-item expanded "><a href="../chapter3/Dashboard.html"><strong aria-hidden="true">7.</strong> Dashboard</a></li><li class="chapter-item expanded affix "><li class="part-title">튜토리얼</li><li class="chapter-item expanded "><a href="../chapter4/메뉴생성및연결.html"><strong aria-hidden="true">8.</strong> 메뉴생성 및 연결</a></li><li class="chapter-item expanded "><a href="../chapter4/그리드생성및데이터불러오기.html"><strong aria-hidden="true">9.</strong> 그리드 생성 및 데이터 불러오기</a></li><li class="chapter-item expanded "><a href="../chapter4/JAVA컨트롤러.html"><strong aria-hidden="true">10.</strong> Java Controller</a></li><li class="chapter-item expanded "><a href="../chapter4/리얼그리드이벤트.html"><strong aria-hidden="true">11.</strong> realgrid event</a></li><li class="chapter-item expanded "><a href="../chapter4/CRUD.html"><strong aria-hidden="true">12.</strong> CRUD</a></li><li class="chapter-item expanded "><a href="../chapter4/pivot그리드.html" class="active"><strong aria-hidden="true">13.</strong> pivot그리드</a></li><li class="chapter-item expanded "><a href="../chapter4/팝업.html"><strong aria-hidden="true">14.</strong> 팝업</a></li><li class="chapter-item expanded "><a href="../chapter4/유효성검사.html"><strong aria-hidden="true">15.</strong> 유효성 검사</a></li><li class="chapter-item expanded "><a href="../chapter4/차트.html"><strong aria-hidden="true">16.</strong> 차트</a></li><li class="chapter-item expanded "><a href="../chapter4/다국어.html"><strong aria-hidden="true">17.</strong> 다국어</a></li><li class="chapter-item expanded "><a href="../chapter4/LookupTree.html"><strong aria-hidden="true">18.</strong> LookupTree</a></li><li class="chapter-item expanded affix "><li class="part-title">build</li><li class="chapter-item expanded "><a href="../chapter6/build.html"><strong aria-hidden="true">19.</strong> build</a></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <!-- Track and set sidebar scroll position -->
+        <script>
+            var sidebarScrollbox = document.querySelector('#sidebar .sidebar-scrollbox');
+            sidebarScrollbox.addEventListener('click', function(e) {
+                if (e.target.tagName === 'A') {
+                    sessionStorage.setItem('sidebar-scroll', sidebarScrollbox.scrollTop);
+                }
+            }, { passive: true });
+            var sidebarScrollTop = sessionStorage.getItem('sidebar-scroll');
+            sessionStorage.removeItem('sidebar-scroll');
+            if (sidebarScrollTop) {
+                // preserve sidebar scroll position when navigating via links within sidebar
+                sidebarScrollbox.scrollTop = sidebarScrollTop;
+            } else {
+                // scroll sidebar to current active section when navigating via "next/previous chapter" buttons
+                var activeSection = document.querySelector('#sidebar .active');
+                if (activeSection) {
+                    activeSection.scrollIntoView({ block: 'center' });
+                }
+            }
+        </script>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">T³SmartSCM UI Education</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h2 id="pivot-grid"><a class="header" href="#pivot-grid">Pivot Grid</a></h2>
+<p><strong>샘플 파일명:</strong>  <code>Practice05.jsx</code>, <code>PracticeController.java</code></p>
+<blockquote>
+<p>이 샘플에서는 피벗 데이터를 가공하여 그리드 형태로 구현하는 방법을 보여줍니다.</p>
+</blockquote>
+<h3 id="backend"><a class="header" href="#backend">backend</a></h3>
+<p><strong>1. 데이터 그룹화</strong> 이후, 스트림 API를 사용해 데이터를 <code>pivotColumns</code> 함수에서 정의한 기준에 따라 그룹화합니다. <code>Collectors.groupingBy</code>를 사용해 데이터를 그룹화하고, 각 그룹을 리스트로 반환합니다.</p>
+<pre><code class="language-java">Collection&lt;List&lt;Map&lt;String, Object&gt;&gt;&gt; groupedList = dataList.stream()
+    .collect(Collectors.groupingBy(pivotColumns, LinkedHashMap::new, Collectors.toList())).values();
+</code></pre>
+<p><strong>2. 헤더 추출</strong> 각 그룹의 데이터에서 <code>PLAN_DATE</code> 필드를 기준으로 헤더를 추출합니다. 이 헤더는 피벗 테이블에서 컬럼 헤더로 사용됩니다. 추출된 헤더는 <code>TreeSet</code>을 사용해 중복을 제거하고 정렬합니다.</p>
+<pre><code class="language-java">Set&lt;String&gt; header = new TreeSet&lt;&gt;();
+for (Map&lt;String, Object&gt; heads : dataList) {
+  header.add((String) heads.get("PLAN_DATE"));
+}
+</code></pre>
+<p><strong>3-1. 피벗 데이터 구성</strong> 그룹화된 각 데이터를 순회하며, 헤더에 맞게 데이터를 재배치합니다. 그룹 내 각 데이터의 <code>PLAN_DATE</code>를 기준으로 <code>QTY</code> 값을 배열에 배치하고, 이를 다시 맵에 추가합니다.</p>
+<pre><code class="language-java">if (header.size() &gt; 0) {
+  String[] existDataHeader = header.toArray(new String[header.size()]);
+  for (List&lt;Map&lt;String, Object&gt;&gt; groupItem : groupedList) {
+    Object[] qty = new Object[existDataHeader.length];
+    boolean existDataFlag = false;
+
+    for (Map&lt;String, Object&gt; item : groupItem) {
+      String headerIdx = (String) item.get("PLAN_DATE");
+      int idx = Arrays.asList(existDataHeader).indexOf(headerIdx);
+      qty[idx] = item.get("QTY");
+      existDataFlag = true;
+    }
+    if (existDataFlag) {
+      Map&lt;String, Object&gt; item = groupItem.get(0);
+      item.put("QTY", Arrays.asList(qty));
+      data.add(item);
+    }
+  }
+  resultMap.put("header", header);
+  resultMap.put("data", data);
+} else {
+  resultMap.put("header", null);
+  resultMap.put("data", dataList);
+}
+</code></pre>
+<p>이 과정에서 <code>existDataFlag</code>는 데이터가 유효한지 확인하는 플래그로 사용되며, 유효한 경우에만 피벗 데이터가 추가됩니다.</p>
+<p><strong>3-2. PivotUtil.java 사용</strong></p>
+<p>주어진 입력값들을 기준으로 Grouping을 하고, 그 결과를 피벗 테이블로 변환하여 리턴</p>
+<p><strong>파라미터 설명</strong></p>
+<div class="table-wrapper"><table><thead><tr><th>파라미터명</th><th style="text-align: center">설명</th><th style="text-align: center">예시</th></tr></thead><tbody>
+<tr><td>dataList</td><td style="text-align: center"></td><td style="text-align: center">[{"PLANT_ID": "P1", "QTY": 100}, ...]</td></tr>
+<tr><td>headerColumn</td><td style="text-align: center">피벗 테이블의 헤더로 사용할 컬럼.</td><td style="text-align: center">"PLAN_DATE"</td></tr>
+<tr><td>groupCds</td><td style="text-align: center">Group By에 사용될 컬럼들의 배열.</td><td style="text-align: center">{"PLANT_ID", "DEMAND_ID", "ROUTE_CODE"}</td></tr>
+<tr><td>dataColumns</td><td style="text-align: center">피벗 테이블에서 값을 표시할 데이터 컬럼들의 배열.</td><td style="text-align: center">{"QTY", "HOLIDAY_YN"}</td></tr>
+<tr><td>measureCds</td><td style="text-align: center">데이터 값이 나눠진 경우(측정값 분리 시) 사용하는 컬럼. 보통 groupCds에 포함됨.</td><td style="text-align: center">{"A_QTY", "B_QTY", "C_QTY"}</td></tr>
+<tr><td>additionalHeaderColumns</td><td style="text-align: center">추가적으로 헤더에 포함할 컬럼.</td><td style="text-align: center">{"WEEK","ETC"}</td></tr>
+</tbody></table>
+</div>
+<p>시나리오 1 : 일반 pivot</p>
+<pre><code class="language-java">String headerColumn ="PLAN_DATE"; 
+String[] groupCds = {"PLANT_ID","DEMAND_ID","ROUTE_CODE","RESOURCE_CODE"}; 
+String[] dataColumns = {"QTY", "HOLIDAY_YN"}; 
+String[] measureCds = {}; 
+String[] additionalHeaderColumns = {}; 
+return PivotUtil.pivotData(dataList, headerColumn, groupCds, dataColumns, measureCds, additionalHeaderColumns);
+</code></pre>
+<p>시나리오2 : 데이터 값이 나눠진 경우</p>
+<div class="table-wrapper"><table><thead><tr><th>구분</th><th style="text-align: center">2024-01</th><th style="text-align: center">2024-02</th></tr></thead><tbody>
+<tr><td>기초재고</td><td style="text-align: center">1</td><td style="text-align: center">1</td></tr>
+<tr><td>출고예정</td><td style="text-align: center">1</td><td style="text-align: center">1</td></tr>
+<tr><td>입고예정</td><td style="text-align: center">1</td><td style="text-align: center">1</td></tr>
+<tr><td>기말재고</td><td style="text-align: center">1</td><td style="text-align: center">1</td></tr>
+</tbody></table>
+</div>
+<pre><code class="language-java">String headerColumn ="PLAN_DT";
+String[] groupCds = {"PLNT_CD", "VERSION_CD", "ITEM_CD"};
+String[] dataColumns = {"BOH_QTY", "GI_QTY", "GR_QTY", "EOH_QTY", "FLAG"};
+String[] measureCds = {"기초재고", "출고예정", "입고예정", "기말재고"}; //다국어 컬럼명
+String[] additionalHeaderColumns = {};
+return PivotUtil.pivotData(dataList, headerColumn, groupCds, dataColumns, measureCds, additionalHeaderColumns);
+</code></pre>
+<p>시나리오3 : 헤더에 부가적인 정보를 DB 데이터로 표현 해달라고 하는 경우</p>
+<div class="table-wrapper"><table><thead><tr><th>2024-01</th><th style="text-align: center">2024-02</th></tr></thead><tbody>
+<tr><td>W01</td><td style="text-align: center">W02</td></tr>
+<tr><td>1월</td><td style="text-align: center">2월</td></tr>
+<tr><td>1</td><td style="text-align: center">1</td></tr>
+<tr><td>1</td><td style="text-align: center">1</td></tr>
+<tr><td>1</td><td style="text-align: center">1</td></tr>
+<tr><td>1</td><td style="text-align: center">1</td></tr>
+</tbody></table>
+</div>
+<pre><code class="language-java">String headerColumn ="PLAN_DATE"; 
+String[] groupCds = {"PLANT_ID","DEMAND_ID","ROUTE_CODE","RESOURCE_CODE"}; 
+String[] dataColumns = {"QTY", "HOLIDAY_YN"}; 
+String[] measureCds = {}; 
+String[] additionalHeaderColumns = {"WEEK","MONTH"}; 
+return PivotUtil.pivotData(dataList, headerColumn, groupCds, dataColumns, measureCds, additionalHeaderColumns);
+</code></pre>
+<p><strong>4. 결과 반환</strong>
+마지막으로, 생성된 헤더와 피벗 데이터가 담긴 맵을 반환합니다. 이 결과는 프론트엔드나 다른 시스템에서 사용하기 위한 최종 데이터 구조가 됩니다.</p>
+<pre><code>{
+  "ROUTE_NAME": "1차가공",
+  "PLAN_DATE": "2024-08-23",
+  "HOLIDAY_YN": "N",
+  "RESOURCE_CODE": "KRS-020110",
+  "QTY": [
+    1,
+    1,
+    1,
+    1,
+    1,
+    10,
+    100,
+    55
+  ],
+  "PLANT_ID": "4205",
+  "DEMAND_ID": "F0170006-K1-0001",
+  "RESOURCE_NAME": "가공",
+  "ROUTE_CODE": "KRT-020101"
+}
+</code></pre>
+<hr />
+<h3 id="font-end"><a class="header" href="#font-end">font-end</a></h3>
+<p>이 자료에서는 주어진 React 소스를 통해 그리드 데이터를 조회하고, 피벗 테이블을 생성 및 표시하는 방법을 설명합니다. 이 코드의 주요 목적은 데이터를 서버로부터 불러와 동적으로 컬럼을 생성하고, 그리드에 데이터를 표시하는 것입니다.</p>
+<p>pivot Grid는 Context Menu의 레이아웃 저장/삭제 기능을 사용하지 않기 때문에 <code>dynamic={true}</code> 를 설정한다.</p>
+<pre><code> &lt;BaseGrid id="grid1" items={grid1Items} afterGridCreate={afterGrid1Create} dynamic={true}/&gt;
+</code></pre>
+<ol>
+<li>데이터 조회 (<code>loadData</code> 함수)** <code>loadData</code> 함수는 서버에서 데이터를 조회하는 역할을 합니다.</li>
+</ol>
+<pre><code class="language-javascript">const loadData = () =&gt; {
+  let param = {
+    p_GENDOR : getValues('gender'),  // 성별 선택값
+    P_START_DT : getValues('startDt'),  // 시작일 선택값
+  };
+
+  zAxios({
+    method: 'post',
+    header: { 'content-type': 'application/json' },
+    url: baseURI() + 'practice/q3',  // 요청을 보낼 서버 URL
+    data: param
+  })
+  .then(function (res) {
+    if (res.status === HTTP_STATUS.SUCCESS) {  // 서버 응답이 성공적일 경우
+      makeCrossTabFieldsAndColumns(res.data.header);  // 동적 컬럼 생성 함수 호출
+      setCrossTabGridData(res.data.header, res.data.data);  // 그리드에 데이터 설정
+    }
+  })
+  .catch(function (err) {
+    console.log(err);  // 에러 발생 시 로그 출력
+  });
+};
+</code></pre>
+<ul>
+<li><strong><code>zAxios</code></strong> : axios 기반으로 만든 서버에 요청을 보내는 비동기 함수입니다.
+<ul>
+<li><u>waitOn: false, 옵션을 추가하면 progress 가 나타나지 않습니다.</u></li>
+</ul>
+<pre><code class="language-javascript">zAxios({
+  method: 'post',
+  header: { 'content-type': 'application/json' },
+  url: baseURI() + 'practice/q3',  // 요청을 보낼 서버 URL
+  data: param,
+  waitOn: false
+})
+</code></pre>
+</li>
+</ul>
+<ol start="2">
+<li>동적 컬럼 생성 (<code>makeCrossTabFieldsAndColumns</code> 함수)**
+이 함수는 서버로부터 받아온 헤더 데이터를 기반으로 그리드에 동적 컬럼을 추가합니다. 각 날짜별로 새로운 컬럼을 생성하고, 그 컬럼을 그리드에 추가합니다.</li>
+</ol>
+<pre><code class="language-javascript">function makeCrossTabFieldsAndColumns(dateHeaders) {
+  let dynamicCols = [];
+  dateHeaders.forEach(dateHeader =&gt; {
+    let dateHeaderSplit = dateHeader.split("-");
+    const date = new Date(dateHeaderSplit[0], dateHeaderSplit[1]-1, dateHeaderSplit[2]);
+    dynamicCols.push(
+      { 
+        name: dateHeader, 
+        dataType: 'number',
+        headerText: date.format("yyyy/MM/dd"),
+        visible: true,
+        editable: true, 
+        width: 80,
+      },
+    );
+  });   
+  grid1.addGridItems(grid1Items.concat(dynamicCols), true);  // 기존 컬럼에 동적 컬럼을 추가
+}
+</code></pre>
+<ul>
+<li>
+<p><strong><code>dateHeaders</code></strong> : 서버로부터 받아온 날짜별 헤더 리스트입니다.</p>
+</li>
+<li>
+<p><strong><code>dynamicCols</code></strong> : 동적으로 생성된 컬럼 객체 배열입니다.</p>
+</li>
+<li>
+<p><strong><code>addGridItems</code></strong> : 기존의 컬럼 배열에 동적으로 생성된 컬럼을 추가합니다.</p>
+</li>
+</ul>
+<ol start="3">
+<li>데이터 그리드에 설정 (<code>setCrossTabGridData</code> 함수)**
+이 함수는 동적으로 생성된 컬럼과 데이터를 그리드에 설정합니다. 서버로부터 받은 데이터 배열을 가공하여 그리드에 채웁니다.</li>
+</ol>
+<pre><code class="language-javascript">function setCrossTabGridData(dateHeaders, data) {
+  let jsonData = [];
+  data.map(function (dataRow) {
+    let obj = {};
+    obj = Object.assign(obj, dataRow);  // 데이터 행을 복사하여 객체에 할당
+    dateHeaders.map(function (val, idx) {
+      obj[val] = dataRow["QTY"][idx];  // 날짜별 데이터를 해당 컬럼에 할당
+    });
+    jsonData.push(obj);  // 가공된 데이터를 배열에 추가
+  });
+
+  grid1.dataProvider.fillJsonData(jsonData);  // 가공된 데이터를 그리드에 채움
+}
+</code></pre>
+<h4 id="pivot-저장"><a class="header" href="#pivot-저장">pivot 저장</a></h4>
+<ul>
+<li><strong><code>getUpdatedCells</code></strong> : 지정된 행의 수정된 셀 데이터들을 확인한다.</li>
+</ul>
+<pre><code class="language-javascript">function saveData() {
+    grid1.gridView.commit(true);
+    showMessage(transLangKey('MSG_CONFIRM'), transLangKey('MSG_SAVE'), function (answer) {
+    if (answer) {
+      let changeRowData = [];
+      let changes = [];
+
+      changes = changes.concat(
+        grid1.dataProvider.getAllStateRows().created,
+        grid1.dataProvider.getAllStateRows().updated,
+        grid1.dataProvider.getAllStateRows().deleted,
+        grid1.dataProvider.getAllStateRows().createAndDeleted
+      );
+
+      changes.forEach(function (row) {
+        let data = grid1.dataProvider.getJsonRow(row);
+        changeRowData.push(data);
+      });
+
+      if (changeRowData.length === 0) {
+        //저장 할 내용이 없습니다.
+        showMessage(transLangKey('MSG_CONFIRM'), transLangKey('MSG_5039'), { close: false });
+      } else {
+        if (answer) {
+          let arrUpdateData = [];
+          if(changes.length &gt; 0){
+            changes.forEach(function (row) {
+              let rowData = grid1.dataProvider.getJsonRow(row);
+              const updatedCells = grid1.dataProvider.getUpdatedCells([row]);
+              let headerGrps = [];
+              updatedCells.map(cellRow =&gt; {
+                const cells = cellRow.updatedCells
+                cells.map(field =&gt; {
+                  let date = field.fieldName;
+                  if(headerGrps.indexOf(date) == -1) {
+                    headerGrps.push(date);
+                  }
+                });
+              });
+
+              headerGrps.map(field =&gt; {
+                let updData = {
+                  PLANT_ID: rowData['PLANT_ID'],
+                  DEMAND_ID: rowData['DEMAND_ID'],
+                  ROUTE_CODE: rowData['ROUTE_CODE'],
+                  RESOURCE_CODE: rowData['RESOURCE_CODE'],
+                  BASE_DATE: field,
+                  QTY: rowData[field],
+                }; 
+                arrUpdateData.push(updData);
+              });
+            });
+          }
+          console.log("arrUpdateData", arrUpdateData);
+        }
+      }
+    }
+    });
+  }
+</code></pre>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../chapter4/CRUD.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../chapter4/팝업.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../chapter4/CRUD.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../chapter4/팝업.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>
