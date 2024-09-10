@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.zionex.t3series.web.constant.ServiceConstants;
 import com.zionex.t3series.web.domain.admin.user.UserService;
+import com.zionex.t3series.web.util.crosstab.PivotUtil;
 import com.zionex.t3series.web.util.interceptor.ExecPermission;
 import com.zionex.t3series.web.util.query.QueryHandler;
 
@@ -195,6 +196,37 @@ public class PracticeController {
     }
 
     return resultMap;
+  }
+
+  @ExecPermission(menuCd = "UI_PRACTICE_05", type = ServiceConstants.PERMISSION_TYPE_READ)
+  @PostMapping("/practice/q4")
+  public Map<String, Object> getData4(@RequestBody Map<String, Object> params, HttpServletRequest request) throws Exception {
+
+    List<Map<String, Object>> dataList = Arrays.asList(
+      createDataMap("4205", "F0170006-K1-0001", "KRT-020101", "1차가공", "KRS-020110", "가공", "2024-08-23", 1, "N"),
+      createDataMap("4205", "F0170006-K1-0001", "KRT-020101", "1차가공", "KRS-020121", "소형로", "2024-08-23", 10, "N"),
+      createDataMap("4205", "F0170006-K1-0001", "KRT-020101", "1차가공", "KRS-020110", "가공", "2024-08-24", 1, "N"),
+      createDataMap("4205", "F0170006-K1-0001", "KRT-020101", "1차가공", "KRS-020121", "소형로", "2024-08-24", 10, "N"),
+      createDataMap("4205", "F0170006-K1-0001", "KRT-020101", "1차가공", "KRS-020110", "가공", "2024-08-25", 1, "N"),
+      createDataMap("4205", "F0170006-K1-0001", "KRT-020101", "1차가공", "KRS-020121", "소형로", "2024-08-25", 10, "N"),
+      createDataMap("4205", "F0170006-K1-0001", "KRT-020101", "1차가공", "KRS-020110", "가공", "2024-08-26", 1, "N"),
+      createDataMap("4205", "F0170006-K1-0001", "KRT-020101", "1차가공", "KRS-020121", "소형로", "2024-08-26", 10, "N"),
+      createDataMap("4205", "F0170006-K1-0001", "KRT-020101", "1차가공", "KRS-020110", "가공", "2024-08-27", 1, "N"),
+      createDataMap("4205", "F0170006-K1-0001", "KRT-020101", "1차가공", "KRS-020121", "소형로", "2024-08-27", 10, "N"),
+      createDataMap("4205", "F0170006-K1-0001", "KRT-020101", "1차가공", "KRS-020110", "가공", "2024-08-28", 10, "Y"),
+      createDataMap("4205", "F0170006-K1-0001", "KRT-020101", "1차가공", "KRS-020121", "소형로", "2024-08-28", 5, "Y"),
+      createDataMap("4205", "F0170006-K1-0001", "KRT-020101", "1차가공", "KRS-020110", "가공", "2024-08-29", 100, "Y"),
+      createDataMap("4205", "F0170006-K1-0001", "KRT-020101", "1차가공", "KRS-020121", "소형로", "2024-08-29", 999, "Y"),
+      createDataMap("4205", "F0170006-K1-0001", "KRT-020101", "1차가공", "KRS-020110", "가공", "2024-08-30", 55, "N"),
+      createDataMap("4205", "F0170006-K1-0001", "KRT-020101", "1차가공", "KRS-020121", "소형로", "2024-08-30", 22, "N")
+    );
+
+    String headerColumn ="PLAN_DATE";
+    String[] groupCds = {"PLANT_ID","DEMAND_ID","ROUTE_CODE","RESOURCE_CODE"};
+    String[] dataColumns = {"QTY", "HOLIDAY_YN"};
+    String[] measureCds = {};
+    String[] additionalHeaderColumns = {};
+    return PivotUtil.pivotData(dataList, headerColumn, groupCds, dataColumns, measureCds, additionalHeaderColumns);
   }
 
   @ExecPermission(menuCd = "UI_PRACTICE_01", type = ServiceConstants.PERMISSION_TYPE_UPDATE)
