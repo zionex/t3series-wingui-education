@@ -1,7 +1,3 @@
-# wingui
-- [Wingui Introduction](https://url.kr/w25r2c)
-- [Wingui Design Guide](https://url.kr/53idnd)
-
 # 사전 지식 
 - [사전 지식](./chapter1/사전지식.md)
 # 개발 표준
@@ -26,7 +22,5 @@
 - [차트](./chapter4/차트.md)
 - [다국어](./chapter4/다국어.md)
 - [LookupTree](./chapter4/LookupTree.md)
-# 디버깅
-- [디버깅](./chapter5/디버깅.md)
 # build
 - [build](./chapter6/build.md)

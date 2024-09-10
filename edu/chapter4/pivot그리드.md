@@ -19,7 +19,7 @@ for (Map<String, Object> heads : dataList) {
   header.add((String) heads.get("PLAN_DATE"));
 }
 ```
-**3. 피벗 데이터 구성** 그룹화된 각 데이터를 순회하며, 헤더에 맞게 데이터를 재배치합니다. 그룹 내 각 데이터의 `PLAN_DATE`를 기준으로 `QTY` 값을 배열에 배치하고, 이를 다시 맵에 추가합니다.
+**3-1. 피벗 데이터 구성** 그룹화된 각 데이터를 순회하며, 헤더에 맞게 데이터를 재배치합니다. 그룹 내 각 데이터의 `PLAN_DATE`를 기준으로 `QTY` 값을 배열에 배치하고, 이를 다시 맵에 추가합니다.
 
 ```java
 if (header.size() > 0) {
@@ -48,6 +48,69 @@ if (header.size() > 0) {
 }
 ```
 이 과정에서 `existDataFlag`는 데이터가 유효한지 확인하는 플래그로 사용되며, 유효한 경우에만 피벗 데이터가 추가됩니다.
+
+
+**3-2. PivotUtil.java 사용**
+
+주어진 입력값들을 기준으로 Grouping을 하고, 그 결과를 피벗 테이블로 변환하여 리턴
+
+**파라미터 설명** 
+
+| 파라미터명 | 설명 | 예시 | 
+|----------|:-------:|:-------:|
+| dataList |  | [{"PLANT_ID": "P1", "QTY": 100}, ...] | 
+| headerColumn | 피벗 테이블의 헤더로 사용할 컬럼. | "PLAN_DATE" | 
+| groupCds | Group By에 사용될 컬럼들의 배열. | {"PLANT_ID", "DEMAND_ID", "ROUTE_CODE"} | 
+| dataColumns | 피벗 테이블에서 값을 표시할 데이터 컬럼들의 배열. | {"QTY", "HOLIDAY_YN"} | 
+| measureCds | 데이터 값이 나눠진 경우(측정값 분리 시) 사용하는 컬럼. 보통 groupCds에 포함됨. | {"A_QTY", "B_QTY", "C_QTY"} | 
+| additionalHeaderColumns | 추가적으로 헤더에 포함할 컬럼. | {"WEEK","ETC"} | 
+
+시나리오 1 : 일반 pivot
+```java
+String headerColumn ="PLAN_DATE"; 
+String[] groupCds = {"PLANT_ID","DEMAND_ID","ROUTE_CODE","RESOURCE_CODE"}; 
+String[] dataColumns = {"QTY", "HOLIDAY_YN"}; 
+String[] measureCds = {}; 
+String[] additionalHeaderColumns = {}; 
+return PivotUtil.pivotData(dataList, headerColumn, groupCds, dataColumns, measureCds, additionalHeaderColumns);
+```
+
+
+시나리오2 : 데이터 값이 나눠진 경우 
+| 구분     | 2024-01 | 2024-02 |
+|----------|:-------:|:-------:|
+| 기초재고 |    1    |    1    |
+| 출고예정 |    1    |    1    |
+| 입고예정 |    1    |    1    |
+| 기말재고 |    1    |    1    |
+
+```java
+String headerColumn ="PLAN_DT";
+String[] groupCds = {"PLNT_CD", "VERSION_CD", "ITEM_CD"};
+String[] dataColumns = {"BOH_QTY", "GI_QTY", "GR_QTY", "EOH_QTY", "FLAG"};
+String[] measureCds = {"기초재고", "출고예정", "입고예정", "기말재고"}; //다국어 컬럼명
+String[] additionalHeaderColumns = {};
+return PivotUtil.pivotData(dataList, headerColumn, groupCds, dataColumns, measureCds, additionalHeaderColumns);
+```
+
+시나리오3 : 헤더에 부가적인 정보를 DB 데이터로 표현 해달라고 하는 경우 
+| 2024-01 | 2024-02 | 
+|--------|:--------:|
+|  W01    |   W02   |
+|  1월    |    2월  | 
+| 1 | 1 | 
+| 1 | 1 | 
+| 1 | 1 | 
+| 1 | 1 | 
+```java
+String headerColumn ="PLAN_DATE"; 
+String[] groupCds = {"PLANT_ID","DEMAND_ID","ROUTE_CODE","RESOURCE_CODE"}; 
+String[] dataColumns = {"QTY", "HOLIDAY_YN"}; 
+String[] measureCds = {}; 
+String[] additionalHeaderColumns = {"WEEK","MONTH"}; 
+return PivotUtil.pivotData(dataList, headerColumn, groupCds, dataColumns, measureCds, additionalHeaderColumns);
+```
+
 
 **4. 결과 반환** 
 마지막으로, 생성된 헤더와 피벗 데이터가 담긴 맵을 반환합니다. 이 결과는 프론트엔드나 다른 시스템에서 사용하기 위한 최종 데이터 구조가 됩니다.
