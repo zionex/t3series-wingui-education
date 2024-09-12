@@ -7,7 +7,7 @@ import Login from '@wingui/view/pages/Login';
 import Password from '@wingui/view/pages/Password';
 import { uiSettings } from "@wingui/common/uiSettings";
 import {
-  SideBar, Content, getAppSettings,
+  SideBar, getAppSettings,
   getContentStore, useMenuStore, useWidgetStore, useUserStore, lo, initSettings, transLangKey, validateSession,
   useContentStore
 } from '@zionex/wingui-core/index'
@@ -20,7 +20,7 @@ import menuData from '@wingui/data/menus'
 import { AppStyleProvider } from '@zionex/wingui-core/style/AppStyleProvider';
 import { AppContextProvider } from '@zionex/wingui-core/context/AppContextProvider';
 import LanguageRector,{setSessionLang} from './LangageRector';
-
+import Content from '@wingui/layout/Content'
 // let initApp = false;
 let initLoginPage = false;
 let initUiSetting = false;

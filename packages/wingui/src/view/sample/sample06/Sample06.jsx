@@ -73,7 +73,8 @@ function Sample06() {
     }
   })
   const globalButtons = [
-    { name: "search", action: (e) => { handleSubmit(onSubmit, onErrorInput)() }, visible: true, disable: false }
+    { name: "search", action: (e) => { handleSubmit(onSubmit, onErrorInput)() }, visible: true, disable: false },
+    { name: "help", docUrl: '/edu/chapter3/INPUTS.html', visible: true, disable: false }
   ]
 
   useEffect(() => {

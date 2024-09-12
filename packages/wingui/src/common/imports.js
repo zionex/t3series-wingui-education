@@ -1,5 +1,6 @@
 import ContentInner from "@zionex/wingui-core/layout/ContentInner";
-import { SearchArea } from "@zionex/wingui-core/layout/SearchArea";
+/* import { SearchArea } from "@zionex/wingui-core/layout/SearchArea";  */
+import { SearchArea } from '@wingui/layout/SearchArea'
 import { SearchRow } from "@zionex/wingui-core/layout/SearchRow";
 import { ResultArea } from "@zionex/wingui-core/layout/ResultArea";
 import { ButtonArea, LeftButtonArea, RightButtonArea } from "@zionex/wingui-core/layout/ButtonArea";

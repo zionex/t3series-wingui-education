@@ -9,6 +9,23 @@ import { TabContainer } from '@zionex/wingui-core/component/TabContainer';
 import { Box } from "@mui/material";
 
 function Sample05() {
+  const activeViewId = getActiveViewId();
+  const [viewData, getViewInfo, setViewInfo] = useViewStore((state) => [
+    state.viewData,
+    state.getViewInfo,
+    state.setViewInfo,
+  ]);
+
+  // globalButtons
+  const globalButtons = [
+    { name: "help", docUrl: '/edu/chapter3/Tab.html', visible: true, disable: false }
+  ];
+
+  useEffect(() => {
+    setViewInfo(activeViewId, "globalButtons", globalButtons);
+  }, []);
+
+
   const [tabValue, setTabValue] = useState('tab1');
   const tabChange = (event, newValue) => {
     setTabValue(newValue);

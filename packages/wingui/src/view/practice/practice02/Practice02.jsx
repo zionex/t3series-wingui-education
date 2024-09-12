@@ -42,6 +42,7 @@ function Practice01() {
 
    // globalButtons
   const globalButtons = [
+    { name: "help", docUrl: '/edu/chapter4/JAVA컨트롤러.html', visible: true, disable: false },
     { name: 'search', action: (e) => { loadData() }, visible: true, disable: false },
     { name: "refresh", action: (e) => { refresh() }, visible: true, disable: false },
   ];

@@ -8,6 +8,22 @@ import {
 
 // 12 * 48? 
 function Sample07() {
+  const activeViewId = getActiveViewId();
+  const [viewData, getViewInfo, setViewInfo] = useViewStore((state) => [
+    state.viewData,
+    state.getViewInfo,
+    state.setViewInfo,
+  ]);
+
+  // globalButtons
+  const globalButtons = [
+    { name: "help", docUrl: '/edu/chapter3/Dashboard.html', visible: true, disable: false }
+  ];
+
+  useEffect(() => {
+    setViewInfo(activeViewId, "globalButtons", globalButtons);
+  }, []);
+
   function makeWidgetPanel() {
     let widgets = [
       {

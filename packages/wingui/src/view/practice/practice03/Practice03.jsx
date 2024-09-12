@@ -16,7 +16,7 @@ let grid1Items = [
       let age = grid.getValue(dataCell.index.itemIndex, "AGE");
       if(age > 40){
         //ret.styleName = "rg-cal-week-sun"; // 기존 default style도 함께 지정해줘야함.
-        ret.styleName = "column-textAlignt-far editable-column red";
+        ret.styleName = `${dataCell.dataColumn.styleName} red`;
         ret.editable = true;
       }else{
         ret.editable = false;
@@ -65,6 +65,7 @@ function Practice03() {
 
    // globalButtons
   const globalButtons = [
+    { name: "help", docUrl: '/edu/chapter4/리얼그리드이벤트.html', visible: true, disable: false },
     { name: 'search', action: (e) => { loadData() }, visible: true, disable: false },
     { name: "refresh", action: (e) => { refresh() }, visible: true, disable: false },
   ];

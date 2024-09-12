@@ -7,6 +7,22 @@ import {
 } from "@wingui/common/imports";
 
 function Sample01() {
+  const activeViewId = getActiveViewId();
+  const [viewData, getViewInfo, setViewInfo] = useViewStore((state) => [
+    state.viewData,
+    state.getViewInfo,
+    state.setViewInfo,
+  ]);
+
+  // globalButtons
+  const globalButtons = [
+    { name: "help", docUrl: '/edu/chapter3/레이아웃.html', visible: true, disable: false }
+  ];
+
+  useEffect(() => {
+    setViewInfo(activeViewId, "globalButtons", globalButtons);
+  }, []);
+  
   return (
     <ContentInner>
       <SearchArea>

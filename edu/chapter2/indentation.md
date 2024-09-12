@@ -1,3 +1,6 @@
+
+- [ZIONEX 개발 표준](https://drive.google.com/file/d/1sh8QeDpqFoeAKXoze73hE75x1zRY9wvE/view?usp=drive_link)
+
 ## Front-end
 
 HTML, CSS, JavaScript, JSX 등의 Front-end source의 indentation은 2 spaces를 기준으로 함. VSCode의 설정 예는 다음과 같음.

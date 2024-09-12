@@ -39,6 +39,7 @@ function Practice05() {
 
    // globalButtons
   const globalButtons = [
+    { name: "help", docUrl: '/edu/chapter4/pivot그리드.html', visible: true, disable: false },
     { name: 'search', action: (e) => { loadData() }, visible: true, disable: false },
     { name: "refresh", action: (e) => { refresh() }, visible: true, disable: false },
   ];
@@ -99,7 +100,8 @@ function Practice05() {
     zAxios({
       method: 'post',
       header: { 'content-type': 'application/json' },
-      url: baseURI() + 'practice/q3',
+      //url: baseURI() + 'practice/q3',
+      url: baseURI() + 'practice/q4',
       data: param
     })
     .then(function (res) {

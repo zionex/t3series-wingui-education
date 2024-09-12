@@ -9,6 +9,7 @@
 - [InputField](./chapter3/INPUTS.md)
 - [Tab](./chapter3/Tab.md)
 - [Dashboard](./chapter3/Dashboard.md)
+- [Theme](./chapter3/theme.md)
 
 # 튜토리얼
 - [메뉴생성 및 연결](./chapter4/메뉴생성및연결.md)
