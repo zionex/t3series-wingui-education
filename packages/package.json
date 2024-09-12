@@ -102,7 +102,7 @@
     "@tiptap/starter-kit": "2.1.13",
     "@types/sortablejs": "1.15.7",
     "@uiw/react-markdown-preview": "5.0.7",
-    "@zionex/wingui-core": "24.0.0",
+    "@zionex/wingui-core": "24.1.0-alpha1",
     "ag-grid-community": "31.0.1",
     "ag-grid-enterprise": "31.0.1",
     "ag-grid-react": "31.0.1",
