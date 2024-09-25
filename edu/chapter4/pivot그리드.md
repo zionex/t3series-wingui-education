@@ -99,16 +99,11 @@ return PivotUtil.pivotData(dataList, headerColumn, groupCds, dataColumns, measur
   "ROUTE_CODE": "KRT-020101"
 }
 ```
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
 
 
 시나리오2 : Measure 가 있지만 DB에서 Measure 값을 리턴하지 않아서 임의로 표시해야하는 경우
 다국어 처리시  measureNms 에는 다국어 코드값을 넣고 realgrid displayCallback 을 이용해 다국어 표시
+
 ```javascript
 {name: "QTY_TYPE", dataType: "text", headerText :"QTY_TYPE" , visible: true, editable: false, width: 100,
   displayCallback: function (grid, index, val) {
@@ -251,7 +246,7 @@ const loadData = () => {
   });
 };
 ```
- 
+
 - **`zAxios`** : axios 기반으로 만든 서버에 요청을 보내는 비동기 함수입니다.
   - <u>waitOn: false, 옵션을 추가하면 progress 가 나타나지 않습니다.</u>
   ```javascript
@@ -288,11 +283,11 @@ function makeCrossTabFieldsAndColumns(dateHeaders) {
   grid1.addGridItems(grid1Items.concat(dynamicCols), true);  // 기존 컬럼에 동적 컬럼을 추가
 }
 ```
- 
+
 - **`dateHeaders`** : 서버로부터 받아온 날짜별 헤더 리스트입니다.
- 
+
 - **`dynamicCols`** : 동적으로 생성된 컬럼 객체 배열입니다.
- 
+
 - **`addGridItems`** : 기존의 컬럼 배열에 동적으로 생성된 컬럼을 추가합니다.
 3. 데이터 그리드에 설정 (`setCrossTabGridData` 함수)** 
 이 함수는 동적으로 생성된 컬럼과 데이터를 그리드에 설정합니다. 서버로부터 받은 데이터 배열을 가공하여 그리드에 채웁니다.
@@ -313,7 +308,7 @@ function setCrossTabGridData(dateHeaders, data) {
   grid1.dataProvider.fillJsonData(jsonData);  // 가공된 데이터를 그리드에 채움
 }
 ```
- 
+
 #### pivot 저장
 
 - **`getUpdatedCells`** : 지정된 행의 수정된 셀 데이터들을 확인한다.
