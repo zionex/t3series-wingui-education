@@ -186,12 +186,15 @@ itemIndex ---------- gridView
 dataRow ----------- dataProvider
 
 # 올바른 사용법
-dataProvider.getValue(index.itemIndex, "컬럼명") 
-gridView.getValue(index.dataRow, "컬럼명")
+dataProvider.getValue(index.dataRow, "컬럼명") 
+gridView.getValue(index.itemIndex, "컬럼명")
 
 # 틀린사용법
 dataProvider.getValue(index.itemIndex, "컬럼명") (틀린 사용법)
 gridView.getValue(index.dataRow, "컬럼명") (틀린 사용법)
+</code></pre>
+<pre><code>gridView.getCheckedItems() // 체크된 itemIndex 값 배열을 가져옴
+gridView.getCheckedRows() // 체크된 dataRow값 배열을 가져옴
 </code></pre>
 <ul>
 <li>

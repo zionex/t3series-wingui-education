@@ -1273,81 +1273,84 @@ export default Sample04
 </li>
 </ul>
 <h3 id="조회"><a class="header" href="#조회">조회</a></h3>
-<pre><code class="language-java"> @ExecPermission(menuCd = "UI_PRACTICE_01", type = ServiceConstants.PERMISSION_TYPE_READ)
-  @PostMapping("/practice/q1")
-  public List&lt;Map&lt;String, Object&gt;&gt; getData1(@RequestBody Map&lt;String, Object&gt; params, HttpServletRequest request) throws Exception {
-    return queryHandler.getList("SP_UI_PRACTICE_01Q", params);
-  }
+<pre><code class="language-java">    @ExecPermission(menuCd = "UI_PRACTICE_01", type = ServiceConstants.PERMISSION_TYPE_READ)
+    @PostMapping("/practice/q1")
+    public List&lt;Map&lt;String, Object&gt;&gt; getData1(@RequestBody Map&lt;String, Object&gt; params, HttpServletRequest request) throws Exception {
+        return queryHandler.getList("SP_UI_PRACTICE_01Q", params);
+    }
 </code></pre>
 <h3 id="저장"><a class="header" href="#저장">저장</a></h3>
-<pre><code class="language-java"> @ExecPermission(menuCd = "UI_PRACTICE_01", type = ServiceConstants.PERMISSION_TYPE_UPDATE)
-  @PostMapping("/practice/s1")
-  public Map&lt;String, Object&gt; saveData1(@RequestBody List&lt;Map&lt;String, Object&gt;&gt; changes, HttpServletRequest request) throws Exception {
-    String username = userService.getUserDetails().getUsername();
-    Map&lt;String, Object&gt; resultMap = new HashMap&lt;&gt;();
-    for (Map&lt;String, Object&gt; params : changes) {
-      Map&lt;String, Object&gt; param = new HashMap&lt;&gt;();
-      param.put("P_ID", new Object[] { params.get("ID"), String.class, ParameterMode.IN });
-      param.put("P_KORNAME", new Object[] { params.get("KORNAME"), String.class, ParameterMode.IN });
-      param.put("P_GENDER", new Object[] { params.get("GENDER"), String.class, ParameterMode.IN });
-      param.put("P_AGE", new Object[] { params.get("AGE"), Integer.class, ParameterMode.IN });
-      param.put("P_USERNAME", new Object[] { username, String.class, ParameterMode.IN });
-      Map&lt;String, Object&gt; result = queryHandler.save("SP_UI_PRACTICE_01S", param);
+<ul>
+<li>commonService.saveData()를 호출하여 공통 서비스에서 예외 처리가 될 수 있게 함.</li>
+</ul>
+<pre><code class="language-java">    @ExecPermission(menuCd = "UI_PRACTICE_01", type = ServiceConstants.PERMISSION_TYPE_UPDATE)
+    @PostMapping("/practice/s1")
+    public Map&lt;String, Object&gt; saveData1(@RequestBody List&lt;Map&lt;String, Object&gt;&gt; changes, HttpServletRequest request) throws Exception {
+        String username = userService.getUserDetails().getUsername();
 
-      resultMap.putAll(result);
+        Map&lt;String, Object&gt; resultMap = new HashMap&lt;&gt;();
+        for (Map&lt;String, Object&gt; params : changes) {
+            Map&lt;String, Object&gt; param = new HashMap&lt;&gt;();
+            param.put("P_ID", new Object[] { params.get("ID"), String.class, ParameterMode.IN });
+            param.put("P_KORNAME", new Object[] { params.get("KORNAME"), String.class, ParameterMode.IN });
+            param.put("P_GENDER", new Object[] { params.get("GENDER"), String.class, ParameterMode.IN });
+            param.put("P_AGE", new Object[] { params.get("AGE"), Integer.class, ParameterMode.IN });
+            param.put("P_USERNAME", new Object[] { username, String.class, ParameterMode.IN });
+            
+            Map&lt;String, Object&gt; result = commonService.saveData("SP_UI_PRACTICE_01S", param);
+            resultMap.putAll(result);
+        }
+        return resultMap;
     }
-    return resultMap;
-  }
 </code></pre>
 <h3 id="삭제"><a class="header" href="#삭제">삭제</a></h3>
-<pre><code class="language-java"> @ExecPermission(menuCd = "UI_PRACTICE_01", type = ServiceConstants.PERMISSION_TYPE_DELETE)
-  @PostMapping("/practice/d1")
-  public Map&lt;String, Object&gt; deleteData1(@RequestBody List&lt;Map&lt;String, Object&gt;&gt; changes, HttpServletRequest request) throws Exception {
-    String username = userService.getUserDetails().getUsername();
+<pre><code class="language-java">    @ExecPermission(menuCd = "UI_PRACTICE_01", type = ServiceConstants.PERMISSION_TYPE_DELETE)
+    @PostMapping("/practice/d1")
+    public Map&lt;String, Object&gt; deleteData1(@RequestBody List&lt;Map&lt;String, Object&gt;&gt; changes, HttpServletRequest request) throws Exception {
+        String username = userService.getUserDetails().getUsername();
 
-    Map&lt;String, Object&gt; resultMap = new HashMap&lt;&gt;();
-    for (Map&lt;String, Object&gt; params : changes) {
-      Map&lt;String, Object&gt; param = new HashMap&lt;&gt;();
-      
-      param.put("P_ID", new Object[] { params.get("ID"), String.class, ParameterMode.IN });
-      param.put("P_USERNAME", new Object[] { username, String.class, ParameterMode.IN });
-      Map&lt;String, Object&gt; result = queryHandler.save("SP_UI_PRACTICE_01D", param);
-      resultMap.putAll(result);
+        Map&lt;String, Object&gt; resultMap = new HashMap&lt;&gt;();
+        for (Map&lt;String, Object&gt; params : changes) {
+            Map&lt;String, Object&gt; param = new HashMap&lt;&gt;();
+            param.put("P_ID", new Object[] { params.get("ID"), String.class, ParameterMode.IN });
+            param.put("P_USERNAME", new Object[] { username, String.class, ParameterMode.IN });
+            
+            Map&lt;String, Object&gt; result = commonService.saveData("SP_UI_PRACTICE_01D", param);
+            resultMap.putAll(result);
+        }
+        return resultMap;
     }
-    return resultMap;
-  }
 </code></pre>
 <h3 id="native-sql"><a class="header" href="#native-sql">native sql</a></h3>
 <ul>
 <li>sql 문을 직접 호출 할 수 있지만 프로시저 사용을 권장함.</li>
 </ul>
-<pre><code class="language-java">@ExecPermission(menuCd = "UI_PRACTICE_01", type = ServiceConstants.PERMISSION_TYPE_READ)
-  @PostMapping("/practice/q2")
-  public List&lt;?&gt; getData2(@RequestBody Map&lt;String, Object&gt; params, HttpServletRequest request) throws Exception {
-      String sqlQuery = 
-      "SELECT '쿼리-박OO' AS KORNAME, '남' AS GENDER, '71' AS AGE, '(025)6563-2802' AS PHONE, " +
-      "'198160731-00008' AS PRODUCTID, '모잠비크' AS KORCOUNTRY, '2021-01-16' AS ORDERDATE, 'Y' AS ACTIVE " +
-      "UNION ALL " +
-      "SELECT '쿼리-조OO', '남', '62', '(093)8809-8696', " +
-      "'571215854-00001', '캐나다', '2019-07-29', 'Y' " +
-      "UNION ALL " +
-      "SELECT '쿼리-김OO', '남', '45', '(010)1234-5678', " +
-      "'123456789-00003', '한국', '2020-05-23', 'N' " +
-      "UNION ALL " +
-      "SELECT '쿼리-이OO', '여', '32', '(010)8765-4321', " +
-      "'987654321-00004', '미국', '2020-11-11', 'Y' " +
-      "UNION ALL " +
-      "SELECT '쿼리-한OO', '여', '29', '(010)5555-6666', " +
-      "'55556666-00005', '호주', '2021-03-14', 'Y' " +
-      "UNION ALL " +
-      "SELECT '쿼리-장OO', '남', '39', '(010)7777-8888', " +
-      "'77778888-00006', '영국', '2018-09-17', 'N' " +
-      "UNION ALL " +
-      "SELECT '쿼리-송OO', '여', '35', '(010)9999-0000', " +
-      "'99990000-00007', '프랑스', '2021-06-21', 'N';";
+<pre><code class="language-java">    @ExecPermission(menuCd = "UI_PRACTICE_01", type = ServiceConstants.PERMISSION_TYPE_READ)
+    @PostMapping("/practice/q2")
+    public List&lt;?&gt; getData2(@RequestBody Map&lt;String, Object&gt; params, HttpServletRequest request) throws Exception {
+        String sqlQuery = "SELECT '쿼리-박OO' AS KORNAME, '남' AS GENDER, '71' AS AGE, '(025)6563-2802' AS PHONE, " +
+                "'198160731-00008' AS PRODUCTID, '모잠비크' AS KORCOUNTRY, '2021-01-16' AS ORDERDATE, 'Y' AS ACTIVE " +
+                "UNION ALL " +
+                "SELECT '쿼리-조OO', '남', '62', '(093)8809-8696', " +
+                "'571215854-00001', '캐나다', '2019-07-29', 'Y' " +
+                "UNION ALL " +
+                "SELECT '쿼리-김OO', '남', '45', '(010)1234-5678', " +
+                "'123456789-00003', '한국', '2020-05-23', 'N' " +
+                "UNION ALL " +
+                "SELECT '쿼리-이OO', '여', '32', '(010)8765-4321', " +
+                "'987654321-00004', '미국', '2020-11-11', 'Y' " +
+                "UNION ALL " +
+                "SELECT '쿼리-한OO', '여', '29', '(010)5555-6666', " +
+                "'55556666-00005', '호주', '2021-03-14', 'Y' " +
+                "UNION ALL " +
+                "SELECT '쿼리-장OO', '남', '39', '(010)7777-8888', " +
+                "'77778888-00006', '영국', '2018-09-17', 'N' " +
+                "UNION ALL " +
+                "SELECT '쿼리-송OO', '여', '35', '(010)9999-0000', " +
+                "'99990000-00007', '프랑스', '2021-06-21', 'N';";
 
-    return queryHandler.getNativeQueryData(sqlQuery);
-  }
+        return queryHandler.getNativeQueryData(sqlQuery);
+    }
 
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h2 id="realgrid-event"><a class="header" href="#realgrid-event">realgrid event</a></h2>
@@ -1363,12 +1366,15 @@ itemIndex ---------- gridView
 dataRow ----------- dataProvider
 
 # 올바른 사용법
-dataProvider.getValue(index.itemIndex, "컬럼명") 
-gridView.getValue(index.dataRow, "컬럼명")
+dataProvider.getValue(index.dataRow, "컬럼명") 
+gridView.getValue(index.itemIndex, "컬럼명")
 
 # 틀린사용법
 dataProvider.getValue(index.itemIndex, "컬럼명") (틀린 사용법)
 gridView.getValue(index.dataRow, "컬럼명") (틀린 사용법)
+</code></pre>
+<pre><code>gridView.getCheckedItems() // 체크된 itemIndex 값 배열을 가져옴
+gridView.getCheckedRows() // 체크된 dataRow값 배열을 가져옴
 </code></pre>
 <ul>
 <li>
@@ -1490,59 +1496,27 @@ for (Map&lt;String, Object&gt; heads : dataList) {
 </code></pre>
 <p>이 과정에서 <code>existDataFlag</code>는 데이터가 유효한지 확인하는 플래그로 사용되며, 유효한 경우에만 피벗 데이터가 추가됩니다.</p>
 <p><strong>3-2. PivotUtil.java 사용</strong></p>
-<p>주어진 입력값들을 기준으로 Grouping을 하고, 그 결과를 피벗 테이블로 변환하여 리턴</p>
-<p><strong>파라미터 설명</strong></p>
+<p>주어진 입력값들을 기준으로 Grouping을 하고, 그 결과를 피벗 테이블로 변환하여 리턴.</p>
+<p><strong>파라미터 설명</strong>
+<u>배열로 들어가는 값들은 모두 DB 컬럼명</u>이다.</p>
 <div class="table-wrapper"><table><thead><tr><th>파라미터명</th><th style="text-align: center">설명</th><th style="text-align: center">예시</th></tr></thead><tbody>
 <tr><td>dataList</td><td style="text-align: center"></td><td style="text-align: center">[{"PLANT_ID": "P1", "QTY": 100}, ...]</td></tr>
 <tr><td>headerColumn</td><td style="text-align: center">피벗 테이블의 헤더로 사용할 컬럼.</td><td style="text-align: center">"PLAN_DATE"</td></tr>
 <tr><td>groupCds</td><td style="text-align: center">Group By에 사용될 컬럼들의 배열.</td><td style="text-align: center">{"PLANT_ID", "DEMAND_ID", "ROUTE_CODE"}</td></tr>
 <tr><td>dataColumns</td><td style="text-align: center">피벗 테이블에서 값을 표시할 데이터 컬럼들의 배열.</td><td style="text-align: center">{"QTY", "HOLIDAY_YN"}</td></tr>
-<tr><td>measureCds</td><td style="text-align: center">데이터 값이 나눠진 경우(측정값 분리 시) 사용하는 컬럼. 보통 groupCds에 포함됨.</td><td style="text-align: center">{"A_QTY", "B_QTY", "C_QTY"}</td></tr>
-<tr><td>additionalHeaderColumns</td><td style="text-align: center">추가적으로 헤더에 포함할 컬럼.</td><td style="text-align: center">{"WEEK","ETC"}</td></tr>
+<tr><td>measureNms</td><td style="text-align: center">데이터 값이 나눠진 경우(측정값 분리 시) 사용하는 분류명. 보통 groupCds에 포함되어 사용할 일이 없지만 DB 데이터로 주어지지 않을 경우 사용.</td><td style="text-align: center">{"A_QTY", "B_QTY", "C_QTY"}</td></tr>
+<tr><td>additionalHeaderColumns</td><td style="text-align: center">추가적으로 헤더에 포함할 컬럼.</td><td style="text-align: center">{"PLAN_DATE","WEEK","ETC"}</td></tr>
 </tbody></table>
 </div>
 <p>시나리오 1 : 일반 pivot</p>
 <pre><code class="language-java">String headerColumn ="PLAN_DATE"; 
 String[] groupCds = {"PLANT_ID","DEMAND_ID","ROUTE_CODE","RESOURCE_CODE"}; 
 String[] dataColumns = {"QTY", "HOLIDAY_YN"}; 
-String[] measureCds = {}; 
+String[] measureNms = {}; 
 String[] additionalHeaderColumns = {}; 
-return PivotUtil.pivotData(dataList, headerColumn, groupCds, dataColumns, measureCds, additionalHeaderColumns);
+return PivotUtil.pivotData(dataList, headerColumn, groupCds, dataColumns, measureNms, additionalHeaderColumns);
 </code></pre>
-<p>시나리오2 : 데이터 값이 나눠진 경우</p>
-<div class="table-wrapper"><table><thead><tr><th>구분</th><th style="text-align: center">2024-01</th><th style="text-align: center">2024-02</th></tr></thead><tbody>
-<tr><td>기초재고</td><td style="text-align: center">1</td><td style="text-align: center">1</td></tr>
-<tr><td>출고예정</td><td style="text-align: center">1</td><td style="text-align: center">1</td></tr>
-<tr><td>입고예정</td><td style="text-align: center">1</td><td style="text-align: center">1</td></tr>
-<tr><td>기말재고</td><td style="text-align: center">1</td><td style="text-align: center">1</td></tr>
-</tbody></table>
-</div>
-<pre><code class="language-java">String headerColumn ="PLAN_DT";
-String[] groupCds = {"PLNT_CD", "VERSION_CD", "ITEM_CD"};
-String[] dataColumns = {"BOH_QTY", "GI_QTY", "GR_QTY", "EOH_QTY", "FLAG"};
-String[] measureCds = {"기초재고", "출고예정", "입고예정", "기말재고"}; //다국어 컬럼명
-String[] additionalHeaderColumns = {};
-return PivotUtil.pivotData(dataList, headerColumn, groupCds, dataColumns, measureCds, additionalHeaderColumns);
-</code></pre>
-<p>시나리오3 : 헤더에 부가적인 정보를 DB 데이터로 표현 해달라고 하는 경우</p>
-<div class="table-wrapper"><table><thead><tr><th>2024-01</th><th style="text-align: center">2024-02</th></tr></thead><tbody>
-<tr><td>W01</td><td style="text-align: center">W02</td></tr>
-<tr><td>1월</td><td style="text-align: center">2월</td></tr>
-<tr><td>1</td><td style="text-align: center">1</td></tr>
-<tr><td>1</td><td style="text-align: center">1</td></tr>
-<tr><td>1</td><td style="text-align: center">1</td></tr>
-<tr><td>1</td><td style="text-align: center">1</td></tr>
-</tbody></table>
-</div>
-<pre><code class="language-java">String headerColumn ="PLAN_DATE"; 
-String[] groupCds = {"PLANT_ID","DEMAND_ID","ROUTE_CODE","RESOURCE_CODE"}; 
-String[] dataColumns = {"QTY", "HOLIDAY_YN"}; 
-String[] measureCds = {}; 
-String[] additionalHeaderColumns = {"WEEK","MONTH"}; 
-return PivotUtil.pivotData(dataList, headerColumn, groupCds, dataColumns, measureCds, additionalHeaderColumns);
-</code></pre>
-<p><strong>4. 결과 반환</strong>
-마지막으로, 생성된 헤더와 피벗 데이터가 담긴 맵을 반환합니다. 이 결과는 프론트엔드나 다른 시스템에서 사용하기 위한 최종 데이터 구조가 됩니다.</p>
+<p>결과</p>
 <pre><code>{
   "ROUTE_NAME": "1차가공",
   "PLAN_DATE": "2024-08-23",
@@ -1563,6 +1537,104 @@ return PivotUtil.pivotData(dataList, headerColumn, groupCds, dataColumns, measur
   "RESOURCE_NAME": "가공",
   "ROUTE_CODE": "KRT-020101"
 }
+</code></pre>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<p>시나리오2 : Measure 가 있지만 DB에서 Measure 값을 리턴하지 않아서 임의로 표시해야하는 경우
+다국어 처리시  measureNms 에는 다국어 코드값을 넣고 realgrid displayCallback 을 이용해 다국어 표시</p>
+<pre><code class="language-javascript">{name: "QTY_TYPE", dataType: "text", headerText :"QTY_TYPE" , visible: true, editable: false, width: 100,
+  displayCallback: function (grid, index, val) {
+    return transLangKey(val);
+  },
+},
+</code></pre>
+<pre><code class="language-java">String headerColumn ="PLAN_DT";
+String[] groupCds = {"PLNT_CD", "VERSION_CD", "ITEM_CD"};
+String[] dataColumns = {"BOH_QTY", "GI_QTY", "GR_QTY", "EOH_QTY", "FLAG"};
+String[] measureNms = {"기초재고", "출고예정", "입고예정", "기말재고"}; //다국어 컬럼명
+String[] additionalHeaderColumns = {};
+return PivotUtil.pivotData(dataList, headerColumn, groupCds, dataColumns, measureNms, additionalHeaderColumns);
+
+
+</code></pre>
+<p>샘플 데이터 형태</p>
+<div class="table-wrapper"><table><thead><tr><th>PLNT_CD</th><th style="text-align: center">PLNT_NM</th><th style="text-align: center">VERSION_CD</th><th style="text-align: center">ITEM_CD</th><th style="text-align: center">ITEM_NM</th><th style="text-align: center">PLAN_DT</th><th style="text-align: center">BOH_QTY</th><th style="text-align: center">GI_QTY</th><th style="text-align: center">GR_QTY</th><th style="text-align: center">EOH_QTY</th><th style="text-align: center">FLAG</th></tr></thead><tbody>
+<tr><td>1100</td><td style="text-align: center">울산공장</td><td style="text-align: center">U1-20240723-003-003</td><td style="text-align: center">D00001</td><td style="text-align: center">Adipic Acid</td><td style="text-align: center">20240723</td><td style="text-align: center">1000</td><td style="text-align: center">1</td><td style="text-align: center">0</td><td style="text-align: center">1</td><td style="text-align: center">Y</td></tr>
+<tr><td>1100</td><td style="text-align: center">울산공장</td><td style="text-align: center">U1-20240723-003-003</td><td style="text-align: center">D00001</td><td style="text-align: center">Adipic Acid</td><td style="text-align: center">20240724</td><td style="text-align: center">2000</td><td style="text-align: center">2</td><td style="text-align: center">0</td><td style="text-align: center">2</td><td style="text-align: center">Y</td></tr>
+<tr><td>1100</td><td style="text-align: center">울산공장</td><td style="text-align: center">U1-20240723-003-003</td><td style="text-align: center">D00001</td><td style="text-align: center">Adipic Acid</td><td style="text-align: center">20240725</td><td style="text-align: center">3000</td><td style="text-align: center">3</td><td style="text-align: center">0</td><td style="text-align: center">3</td><td style="text-align: center">Y</td></tr>
+</tbody></table>
+</div>
+<p>결과</p>
+<pre><code>{
+    "ITEM_CD": "D00001",
+    "ITEM_NM": "Adipic Acid",
+    "PLNT_NM": "울산공장",
+    "PLNT_CD": "1100",
+    "FLAG": [
+        "Y",
+        "Y",
+        "Y",
+    ],
+    "QTY_TYPE": "기초재고",
+    "QTY": [
+        1000,
+        2000,
+        3000
+    ],
+    "VERSION_CD": "U1-20240723-004-003",
+    "PLAN_DT": "20240723",
+},
+{
+    "ITEM_CD": "D00001",
+    "ITEM_NM": "Adipic Acid",
+    "PLNT_NM": "울산공장",
+    "PLNT_CD": "1100",
+    "FLAG": [
+        "Y",
+        "Y",
+        "Y",
+    ],
+    "QTY_TYPE": "출고예정",
+    "QTY": [
+        1,
+        2,
+        3
+    ],
+    "VERSION_CD": "U1-20240723-004-003",
+    "PLAN_DT": "20240723",
+},
+</code></pre>
+<div class="table-wrapper"><table><thead><tr><th>구분</th><th style="text-align: center">2024-01</th><th style="text-align: center">2024-02</th></tr></thead><tbody>
+<tr><td>기초재고</td><td style="text-align: center">1</td><td style="text-align: center">1</td></tr>
+<tr><td>출고예정</td><td style="text-align: center">1</td><td style="text-align: center">1</td></tr>
+<tr><td>입고예정</td><td style="text-align: center">1</td><td style="text-align: center">1</td></tr>
+<tr><td>기말재고</td><td style="text-align: center">1</td><td style="text-align: center">1</td></tr>
+</tbody></table>
+</div><br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<p>시나리오3 : 헤더에 부가적인 정보를 DB 데이터로 표현 해달라고 하는 경우</p>
+<div class="table-wrapper"><table><thead><tr><th>2024-01</th><th style="text-align: center">2024-02</th></tr></thead><tbody>
+<tr><td>W01</td><td style="text-align: center">W02</td></tr>
+<tr><td>1월</td><td style="text-align: center">2월</td></tr>
+<tr><td>1</td><td style="text-align: center">1</td></tr>
+<tr><td>1</td><td style="text-align: center">1</td></tr>
+<tr><td>1</td><td style="text-align: center">1</td></tr>
+<tr><td>1</td><td style="text-align: center">1</td></tr>
+</tbody></table>
+</div>
+<pre><code class="language-java">String headerColumn ="PLAN_DATE"; 
+String[] groupCds = {"PLANT_ID","DEMAND_ID","ROUTE_CODE","RESOURCE_CODE"}; 
+String[] dataColumns = {"QTY", "HOLIDAY_YN"}; 
+String[] measureNms = {}; 
+String[] additionalHeaderColumns = {"PLAN_DATE","WEEK","MONTH"}; 
+return PivotUtil.pivotData(dataList, headerColumn, groupCds, dataColumns, measureNms, additionalHeaderColumns);
 </code></pre>
 <hr />
 <h3 id="font-end"><a class="header" href="#font-end">font-end</a></h3>
