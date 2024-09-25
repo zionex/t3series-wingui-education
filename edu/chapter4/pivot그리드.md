@@ -102,7 +102,17 @@ return PivotUtil.pivotData(dataList, headerColumn, groupCds, dataColumns, measur
 
 
 시나리오2 : Measure 가 있지만 DB에서 Measure 값을 리턴하지 않아서 임의로 표시해야하는 경우
+(쉽게 설명해서 구분 컬럼이 없이 컬럼으로 데이터가 나눠져있을 경우)
 다국어 처리시  measureNms 에는 다국어 코드값을 넣고 realgrid displayCallback 을 이용해 다국어 표시
+```
+#시나리오 1 데이터 구성
+구분: 기초재고 PLAN_DATE: 20240101  QTY: 1
+구분: 출고예정 PLAN_DATE: 20240101  QTY: 2
+
+#시나리오2 데이터 구성
+DATE: 20240101  기초재고: 1 출고예정:2 
+DATE: 20240102  기초재고: 1 출고예정:2 
+```
 
 ```javascript
 {name: "QTY_TYPE", dataType: "text", headerText :"QTY_TYPE" , visible: true, editable: false, width: 100,
