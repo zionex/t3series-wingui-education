@@ -21,6 +21,8 @@ import { AppStyleProvider } from '@zionex/wingui-core/style/AppStyleProvider';
 import { AppContextProvider } from '@zionex/wingui-core/context/AppContextProvider';
 import LanguageRector,{setSessionLang} from './LangageRector';
 import Content from '@wingui/layout/Content'
+import { AlertDialogProvider } from '@wingui/utils/globalShowMessage';
+
 // let initApp = false;
 let initLoginPage = false;
 let initUiSetting = false;
@@ -130,13 +132,15 @@ function App() {
         <ThemeProvider theme={appTheme}>
           <CssBaseline />
           <AppStyleProvider commonStyle={appStyle}>
-            <Suspense fallback={<Loading />}>
-              <HashRouter>
-                <Route path="/password" render={(props) => <Password {...props} />} />
-                <Route path="/login" render={(props) => <Login {...props} />} />
-                {route ? route : null}
-              </HashRouter>
-            </Suspense>
+            <AlertDialogProvider>
+                <Suspense fallback={<Loading />}>
+                  <HashRouter>
+                    <Route path="/password" render={(props) => <Password {...props} />} />
+                    <Route path="/login" render={(props) => <Login {...props} />} />
+                    {route ? route : null}
+                  </HashRouter>
+                </Suspense>
+              </AlertDialogProvider>
           </AppStyleProvider>
         </ThemeProvider>
         <LanguageRector languageCode={languageCode} isLogin={isLogin}/>

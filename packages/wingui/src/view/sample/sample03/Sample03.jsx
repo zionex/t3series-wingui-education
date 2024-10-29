@@ -32,22 +32,22 @@ function Sample03() {
       </SearchArea>
       <WorkArea>
         <SplitPanel>
-          <HLayoutBox>
+          <VLayoutBox>
             <SplitPanel sizes={[40, 30, 30]} direction={"horizontal"}>
-              <VLayoutBox>
+              <HLayoutBox>
                 Top Left
-              </VLayoutBox>
-              <VLayoutBox>
+              </HLayoutBox>
+              <HLayoutBox>
                 Top Middle
-              </VLayoutBox>
-              <VLayoutBox>
+              </HLayoutBox>
+              <HLayoutBox>
                 Top Right
-              </VLayoutBox>
+              </HLayoutBox>
             </SplitPanel>
-          </HLayoutBox>
-          <HLayoutBox>
+          </VLayoutBox>
+          <VLayoutBox>
             Bottom Contents
-          </HLayoutBox>
+          </VLayoutBox>
         </SplitPanel>
       </WorkArea>
   </ContentInner>

@@ -31,12 +31,12 @@ function Sample02() {
         </SearchRow>
       </SearchArea>
       <WorkArea>
-        <SplitPanel sizes={[60, 40]} direction={"horizontal"}>
+        <SplitPanel sizes={[60, 40]}>
           <VLayoutBox>
-            Left Contents
+            Top Contents
           </VLayoutBox>
           <VLayoutBox>
-            Right Contents
+            Bottom Contents
           </VLayoutBox>
         </SplitPanel>
       </WorkArea>

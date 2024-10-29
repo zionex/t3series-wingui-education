@@ -31,12 +31,12 @@ function Sample01() {
         </SearchRow>
       </SearchArea>
       <WorkArea>
-        <SplitPanel sizes={[60, 40]} >
+        <SplitPanel sizes={[60, 40]}  direction={"horizontal"}>
           <HLayoutBox>
-            Top Contents
+            Left Contents
           </HLayoutBox>
           <HLayoutBox>
-            Bottom Contents
+            Right Contents
           </HLayoutBox>
         </SplitPanel>
       </WorkArea>
