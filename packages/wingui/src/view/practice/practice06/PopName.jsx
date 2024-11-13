@@ -89,11 +89,17 @@ function PopName(props) {
     props.onClose(false);
   };
 
+  function handleKeyDown(event) {
+    if (event.key === "Enter") {
+      onPopupSubmit();
+    }
+  }
+
   return (
     <PopupDialog open={props.open} onClose={props.onClose} checks={[popGrid1]} onSubmit={handleSubmit(saveSubmit, onError)} title="TEST_POPUP" resizeHeight={400} resizeWidth={800}>
       <SearchArea submit={handleSubmit(onPopupSubmit, onError)} searchButton={true}>
-        <InputField name="id" label={"ID"} readonly={false} disabled={false} control={control} />
-        <InputField name="name" label={"NM"} control={control} readonly={false} disabled={false} />
+        <InputField name="id" label={"ID"} readonly={false} disabled={false} control={control} onKeyDown={(event) => handleKeyDown(event)}/>
+        <InputField name="name" label={"NM"} control={control} readonly={false} disabled={false} onKeyDown={(event) => handleKeyDown(event)}/>
       </SearchArea>
       <ButtonArea>
         <LeftButtonArea>
