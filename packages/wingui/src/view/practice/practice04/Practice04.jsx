@@ -142,7 +142,7 @@ function Practice04() {
   // grid1 조회
   const loadData = () => {
     let param = {
-      p_GENDOR : getValues('gender'),
+      p_GENDER : getValues('gender'),
       P_START_DT : getValues('startDt'),
     };    
 
@@ -179,13 +179,13 @@ function Practice04() {
 
         let changeRowData = [];
         changes.forEach(function (row) {
-          changeRowData.push(grid1.dataProvider.getOutputRow({booleanFormat: 'N:Y'}, row));
+          changeRowData.push(grid1.dataProvider.getOutputRow({booleanFormat: 'N:Y', datetimeFormat: 'yyyy-MM-dd'}, row));
         });
 
         let valid = true;
         if(invalids && invalids.length> 0){
           changeRowData.forEach(function (rowData) {
-            if (!rowData.PLNT_CD || !rowData.RES_CD || !rowData.ITEM_CD || !rowData.START_DT || !rowData.END_DT || !rowData.LOAD_RATE ) {
+            if (!rowData.KORNAME ) {
               valid = false;
             }
           });
@@ -196,6 +196,7 @@ function Practice04() {
           return false;
         }
 
+        console.log(changeRowData);
         if (changeRowData.length === 0) {
           showMessage(transLangKey('MSG_CONFIRM'), transLangKey('MSG_5039'), { close: false });
         } else {                       

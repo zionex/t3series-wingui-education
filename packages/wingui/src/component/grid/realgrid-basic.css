@@ -430,3 +430,9 @@
 .rg-alternate-row-bar .rg-checkbar-cell {
   background-color: var(--palette-base-colorA) !important;
 } */
+
+
+
+.multiline-editor{
+  white-space: pre-line;
+}

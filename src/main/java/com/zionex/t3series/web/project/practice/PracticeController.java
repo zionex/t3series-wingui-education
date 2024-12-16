@@ -66,13 +66,13 @@ class Sample {
 public class PracticeController {
 
     private final QueryHandler queryHandler;
-    private final UserService userService;
     private final CommonService commonService;
+    private final UserService userService;
 
     @ExecPermission(menuCd = "UI_PRACTICE_01", type = ServiceConstants.PERMISSION_TYPE_READ)
     @PostMapping("/practice/q1")
     public List<Map<String, Object>> getData1(@RequestBody Map<String, Object> params, HttpServletRequest request) throws Exception {
-        return queryHandler.getList("SP_UI_PRACTICE_01Q", params);
+        return commonService.getData("SP_UI_PRACTICE_01Q", params);
     }
 
     @ExecPermission(menuCd = "UI_PRACTICE_01", type = ServiceConstants.PERMISSION_TYPE_READ)
@@ -218,11 +218,16 @@ public class PracticeController {
         Map<String, Object> resultMap = new HashMap<>();
         for (Map<String, Object> params : changes) {
             Map<String, Object> param = new HashMap<>();
-            param.put("P_ID", new Object[] { params.get("ID"), String.class, ParameterMode.IN });
-            param.put("P_KORNAME", new Object[] { params.get("KORNAME"), String.class, ParameterMode.IN });
-            param.put("P_GENDER", new Object[] { params.get("GENDER"), String.class, ParameterMode.IN });
-            param.put("P_AGE", new Object[] { params.get("AGE"), Integer.class, ParameterMode.IN });
-            param.put("P_USERNAME", new Object[] { username, String.class, ParameterMode.IN });
+            param.put("p_ID", new Object[] { params.get("ID"), String.class, ParameterMode.IN });
+            param.put("p_KORNAME", new Object[] { params.get("KORNAME"), String.class, ParameterMode.IN });
+            param.put("p_GENDER", new Object[] { params.get("GENDER"), String.class, ParameterMode.IN });
+            param.put("p_AGE", new Object[] { params.get("AGE"), Integer.class, ParameterMode.IN });
+            param.put("p_PHONE", new Object[] { params.get("PHONE"), String.class, ParameterMode.IN });
+            param.put("p_PRODUCTID", new Object[] { params.get("PRODUCTID"), String.class, ParameterMode.IN });
+            param.put("p_KORCOUNTRY", new Object[] { params.get("KORCOUNTRY"), String.class, ParameterMode.IN });
+            param.put("p_ORDERDATE", new Object[] { params.get("ORDERDATE"), String.class, ParameterMode.IN });
+            param.put("p_ACTIVE", new Object[] { params.get("ACTIVE"), String.class, ParameterMode.IN });
+           // param.put("P_USERNAME", new Object[] { username, String.class, ParameterMode.IN });
             
             Map<String, Object> result = commonService.saveData("SP_UI_PRACTICE_01S", param);
             resultMap.putAll(result);
@@ -238,8 +243,8 @@ public class PracticeController {
         Map<String, Object> resultMap = new HashMap<>();
         for (Map<String, Object> params : changes) {
             Map<String, Object> param = new HashMap<>();
-            param.put("P_ID", new Object[] { params.get("ID"), String.class, ParameterMode.IN });
-            param.put("P_USERNAME", new Object[] { username, String.class, ParameterMode.IN });
+            param.put("p_ID", new Object[] { params.get("ID"), String.class, ParameterMode.IN });
+            //param.put("P_USERNAME", new Object[] { username, String.class, ParameterMode.IN });
             
             Map<String, Object> result = commonService.saveData("SP_UI_PRACTICE_01D", param);
             resultMap.putAll(result);
