@@ -94,6 +94,13 @@
                             <targetPath>WEB-INF/lib</targetPath>
                         </resource>
                     </webResources>
+                    <annotationProcessorPaths>
+                    <path>
+                        <groupId>com.querydsl</groupId>
+                        <artifactId>querydsl-apt</artifactId>
+                        <version>4.4.0</version>
+                    </path>
+                    </annotationProcessorPaths>
                 </configuration>
             </plugin>
             <plugin>
@@ -125,6 +132,17 @@
 
     <dependencies>
         <!-- T3Series dependencies -->
+
+        <!-- <dependency>
+            <groupId>t3series</groupId>
+            <artifactId>t3series-common</artifactId>
+            <version>${parent.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>t3series</groupId>
+            <artifactId>t3series-fpserver</artifactId>
+            <version>${parent.version}</version>
+        </dependency> -->
         <dependency>
             <groupId>t3series</groupId>
             <artifactId>t3series-common</artifactId>
@@ -138,6 +156,23 @@
             <version>24.0.0</version>
             <scope>system</scope>
             <systemPath>${project.basedir}/lib/t3series-fpserver-24.0.0.jar</systemPath>
+        </dependency>
+
+        <dependency>
+            <groupId>de.bytefish</groupId>
+            <artifactId>jsqlserverbulkinsert</artifactId>
+            <version>5.1.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct</artifactId>
+            <version>1.5.5.Final</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.python</groupId>
+            <artifactId>jython</artifactId>
         </dependency>
 
         <dependency>
