@@ -131,8 +131,8 @@ function OrnOtherPlan() {
     let planStDt = getValues('planStDt');
     let plantCdArr = getValues('plantCd');
     let params = {
-      P_PLAN_ST_DT: planStDt,
-      // P_PLAN_ST_DT: '20241014', //테스트데이터
+      // P_PLAN_ST_DT: planStDt,
+      P_PLAN_ST_DT: '20241014', //테스트데이터
       P_PLANT_CD: plantCdArr.length == plantCdSize ? "" : plantCdArr.join(","),
       P_USER_ID: username
     }
