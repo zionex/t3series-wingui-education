@@ -4,22 +4,11 @@ import { Box, IconButton } from "@mui/material";
 import {
   InputField, useViewStore, useContentStore, useIconStyles, PopupDialog, SearchArea, SearchRow, BaseGrid, zAxios, CommonButton
 } from '@wingui/common/imports';
-import { MuiColorInput } from "mui-color-input";
-import { makeStyles } from '@mui/styles';
 import { ChromePicker } from 'react-color'
 import { Square } from "@mui/icons-material";
 
-const useColorPickerInputStyles = makeStyles({
-  root: {
-    '& legend': {
-      fontSize: '1em',
-    },
-  }
-});
-
 function PopColorPicker(props) {
-  const [registedColor, setRegistedColor] = useState([]);
-  const [viewData, getViewInfo] = useViewStore(state => [state.viewData, state.getViewInfo])
+  const [registedColors, setRegistedColors] = useState([]);
   const { handleSubmit, getValues, control, watch, formState: { errors }, clearErrors } = useForm({
     defaultValues: {
       colorType: "R",
@@ -38,7 +27,7 @@ function PopColorPicker(props) {
 
         li.push(o)
       })
-      setRegistedColor(li)
+      setRegistedColors(li)
     }
   }, [props.defaultPalette])
   useEffect(() => {
@@ -63,7 +52,11 @@ function PopColorPicker(props) {
   function setPickColor(e) {
     if (colorType === 'R') {
       props.setInputColors((prevState) => {
-        return { ...prevState, ...{ [props.colorKey]: getValues('registedColor') } }
+        if(getValues('registedColor') !== null) {
+          return { ...prevState, ...{ [props.colorKey]: getValues('registedColor').value } }
+        } else {
+          return { ...prevState}
+        }
       });
     } else if (colorType === 'N') {
       props.setInputColors((prevState) => {
@@ -74,14 +67,15 @@ function PopColorPicker(props) {
   }
   return (
     <PopupDialog type="NOBUTTONS" open={props.open} onClose={props.onClose} checks={[]} onClick={handleSubmit(saveSubmit, onError)} title={transLangKey("SELECT_COLOR")} resizeHeight={colorType === 'R' ? 300 : 450} resizeWidth={400}>
-      <Box>
-        <InputField name="colorType" type="radio" hiddenLabel options={[{ label: transLangKey('등록된 색상 선택'), value: 'R' }, { label: transLangKey('새로운 색상 선택'), value: 'N' }]} control={control} />
+      <Box sx={{ display: "flex", flexDirection: 'column', height:'100%' }}>
+        <InputField name="colorType" type="radio" hiddenLabel options={[{ label: transLangKey('SELECT_REGISTED_COLOR'), value: 'R' }, { label: transLangKey('SELECT_NEW_COLOR'), value: 'N' }]} control={control} />
         {
           colorType === 'R' ?
             <InputField
               hiddenLabel inputType="labelText" name="registedColor" type="autocomplete"
-              label={'REGIST_COLORS'} style={{ width: '240px' }}
-              ListboxProps={{ style: { maxHeight: 120 } }}
+              label={transLangKey('REGIST_COLOR')} style={{ width: '240px' }}
+              disableClearable={true}
+              ListboxProps={{ style: { maxHeight: 200 } }}
               renderOption={(props, option) => (
                 <Box
                   component="li"
@@ -91,7 +85,8 @@ function PopColorPicker(props) {
                   <Square sx={{ color: option.color }} />{option.label}
                 </Box>
               )}
-              options={registedColor}
+              disablePortal={false}
+              options={registedColors}
               readonly={false} disabled={false} control={control} />
             :
             <ChromePicker
@@ -100,7 +95,7 @@ function PopColorPicker(props) {
             />
         }
       </Box>
-      <Box sx={{ textAlign: "center", justifyContent: 'center' }}>
+      <Box sx={{ textAlign: "center", justifyContent: 'center', flexGrow: 1 }}>
         <CommonButton type="text" variant="contained" onClick={setPickColor}>{transLangKey("SELECT")}</CommonButton>
       </Box>
     </PopupDialog>

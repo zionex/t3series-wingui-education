@@ -49,6 +49,7 @@ function UserGroup() {
   const location = useLocation();
   const classes = useResultAreaStyles();
   const activeViewId = getActiveViewId()
+  const getContentDataFromPath = useMenuStore(state => state.getContentDataFromPath);
   const [getViewPath] = useMenuStore(state => [state.getViewPath]);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [viewData, getViewInfo, setViewInfo] = useViewStore(state => [state.viewData, state.getViewInfo, state.setViewInfo]);
@@ -76,7 +77,9 @@ function UserGroup() {
       setViewInfo(activeViewId, 'globalButtons', globalButtons)
 
       setOptions()
-      loadData()
+      if(location.state === undefined || location.state === null) {
+        loadData()
+      }
     }
     if (userGrid) {
       setPOptions()
@@ -84,9 +87,16 @@ function UserGroup() {
   }, [userGrid, userGroupGrid])
   useEffect(() => {
     if (location.state !== undefined && location.state !== null && userGroupGrid !== null) {
-      setValue('grpNm', location.state.grpNm)
-
-      loadData();
+      const contentData = getContentDataFromPath(location.pathname);
+      if (contentData) {
+        if (activeViewId === contentData.viewId) {
+          setValue('grpNm', location.state.grpNm);
+          if(getValues('grpNm') !== undefined) {
+            loadData();
+            history.replace({ state: null });
+          }
+        }
+      }
     }
   }, [location, userGroupGrid])
 
@@ -121,7 +131,7 @@ function UserGroup() {
     userGrid.gridView.setCheckBar({ visible: true });
     userGrid.gridView.setStateBar({ visible: true });
     userGrid.gridView.onCellClicked = function (grid, clickData) {
-      let clickedRow = grid.getJsonRows()[clickData.dataRow]
+      let clickedRow = grid.getDataSource().getJsonRow(clickData.dataRow)
       if (clickData.column === 'displayName') {
         history.push({ pathname: getViewPath('UI_AD_02'), state: { username: clickedRow.username } })
       }
@@ -139,10 +149,7 @@ function UserGroup() {
     if(current === undefined) {
       refresh()
     }
-    
-    if (location.state !== undefined && location.state !== null) {
-      location.state.grpNm = getValues('grpNm')
-    }
+
     userGroupGrid.gridView.commit(true);
 
     userGroupGrid.gridView.showToast(progressSpinner + 'Load Data...', true);
@@ -168,7 +175,7 @@ function UserGroup() {
     if (targetGrid.gridId === 'userGrid') {
       if (targetGrid.gridView.getCheckedRows().length === targetGrid.dataProvider.getRowCount()) {
         //적어도 하나 이상의 공통코드는 존재해야 합니다.
-        showMessage(transLangKey('DELETE'), transLangKey('최소 하나 이상의 사용자 그룹은 존재해야 합니다.'), { close: false })
+        showMessage(transLangKey('DELETE'), transLangKey('MSG_SELECT_DELETE'), { close: false })
         return false;
       }
     }

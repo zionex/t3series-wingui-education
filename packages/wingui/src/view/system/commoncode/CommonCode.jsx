@@ -29,10 +29,7 @@ let codeGrpGridItems = [
   { name: "grpNm", dataType: "text", headerText: "GRP_NM", visible: true, editable: true, width: 250, validRules: [{ criteria: "required" }] },
   { name: "descrip", dataType: "text", headerText: "DESCRIP", visible: false, editable: false, width: 250 },
   {
-    name: "descripLangValue", dataType: "text", headerText: "DESCRIP", visible: true, editable: true, width: 250,
-    displayCallback: function (grid, index, value) {
-      return transLangKey(value);
-    }
+    name: "descripLangValue", dataType: "text", headerText: "DESCRIP", visible: true, editable: true, width: 250, lang: true
   },
   { name: "seq", dataType: "text", headerText: "SEQ", visible: false, editable: false, width: 50 },
   { name: "useYn", dataType: "boolean", headerText: "USE_YN", visible: true, editable: true, width: 50, defaultValue: true },
@@ -147,66 +144,50 @@ function CommonCode() {
     codeGrid.gridView.setStateBar({ visible: true })
   }
 
-  function deleteRow(targetGrid) {
+  function deleteRow(targetGrid, deleteRows) {
     let seperator = (targetGrid.gridView.id === 'codeGrpGrid') ? 'groups' : 'codes'
     targetGrid.gridView.commit(true);
 
-    let deleteRows = [];
-    let createdDeleteRowIndex = [];
-    targetGrid.gridView.getCheckedRows().forEach(function (indx) {
-      if (!targetGrid.dataProvider.getAllStateRows().created.includes(indx)) {
-        deleteRows.push(targetGrid.dataProvider.getJsonRow(indx));
-      } else {
-        createdDeleteRowIndex.push(indx);
-      }
-    });
-    if (!deleteRows.length) {
-      if (!createdDeleteRowIndex.length) {
-        //삭제할 행을 선택해주세요.
-        showMessage(transLangKey('MSG_CONFIRM'), transLangKey('MSG_SELECT_DELETE'), { close: false });
-      } else {
-        showMessage(transLangKey('DELETE'), transLangKey('MSG_DELETE'), function (answer) {
-          if (answer) {
-            targetGrid.dataProvider.removeRows(createdDeleteRowIndex);
-          }
-        });
-      }
+    let selectedSrcId =  codeGrpGrid.dataProvider.getValue(codeGrpGrid.gridView.getCurrent().dataRow, 'id');
 
-    } else {
+    if (deleteRows.length > 0) {
       if (targetGrid.gridView.id === 'codeGrid' && targetGrid.gridView.getCheckedRows().length === targetGrid.dataProvider.getRowCount()) {
         //적어도 하나 이상의 공통코드는 존재해야 합니다.
-        showMessage(transLangKey('DELETE'), transLangKey('최소 하나 이상의 공통코드는 존재해야 합니다.'), { close: false })
+        showMessage(transLangKey('DELETE'), transLangKey('MSG_WARNING_DELETE_COMMON_CODE'), { close: false })
+        loadData(targetGrid, selectedSrcId, targetGrid.gridView.getCurrent())
+
       } else {
-        showMessage(transLangKey('DELETE'), transLangKey('MSG_DELETE'), function (answer) {
-          if (answer) {
-            targetGrid.gridView.showToast(progressSpinner + 'Deleting data...', true);
+        targetGrid.gridView.showToast(progressSpinner + 'Deleting data...', true);
 
-            let formData = new FormData();
-            formData.append("changes", JSON.stringify(deleteRows));
+        let formData = new FormData();
+        formData.append("changes", JSON.stringify(deleteRows));
 
-            zAxios({
-              method: 'post',
-              url: 'system/common/' + seperator + '/delete',
-              headers: { 'content-type': 'multipart/form-data' },
-              data: formData
-            }).then(function (response) {
-              if (response.status === HTTP_STATUS.SUCCESS) {
-                targetGrid.dataProvider.removeRows(targetGrid.gridView.getCheckedItems());
-              }
-            })
-              .catch(function (err) {
-                console.log(err);
-              })
-              .then(function () {
-                targetGrid.gridView.hideToast();
-                if (targetGrid.gridView.id === 'codeGrpGrid') {
-                  loadData(targetGrid, undefined, targetGrid.gridView.getCurrent())
-                } else {
-                  loadData(targetGrid, selectedSrcId, targetGrid.gridView.getCurrent())
-                }
-              });
+        zAxios({
+          method: 'post',
+          url: 'system/common/' + seperator + '/delete',
+          headers: { 'content-type': 'multipart/form-data' },
+          data: formData
+        }).then(function (response) {
+          if (response.status === HTTP_STATUS.SUCCESS) {
+            let deleteRows = [];
+            targetGrid.gridView.getCheckedRows().forEach(function (row) {
+              let dataRow = targetGrid.gridView.getDataRow(row);
+              deleteRows.push(dataRow);
+            });
+            targetGrid.dataProvider.removeRows(deleteRows);
           }
-        });
+        })
+          .catch(function (err) {
+            console.log(err);
+          })
+          .then(function () {
+            targetGrid.gridView.hideToast();
+            if (targetGrid.gridView.id === 'codeGrpGrid') {
+              loadData(targetGrid, undefined, targetGrid.gridView.getCurrent())
+            } else {
+              loadData(targetGrid, selectedSrcId, targetGrid.gridView.getCurrent())
+            }
+          });
       }
     }
   }
@@ -229,9 +210,9 @@ function CommonCode() {
     let checkCd = '';
 
     let useYn = true;
-    let selectedGroupCd = codeGrpGrid.dataProvider.getValue(codeGrpGrid.gridView.getCurrent().itemIndex, 'grpCd')
-    let selectedSrcId = codeGrpGrid.dataProvider.getValue(codeGrpGrid.gridView.getCurrent().itemIndex, 'id')
-    let selectedUseYn = codeGrpGrid.dataProvider.getValue(codeGrpGrid.gridView.getCurrent().itemIndex, 'useYn')
+    let selectedGroupCd = codeGrpGrid.dataProvider.getValue(codeGrpGrid.gridView.getCurrent().dataRow, 'grpCd')
+    let selectedSrcId = codeGrpGrid.dataProvider.getValue(codeGrpGrid.gridView.getCurrent().dataRow, 'id')
+    let selectedUseYn = codeGrpGrid.dataProvider.getValue(codeGrpGrid.gridView.getCurrent().dataRow, 'useYn')
     let checkCharactor = 0;
     changes.forEach(function (row) {
       useYn = targetGrid.dataProvider.getJsonRow(row).useYn;
@@ -360,7 +341,7 @@ function CommonCode() {
   }
   function insertRow(gridObject) {
     if (gridObject.dataProvider.getRowCount() > 0) {
-      gridObject.gridView.beginInsertRow(gridObject.gridView.getCurrent().dataRow + 1);
+      gridObject.gridView.beginInsertRow(gridObject.gridView.getCurrent().itemIndex + 1);
     } else {
       gridObject.gridView.beginAppendRow(0);
     }
@@ -382,7 +363,7 @@ function CommonCode() {
               <RightButtonArea>
                 <ButtonGroup variant="outlined">
                   <GridAddRowButton grid="codeGrpGrid" onClick={() => { insertRow(codeGrpGrid) }}></GridAddRowButton>
-                  <GridDeleteRowButton grid="codeGrpGrid" onClick={() => { deleteRow(codeGrpGrid) }}></GridDeleteRowButton>
+                  <GridDeleteRowButton grid="codeGrpGrid" onDelete={deleteRow} ></GridDeleteRowButton>
                   <GridSaveButton onClick={() => { saveData(codeGrpGrid) }}>{transLangKey("SAVE")}</GridSaveButton>
                 </ButtonGroup>
               </RightButtonArea>
@@ -399,7 +380,7 @@ function CommonCode() {
               <RightButtonArea>
                 <ButtonGroup variant="outlined">
                   <GridAddRowButton grid="codeGrid" onClick={() => { insertRow(codeGrid) }}></GridAddRowButton>
-                  <GridDeleteRowButton grid="codeGrid" onClick={() => { deleteRow(codeGrid) }}></GridDeleteRowButton>
+                  <GridDeleteRowButton grid="codeGrid" onDelete={deleteRow}></GridDeleteRowButton>
                   <GridSaveButton onClick={() => { saveData(codeGrid) }}>{transLangKey("SAVE")}</GridSaveButton>
                 </ButtonGroup>
               </RightButtonArea>

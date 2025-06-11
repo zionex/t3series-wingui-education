@@ -4,16 +4,7 @@ const path = require('path');
 const webpack = require("webpack");
 
 const VIEW_PATH = 'view'
-class BuildTimePlugin {
-  apply(compiler) {
-    compiler.hooks.done.tap('BuildTimePlugin', stats => {
-      setImmediate(() => {
-        console.log(`[${new Date().toLocaleString()}] Build Complete`);
-      });
-    });
-  }
-}
-
+//const IGNORE_VIEW_PATH = 'view_ag'
 
 module.exports = {
   mode: 'development',
@@ -23,27 +14,38 @@ module.exports = {
   devtool: 'inline-source-map',
   output: {
     filename: 'js/bundle/[name].js',
-    chunkFilename: 'js/bundle/[name].bundle.js',
+    chunkFilename: 'js/bundle/[name].js',
     sourceMapFilename: 'js/bundle/[name].js.map',
     libraryTarget: 'window',
     path: path.resolve(__dirname, '../../src/main/webapp')
   },
   optimization: {
-    removeAvailableModules: false,
-    removeEmptyChunks: false,
-    runtimeChunk: false,
+    runtimeChunk: 'single',
     splitChunks: {
       cacheGroups: {
-        vendor: {
-          test: /[\\/]node_modules[\\/]((?!(realgrid)).*)[\\/]/,
-          name: 'vendor',
+        realgrid: {
+          test: /[\\/]node_modules[\\/](realgrid)[\\/]/,
+          name: 'realgrid',
           chunks: 'all',
-          minChunks: 1
+        },
+        vendor1: {
+          test: /[\\/]node_modules[\\/](react|react-dom)[\\/]/,
+          name: 'vendor1',
+          chunks: 'all',
+          minChunks: 1,
+        },
+        vendor2: {
+          test: /[\\/]node_modules[\\/](axios|@toast-ui)[\\/]/,
+          name: 'vendor2',
+          chunks: 'all',
+          minChunks: 1,
         },
         commons: {
           name: 'commons',
           minChunks: 1,
           chunks: 'initial',
+          priority: -20,
+          enforce: true,
         }
       }
     }
@@ -51,19 +53,18 @@ module.exports = {
   plugins: [
     new webpack.DefinePlugin({
       VIEW_PATH: JSON.stringify(VIEW_PATH),
-    }),
-    new BuildTimePlugin()
-  ],
+      //IGNORE_VIEW_PATH: JSON.stringify(IGNORE_VIEW_PATH),
+    })],
   module: {
     rules: [
       {
         test: /\.(js|mjs|jsx|ts|tsx)?$/,
-        loader: 'esbuild-loader',
         exclude: [
           {
             and: [path.resolve(__dirname, "node_modules")],
           }
         ],
+        loader: 'esbuild-loader',
         options: {
           loader: 'jsx',
           target: 'es2015'
@@ -75,7 +76,7 @@ module.exports = {
       },
       {
         test: /\.(png|svg|jpg|gif)$/,
-        use: ["file-loader",]
+        use: ["file-loader?name=images/[name].[ext]"]
       },
       {
         test: /\.(woff|woff2|eot|ttf|otf)$/,
@@ -107,6 +108,6 @@ module.exports = {
     }
   },
   watchOptions: {
-    ignored: ['**/node_modules/**'],
+    ignored: ['**/node_modules/**', '**/view_ag/**'],
   }
-}
+};

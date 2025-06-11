@@ -19,8 +19,7 @@ function LoginHistory() {
   const { control, getValues, setValue } = useForm({
     defaultValues: {
       displayName: '',
-      accessDttmFrom: (new Date()).format('yyyy-MM-dd 00:00:00'),
-      accessDttmTo: (new Date()).format('yyyy-MM-dd HH:mm:ss')
+      accessDttm: [(new Date()).format('yyyy-MM-dd 00:00:00'), (new Date()).format('yyyy-MM-dd HH:mm:ss')],
     }
   });
   const globalButtons = [
@@ -50,8 +49,8 @@ function LoginHistory() {
     zAxios.get('system/logs/system-access', {
       params: {
         'display-name': getValues('displayName'),
-        'accessdttm-from': (new Date(getValues('accessDttmFrom'))).format('yyyy-MM-ddTHH:mm:ss'),
-        'accessdttm-to': (new Date(getValues('accessDttmTo'))).format('yyyy-MM-ddTHH:mm:ss'),
+        'accessdttm-from': (new Date(getValues("accessDttm")[0])).format('yyyy-MM-ddTHH:mm:ss'),
+        'accessdttm-to': (new Date(getValues("accessDttm")[1])).format('yyyy-MM-ddTHH:mm:ss'),
         'page': page - 1,
         'size': settings.perPageSize
       },
@@ -85,8 +84,7 @@ function LoginHistory() {
       <SearchArea>
         <SearchRow>
           <InputField control={control} label={transLangKey("USER_NM")} name="displayName" enterSelect></InputField>
-          <InputField control={control} type="datetime" name="accessDttmFrom" label={transLangKey("LOGIN_DTTM")} dateformat="yyyy-MM-dd HH:mm:ss" showTimeSelect={true} ></InputField>
-          <InputField control={control} type="datetime" name="accessDttmTo" label={transLangKey("LOGOUT_DTTM")} dateformat="yyyy-MM-dd HH:mm:ss" showTimeSelect={true} />
+          <InputField control={control} type="dateRange" name="accessDttm" label={[transLangKey("LOGIN_DTTM"), transLangKey("LOGIN_DTTM")]} showTimeSelect={true}  ></InputField>
         </SearchRow>
       </SearchArea>
       <WorkArea>

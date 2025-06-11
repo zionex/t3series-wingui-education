@@ -1,10 +1,10 @@
-.issueCloseStatus {
+.issue-close-status {
   color: gainsboro;
 }
 
-.issueOpenStatus {
-  font-weight:800;
-  color: crimson
+.issue-open-status {
+  font-weight: 800;
+  color: #fc5f67;
 }
 
 .issue-mgmt .rg-root .rg-table tbody tr {
@@ -15,10 +15,6 @@
   height: 35px;
 }
 
-#contentInner-UI_UT_ISSUE_MGMT {
-  margin-top: 10px
-}
-
 #contentInner-UI_UT_ISSUE_MGMT .wingui-pagination {
-  margin: 10px 0 36px 0;
+  margin: 10px 0;
 }

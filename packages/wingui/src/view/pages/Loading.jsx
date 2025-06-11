@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { transLangKey } from "@zionex/wingui-core/lang/i18n-func";
-import { LinearProgress, Typography } from "@mui/material";
+import { Box, LinearProgress, Typography } from "@mui/material";
 
 function Loading() {
   useEffect(() => {
@@ -8,13 +8,12 @@ function Loading() {
   return (
     <>
       <LinearProgress />
-      <div className="row justify-content-md-center">
-      </div>
-      <div className="row justify-content-md-center">
-        <div className="col-md-auto" >
+      <Box sx={{ display: 'flex', justifyContent: 'center' }}> </Box>
+      <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+        <Box sx={{ }} >
           <Typography variant="h4">{transLangKey('MSG_LOADING')}</Typography>
-        </div>
-      </div>
+        </Box>
+      </Box>
     </>
   )
 }

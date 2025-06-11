@@ -6,6 +6,7 @@ import {
   useLoginStyles,
   useContentStyles,
   useSidebarStyles,
+  useTopbarStyles,
   useAppBarStyles,
   useViewPathStyles,
   useHistoryStyles,
@@ -29,7 +30,7 @@ import {
   useDashboardStyle,
   useWidgetStyle,
   useFloatIssueListStyles,
-  CustomIcon,
+  usePaginationStyles,
 } from '@wingui/style/AppCommonStyle'
 
 
@@ -49,7 +50,7 @@ export function getAppStyle() {
     useSearchMenuStyles,
     useInputStyles, useSearchMenuStyles, useFormInputStyles,
     useIconStyles, useAllMenuStyles, useFloatMenuStyles, useLargeMenuDropdownStyles,
-    CustomIcon, useDashboardStyle, useWidgetStyle, useSidebarStyles,
+    useDashboardStyle, useWidgetStyle, useSidebarStyles, useTopbarStyles, usePaginationStyles,
     useWorkAreaStyles, useTabContentStyles, useSearchAreaStyles, useContentInnerStyles,
     useTabSetupStyles, useLoginStyles, useFloatIssueListStyles,
     usePopupDialogStyles, useResultAreaStyles,
@@ -110,7 +111,7 @@ async function createCustomTheme() {
     themeData: {
       ...themeData
     },
-    palette: themeType === 'system' ? {
+    palette: themeType !== 'dark' ? {
       primary: {
         main: themeData.palette.primary.main,
         light: themeData.palette.primary.light,
@@ -293,7 +294,6 @@ async function createCustomTheme() {
       MuiSvgIcon: {
         styleOverrides: {
           root: {
-            color: themeType === 'dark' ? themeData.palette.appBar.color : null,
             height: 20,
             width: 20,
           },

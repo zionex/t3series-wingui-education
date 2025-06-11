@@ -4,7 +4,6 @@ const path = require('path');
 const webpack = require("webpack");
 
 const VIEW_PATH = 'view'
-const IGNORE_VIEW_PATH = 'view_ag'
 
 module.exports = {
   mode: 'production',
@@ -19,32 +18,41 @@ module.exports = {
     path: path.resolve(__dirname, '../../src/main/webapp')
   },
   optimization: {
-    runtimeChunk: false,
+    runtimeChunk: 'single',
     splitChunks: {
       cacheGroups: {
-        vendor: {
-          test: /[\\/]node_modules[\\/]((?!(realgrid)).*)[\\/]/,
-          name: 'vendor',
-          chunks: 'all',
-        },
         realgrid: {
           test: /[\\/]node_modules[\\/](realgrid)[\\/]/,
           name: 'realgrid',
           chunks: 'all',
         },
+        vendor1: {
+          test: /[\\/]node_modules[\\/](react|react-dom)[\\/]/,
+          name: 'vendor1',
+          chunks: 'all',
+          minChunks: 1,
+        },
+        vendor2: {
+          test: /[\\/]node_modules[\\/](axios|@toast-ui)[\\/]/,
+          name: 'vendor2',
+          chunks: 'all',
+          minChunks: 1,
+        },
         commons: {
           name: 'commons',
           minChunks: 1,
           chunks: 'initial',
+          priority: -20,
+          enforce: true,
         }
       }
     }
   },
   plugins: [
-  new webpack.DefinePlugin({
-    VIEW_PATH: JSON.stringify(VIEW_PATH),
-    IGNORE_VIEW_PATH: JSON.stringify(IGNORE_VIEW_PATH),
-  })],
+    new webpack.DefinePlugin({
+      VIEW_PATH: JSON.stringify(VIEW_PATH),
+    })
+  ],
   module: {
     rules: [
       {

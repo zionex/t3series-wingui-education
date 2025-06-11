@@ -45,11 +45,7 @@ const userGroupGridItems = [
 
 const pmsnGridItems = [
   {
-    name: "menuGrp", dataType: "text", headerText: "MENU_GROUP", editable: false, width: 100, mergeRule: { criteria: "value" }, autoFilter: true,
-    valueCallback: function (provider, dataRow, fieldName, fieldNames, values) {
-      let menuGrp = values[fieldNames.indexOf("menuGrp")];
-      return transLangKey(menuGrp)
-    }
+    name: "menuGrp", dataType: "text", headerText: "MENU_GROUP", editable: false, width: 100, mergeRule: { criteria: "value" }, autoFilter: true, lang:true
   },
   { name: "menuCd", dataType: "text", headerText: "MENU_CD", editable: false, width: 100, autoFilter: true },
   {
@@ -121,7 +117,7 @@ function TotalPermission() {
     userGrid.gridView.onCellClicked = function (grid, clickData) {
       if (clickData.cellType === "data") {
         if (clickData.column === 'username') {
-          let clickedRow = grid.getJsonRows()[clickData.dataRow]
+          let clickedRow = grid.getDataSource().getJsonRow(clickData.dataRow)
           history.push({ pathname: getViewPath('UI_AD_05'), state: { username: clickedRow.username } })
         }
         let username = grid.getValue(clickData.itemIndex, "username");
@@ -140,7 +136,7 @@ function TotalPermission() {
         return;
       
       if (clickData.column === 'grpCd') {
-        let clickedRow = grid.getJsonRows()[clickData.dataRow]
+        let clickedRow = grid.getDataSource().getJsonRow(clickData.dataRow)
         history.push({ pathname: getViewPath('UI_AD_04'), state: { grpCd: clickedRow.grpCd, grpNm: clickedRow.grpNm } })
       }
     }

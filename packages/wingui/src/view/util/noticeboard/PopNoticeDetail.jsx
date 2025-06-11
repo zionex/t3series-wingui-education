@@ -6,6 +6,7 @@ import { Box } from '@mui/material';
 import { PopupDialog, InputField, CommonButton, useUserStore, zAxios, FormRow, VLayoutBox, useViewStore } from '@wingui/common/imports';
 import { IconButton } from "@mui/material";
 import { useTheme } from '@mui/material/styles';
+import { ZEditor } from '@zionex/wingui-core/component/input/ZEditor'
 
 function PopNoticeDetail(props) {
   const theme = useTheme();
@@ -17,12 +18,11 @@ function PopNoticeDetail(props) {
     }
     else return def;
   }
+  const [content, setContent] = useState(getNoticeValue('content'))
   const { handleSubmit, getValues, setValue, control, formState: { errors }, clearErrors, watch } = useForm({
     defaultValues: {
       'createDttm': getNoticeValue('createDttm'),
-      'createByDisplayName': getNoticeValue('createByDisplayName'),
-      'content': getNoticeValue('content'),
-      // 'noticeYn': [],
+      'createByDisplayName': getNoticeValue('createByDisplayName')
     }
   });
 
@@ -35,7 +35,7 @@ function PopNoticeDetail(props) {
       loadFiles(props.notice.id);
       setValue('createDttm', getNoticeValue('createDttm'))
       setValue('createByDisplayName', getNoticeValue('createByDisplayName'))
-      setValue('content', getNoticeValue('content'))
+      setContent(getNoticeValue('content'))
       setValue('noticeYn', getNoticeValue('noticeYn', false) === true ? ['Y'] : [''])
     }
     if (popupMode === 'NEW') {
@@ -96,7 +96,7 @@ function PopNoticeDetail(props) {
         createBy: notice.createBy,
         modifyBy: username,
         deleteYn: 'N',
-        noticeYn: notice.noticeYn ? 'Y' : 'N',
+        noticeYn: notice.noticeYn == 'N' ? 'N' : 'Y',
         files: notice.files
       };
 
@@ -172,10 +172,10 @@ function PopNoticeDetail(props) {
               }
             }
             else {
-              console.log('응답 데이타가 없습니다.')
+              console.log(response.status)
             }
           } else {
-            console.log('응답 상태', response.status)
+            console.log(response.status)
           }
         }).catch(function (error) {
           console.log(error);
@@ -190,13 +190,13 @@ function PopNoticeDetail(props) {
     saveFiles(notice, uploadedFiles, mode);
   }
 
-  const getCheckValue=(vals, defValue)=> {
-    if(!vals || vals.length ==0)
+  const getCheckValue = (vals, defValue) => {
+    if (!vals || vals.length == 0)
       return defValue;
     else {
-      let ret=[]
+      let ret = []
       vals.forEach(v => {
-        if(v)
+        if (v)
           ret.push(v)
       })
       return ret.length > 1 ? ret : ret[0] ? ret[0] : defValue;
@@ -208,9 +208,9 @@ function PopNoticeDetail(props) {
 
 
       let noticeYnArr = getValues('noticeYn')
-      notice.content = getValues('content')
+      notice.content = content
       notice.title = getValues('title')
-      notice.noticeYn = getCheckValue(noticeYnArr,"N");
+      notice.noticeYn = getCheckValue(noticeYnArr, "N");
       if (!notice.noticeYn) {
         notice.noticeYn = 'N';
       }
@@ -292,7 +292,7 @@ function PopNoticeDetail(props) {
   }
   function checkUpdate() {
     if (popupMode == 'NEW') {
-      if (getValues('content') !== undefined) {
+      if (content !== undefined) {
         showMessage(transLangKey('WARNING'), transLangKey('MSG_5142'), function (answer) {
           if (answer) {
             props.onClose()
@@ -302,7 +302,7 @@ function PopNoticeDetail(props) {
         props.onClose()
       }
     } else if (popupMode === 'MODIFY') {
-      if (props.notice.content !== getValues('content')) {
+      if (props.notice.content !== content) {
         showMessage(transLangKey('WARNING'), transLangKey('MSG_5142'), function (answer) {
           if (answer) {
             props.onClose()
@@ -315,9 +315,12 @@ function PopNoticeDetail(props) {
       props.onClose()
     }
   }
+  const onChange = (val) => {
+    setContent(val)
+  }
   return (
     <>
-      <PopupDialog type={popupMode == 'READ' ? 'OK' : 'OKCANCEL'} open={props.open} onConfirm={checkUpdate} onClose={checkUpdate} onSubmit={handleSubmit(saveSubmit, onError)} 
+      <PopupDialog type={popupMode == 'READ' ? 'OK' : 'OKCANCEL'} open={props.open} onConfirm={checkUpdate} onClose={checkUpdate} onSubmit={handleSubmit(saveSubmit, onError)}
         checks={[]} title={getNoticeValue('title')} resizeHeight={650} resizeWidth={1050}>
         <VLayoutBox id="popNoticeDetail" style={{ height: '100%', borderRadius: '15px', padding: '15px', boxShadow: themeType === 'dark' ? '0' : '3px 3px 3px rgb(240 240 240), 0em 0em 0.4em rgb(240 240 240)', border: '1px solid #d8d8d8' }} type={'noWrapFlex'}>
           {
@@ -337,20 +340,17 @@ function PopNoticeDetail(props) {
               </FormRow>
             ) : null
           }
-          <FormRow style={{ flex: 'auto' }}>
-            <InputField
+          <FormRow style={{ flex: 'auto', overflow: 'auto' }}>
+            <ZEditor
               id="noticeBoardFileUploader"
-              name='content'
-              control={control}
-              width="100%"
+              value={content}
               initialEditType="wysiwyg"
               useCommandShortcut={true}
-              type='editor'
-              //className={{ width: '100%', padding: 0 }}
-              style={{ height: '100%', maxWidth: 'unset', flex: 1, margin: 0, border: '1px solid #e2e2e1', borderRadius: '8px', padding: '8px 20px 0px 10px', color: themeType === 'dark' ? '#fff' : '#000' }}
+              style={{ width: "100%", height: '100%', maxWidth: 'unset', flex: 1, margin: 0, border: '1px solid #e2e2e1', borderRadius: '8px', padding: '8px 20px 0px 10px', color: themeType === 'dark' ? '#fff' : '#000' }}
               readonly={popupMode === 'READ' ? true : false}
               fileupload={true}
               handleFileUploaderChange={handleFileUploaderChange}
+              onChange={onChange}
             />
           </FormRow>
           <FormRow>

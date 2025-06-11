@@ -3,13 +3,12 @@ import 'react-app-polyfill/stable';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import '../../node_modules/realgrid/dist/realgrid-style.css'
+import RealGrid from 'realgrid';
+import { getGridLocale } from './data/realgrid-locale';
 import * as serviceWorker from './serviceWorker';
 import axios from 'axios';
 import feather from 'feather-icons';
 import * as Icon from 'react-feather';
-import 'bootstrap';
-import 'bootstrap/dist/js/bootstrap.bundle'
-import 'bootstrap/dist/css/bootstrap.css'
 
 import flatpickr from "flatpickr";
 window.flatpickr
@@ -19,7 +18,7 @@ import App from './App';
 
 import { userStoreApi } from '@zionex/wingui-core/store/userStore';
 
-import { installSearchKey, itemsToColDefs } from '@zionex/wingui-core';
+import { installSearchKey, localeStoreApi } from '@zionex/wingui-core';
 
 import ChartDataLabels from "chartjs-plugin-datalabels";
 import ChartDragdata from 'chartjs-plugin-dragdata'
@@ -47,6 +46,13 @@ if(packageJson.version !== localStorage.getItem('wingui-version')){
   localStorage.setItem('themeMode', 'system')
 }
 
+const gridLocale = getGridLocale()
+if (Object.keys(gridLocale).includes(localeStoreApi.getState().languageCode)) {
+  RealGrid.setLocale(gridLocale[localeStoreApi.getState().languageCode]);
+} else {
+  RealGrid.setLocale(gridLocale['en']);
+}
+
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(<App />);
 
@@ -56,9 +62,9 @@ root.render(<App />);
 serviceWorker.unregister();
 
 export * from '@wingui/style/CommonStyle'
+export * from '@wingui/data/languageData'
 export * from '@zionex/wingui-core/component/grid/PopupGridLayout'
 export * from '@zionex/wingui-core/component/grid/PopExcelOption';
-
 export * from '@zionex/wingui-core/utils/polyfill'
 export * from '@zionex/wingui-core/common/const';
 export * from '@zionex/wingui-core/utils/common';

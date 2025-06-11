@@ -1,6 +1,5 @@
 import ContentInner from "@zionex/wingui-core/layout/ContentInner";
-/* import { SearchArea } from "@zionex/wingui-core/layout/SearchArea";  */
-import { SearchArea } from '@wingui/layout/SearchArea'
+import { SearchArea } from "@zionex/wingui-core/layout/SearchArea";
 import { SearchRow } from "@zionex/wingui-core/layout/SearchRow";
 import { ResultArea } from "@zionex/wingui-core/layout/ResultArea";
 import { ButtonArea, LeftButtonArea, RightButtonArea } from "@zionex/wingui-core/layout/ButtonArea";
@@ -26,9 +25,8 @@ import { FormArea } from "@zionex/wingui-core/component/FormArea";
 import { FormItem } from "@zionex/wingui-core/component/FormItem";
 import { FormRow } from "@zionex/wingui-core/component/FormRow";
 import { GroupBox } from "@zionex/wingui-core/component/GroupBox";
-import AGGrid from "@zionex/wingui-core/component/aggrid/AGGrid";
 
-import { useIconStyles,useInputConstant } from "@wingui/style/CommonStyle";
+import { useIconStyles, useInputConstant } from "@wingui/style/CommonStyle";
 
 export {
   ContentInner, SearchArea, ResultArea, ButtonArea, LeftButtonArea, RightButtonArea, SearchRow, WorkArea,
@@ -37,5 +35,5 @@ export {
   GridAddRowButton, GridDeleteRowButton, GridSaveButton, GridCnt, Pagination, PopupDialog,
   useIconStyles, useViewStore, getViewStore,useContentStore, getContentStore, storeApi, useUserStore,getUserStore,userStoreApi,
   FormArea, FormRow, FormItem, GroupBox, SplitPanel,
-  zAxios, AGGrid,getActiveViewId,useSearchPositionStore,useInputConstant
+  zAxios, getActiveViewId, useSearchPositionStore, useInputConstant
 }

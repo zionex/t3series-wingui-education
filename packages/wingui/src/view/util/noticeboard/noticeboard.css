@@ -17,12 +17,6 @@
   background: #ffffff;
 }
 
-.noticeboard .rg-head .rg-table tr td,
-.noticeboard .rg-header .rg-table tr td {
-  background: #ffffff !important;
-  border-bottom: 1px solid #e2e5e7;
-}
-
 .noticeboard .rg-header .rg-table tr td:last-child {
   border-right: none;
 }
@@ -101,17 +95,6 @@
 
 .noticeboard .rg-rowindicator-select.rg-white-rowbarcontainer {
   background-color: #fdf0e8 !important;
-}
-
-.noticeboard .rg-head, .noticeboard .rg-header {
-  background: #f4f6fb !important;
-}
-
-.noticeboard .rg-head .rg-table tr td,
-.noticeboard .rg-header .rg-table tr td,
-.noticeboard .rg-rowgroup-head .rg-table tr:not(.rg-rowgroup-summary) td {
-  background: #f4f6fb !important;
-  border-bottom: 1px solid #e2e5e7 !important;
 }
 
 .noticeboard .rg-header .rg-table tbody tr,

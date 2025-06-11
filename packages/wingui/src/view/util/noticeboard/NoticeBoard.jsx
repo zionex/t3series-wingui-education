@@ -277,10 +277,10 @@ function NoticeBoard() {
               }
             }
             else {
-              console.log('응답 데이타가 없습니다.')
+              console.log(response.status)
             }
           } else {
-            console.log('응답 상태', response.status)
+            console.log(response.status)
           }
         }).catch(function (error) {
           console.log(error);

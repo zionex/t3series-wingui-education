@@ -2993,6 +2993,20 @@ const menuData = {
               ]
             },
             {
+              "id": "UI_MP_LOC_HOLIDAY",
+              "parentId": "MENU_DATA_MP",
+              "icon": "",
+              "path": "/dataintegration/masterplan/siteincomingcalendar",
+              "filePath": "/masterplan/master/SiteIncomingCalendar",
+              "manualPath": "masterplan/ui/UI_MP_LOC_HOLIDAY",
+              "seq": 55,
+              "bookmarked": false,
+              "usable": true,
+              "items": [
+
+              ]
+            },
+            {
               "id": "UI_MP_11",
               "parentId": "MENU_DATA_MP",
               "icon": "",
@@ -3835,19 +3849,6 @@ const menuData = {
           ]
         },
         {
-          "id": "UI_SA_05",
-          "parentId": "MENU_SAMPLE",
-          "icon": "",
-          "path": "/sample/Sample05",
-          "filePath": "/sample/Sample05",
-          "seq": 301,
-          "bookmarked": false,
-          "usable": true,
-          "items": [
-
-          ]
-        },
-        {
           "id": "UI_SA_06",
           "parentId": "MENU_SAMPLE",
           "icon": "",
@@ -3882,20 +3883,6 @@ const menuData = {
           "filePath": "/sample/DSTableTest",
           "type": null,
           "seq": 308,
-          "bookmarked": false,
-          "usable": true,
-          "items": [
-
-          ]
-        },
-        {
-          "id": "UI_SA_BLOCKNOTE",
-          "parentId": "MENU_SAMPLE",
-          "icon": "",
-          "path": "/sample/blocknotetest",
-          "filePath": "/sample/BlockNoteTest",
-          "type": null,
-          "seq": 309,
           "bookmarked": false,
           "usable": true,
           "items": [
@@ -4020,19 +4007,6 @@ const menuData = {
           ]
         },
         {
-          "id": "UI_TIPTAP_TEST",
-          "parentId": "MENU_SAMPLE",
-          "icon": "",
-          "path": "/sample/tiptaptest",
-          "filePath": "/sample/TiptapTest",
-          "seq": 319,
-          "bookmarked": false,
-          "usable": true,
-          "items": [
-            
-          ]
-        },
-        {
           "id": "UI_LECTURE_TEST",
           "parentId": "MENU_SAMPLE",
           "icon": "",
@@ -4133,18 +4107,6 @@ const menuData = {
       "usable": true,
       "items": [
         {
-          "id": "UI_PR_01",
-          "parentId": "MENU_TEST_PAGE",
-          "icon": "",
-          "path": "/practice/practice01",
-          "filePath": "/practice/Practice01",
-          "seq": 311,
-          "bookmarked": false,
-          "usable": true,
-          "items": [
-          ]
-        },
-        {
           "id": "UI_SA_BACKEND_TEST",
           "parentId": "MENU_TEST_PAGE",
           "icon": "",
@@ -4216,31 +4178,32 @@ const menuData = {
           "items": [
           ]
         },
-      ]
-    },
-    {
-      "id": "MENU_SAMPLE2",
-      "parentId": "",
-      "icon": "Database",
-      "path": "",
-      "seq": 300,
-      "bookmarked": false,
-      "usable": true,
-      "items": [
         {
-          "id": "UI_SA_EXCELGRIDTEST",
-          "parentId": "MENU_SAMPLE2",
+          "id": "UI_FP_TEST_SIMULATIONKPI",
+          "parentId": "MENU_TEST_PAGE",
           "icon": "",
-          "path": "/sample/excelgridtest",
-          "filePath": "/sample/ExcelGridTest",
-          "seq": 311,
+          "path": "/test/test1",
+          "filePath": "/test/test1",
+          "seq": 317,
           "bookmarked": false,
           "usable": true,
           "items": [
           ]
-        }
+        },
+        {
+          "id": "UI_FP_TEST_PLANPROBLEM",
+          "parentId": "MENU_TEST_PAGE",
+          "icon": "",
+          "path": "/test/test2",
+          "filePath": "/test/test2",
+          "seq": 318,
+          "bookmarked": false,
+          "usable": true,
+          "items": [
+          ]
+        },
       ]
-    },
+    }
   ]
 }
 export default menuData;

@@ -5,7 +5,7 @@ import { transLangKey } from "@wingui";
 
 import { ContentInner } from "@wingui/common/imports";
 
-function DashboardTool(props)  {
+function DashboardTool(props) {
 
   /**
    * Widget property
@@ -17,40 +17,57 @@ function DashboardTool(props)  {
    * @returns Widget 구성 정보
    */
   function makeWidgetPanel() {
-  let widgets = [
-    {
-      key: "1", 
-      title: "Issue", 
-      widgetId: "ISSUE_WIDGET", 
-      "data-grid":{"w":6,"h":4,"x":0,"y":0},
-      linkUrl : "/util/issuemgmt"
-    },
-    {
-      "key": "2", 
-      "title": "Notice", 
-      "widgetId": "NOTICE_WIDGET", 
-      "data-grid":{"w":6,"h":4,"x":6,"y":0},
-      "linkUrl": "/util/noticeboard"
-    },
-    {
-      "key": "3", 
-      "title": "메모장", 
-      "widgetId": "KEEP_WIDGET", 
-      "data-grid":{"w":6,"h":4,"x":0,"y":6},
-    },
-  ];
-  return widgets;
-}
+    let widgets = [
+      {
+        key: "1",
+        title: "Issue",
+        widgetId: "WI_UTIL_ISSUE_WIDGET",
+        "data-grid": { "w": 6, "h": 4, "x": 0, "y": 0 }, //layoutConfig
+        linkUrl: "/util/issuemgmt"
+      },
+      {
+        "key": "2",
+        "title": "Notice",
+        "widgetId": "WI_UTIL_NOTICE_WIDGET",
+        "data-grid": { "w": 6, "h": 4, "x": 6, "y": 0 },
+        "linkUrl": "/util/noticeboard"
+      },
+      {
+        "key": "3",
+        "widgetId": "WI_UTIL_KEEP_WIDGET",
+        "title": "memo",
+        "data-grid": { "w": 6, "h": 4, "x": 0, "y": 6 },
+      },
+    ];
+    return widgets;
+  }
 
-const OnGetWidgets = (widgetConfig) => {
-  return widgetConfig;
-};
+  const OnGetWidgets = (widgetConfig) => {
+    return widgetConfig;
+  };
 
-return (
-  <ContentInner>
-    <DashboardPanel id={"DashboardTool_Board1"} fitHeight={false} otherLoodable={true} actionBar={true} option={{store: 'DB', closeBtn:true, widgetConfigVisible: true}} isResizable={true} isDraggable={true} widgets={makeWidgetPanel()} OnGetWidgets={OnGetWidgets}></DashboardPanel>
-  </ContentInner>
-);
+  return (
+    <ContentInner>
+      <DashboardPanel
+        id={"DashboardTool_Board1"}
+        fitHeight={false}
+        otherLoodable={true}
+        actionBar={true}
+        option={{
+          store: 'DB',
+          closeBtn: true,
+          widgetConfigVisible: false,
+          fullScreenBtn: true
+        }}
+        isResizable={true}
+        isDraggable={true}
+        autoSize={true}
+        widgets={makeWidgetPanel()}
+        OnGetWidgets={OnGetWidgets}
+      >
+      </DashboardPanel>
+    </ContentInner>
+  );
 
 }
 

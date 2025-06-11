@@ -60,6 +60,7 @@ function GroupPermission() {
   const classes = useResultAreaStyles();
   const history = useHistory();
   const location = useLocation();
+  const getContentDataFromPath = useMenuStore(state => state.getContentDataFromPath);
   const [viewData, getViewInfo, setViewInfo] = useViewStore(state => [state.viewData, state.getViewInfo, state.setViewInfo]);
   const [getViewPath] = useMenuStore(state => [state.getViewPath]);
   const [groupGrid, setGroupGrid] = useState(null);
@@ -84,8 +85,14 @@ function GroupPermission() {
   }, [viewData])
   useEffect(() => {
     if (location.state !== undefined && location.state !== null && groupGrid !== null && viewPermissionGrid !== null) {
-      setValue('grpNm', location.state.grpNm)
-      setGrpCd(location.state.grpCd)
+      const contentData = getContentDataFromPath(location.pathname);
+      if (contentData) {
+        if (activeViewId === contentData.viewId) {
+          setValue('grpNm', location.state.grpNm);
+          setGrpCd(location.state.grpCd);
+          history.replace({ state: null });
+        }
+      }
     }
     if (groupGrid) {
       setViewInfo(activeViewId, 'globalButtons', globalButtons)
@@ -111,7 +118,7 @@ function GroupPermission() {
           viewPermissionGridLoadData(grpCd);
         }
       }
-      let clickedRow = grid.getJsonRows()[clickData.dataRow]
+      let clickedRow = grid.getDataSource().getJsonRow(clickData.dataRow)
       if (clickData.column === 'grpNm') {
         history.push({ pathname: getViewPath('UI_AD_03'), state: { grpNm: clickedRow.grpNm } })
       }

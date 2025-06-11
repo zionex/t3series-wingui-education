@@ -30,13 +30,6 @@ function Multilingual() {
       disable: false
     }
   ]
-  const exportExceloptions = {
-    headerDepth: 1,
-    footer: "hidden",
-    allColumns: true,
-    lookupDisplay: true,
-    separateRows: false
-  }
   useEffect(() => {
     setMultilGrid(getViewInfo(activeViewId, 'multilGrid'))
   }, [viewData])
@@ -57,6 +50,15 @@ function Multilingual() {
   function setOptions() {
     multilGrid.gridView.setCheckBar({ visible: true })
     multilGrid.gridView.setStateBar({ visible: true })
+    
+		multilGrid.gridView.excelExportOptions = {
+      headerDepth: 1,
+      footer: "hidden",
+      allColumns: true,
+      lookupDisplay: true,
+      separateRows: false
+		};
+
     multilGrid.gridView.onCellEdited = function (grid) {
       grid.commit(true);
     }
@@ -289,7 +291,7 @@ function Multilingual() {
         <ButtonArea>
           <LeftButtonArea>
             <GridExcelImportButton type="icon" grid="multilGrid" />
-            <GridExcelExportButton type="icon" grid="multilGrid" options={exportExceloptions} />
+            <GridExcelExportButton type="icon" grid="multilGrid" />
             <CommonButton title={transLangKey("RESET_LANGPACK")} onClick={reloadLanguage} ><SystemUpdateAltIcon /></CommonButton>
           </LeftButtonArea>
           <RightButtonArea>

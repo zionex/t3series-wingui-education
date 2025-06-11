@@ -12,6 +12,16 @@ export const useAppBarStyles = makeStyles(theme => ({
   appToolBar: {
     backgroundColor: theme.themeData.palette.base.colorA,
     minHeight: "38px",
+    "& .MuiSvgIcon-root": {
+      height: 24,
+      width: 24,
+      color: theme.themeData.palette.appBar.color,
+    },
+    "& .MuiInputBase-root > .MuiSvgIcon-root": {
+      height: 24,
+      width: 24,
+      color: theme.themeData.palette.typography.color,
+    },
   },
   appBarMenuInput: {
     color: theme.themeData.palette.appBarMenuInput.color,
@@ -36,13 +46,6 @@ export const useAppBarStyles = makeStyles(theme => ({
     },
     textTransform: "inherit"
   },
-  appBarIconButton: {
-    "& .MuiSvgIcon-root": {
-      height: 24,
-      width: 24,
-      color: theme.themeData.palette.appBar.color,
-    },
-  },
   appBarFloatPaper: {
     position: 'absolute',
     zIndex: 9999999,
@@ -59,7 +62,6 @@ export const useAppBarStyles = makeStyles(theme => ({
       "rgb(0 0 0 / 20%) 0px 1px 3px 0px, rgb(0 0 0 / 14%) 0px 1px 1px 0px, rgb(0 0 0 / 12%) 0px 2px 1px -1px",
   },
 }));
-
 
 export const useContentStyles = makeStyles(theme => (
   {
@@ -94,7 +96,8 @@ export const useTabContentStyles = makeStyles(theme => (
   {
     tabContent: {
       whiteSpace: "nowrap",
-      // borderBottom: theme.palette.tabContent.borderBottom,
+      borderTop: theme.type === 'light' ? `1px solid #E0E0E0` : "none",
+      borderBottom: theme.type === 'light' ? `2px solid ${theme.themeData.palette.base.colorC}` : "none",
       background: theme.themeData.palette.base.colorA,
       "& .MuiTab-root>.MuiSvgIcon-root": {
         height: 12,
@@ -132,7 +135,7 @@ export const useTabContentStyles = makeStyles(theme => (
         float: 'right'
       },
       "& .MuiTab-root": {
-        color: "#e8e8e8",
+        color: theme.themeData.palette.base.colorF,
         // backgroundColor: theme.palette.primary.dark,
         marginRight: 0,
         minWidth: '10px',
@@ -146,16 +149,10 @@ export const useTabContentStyles = makeStyles(theme => (
         textOverflow: "ellipsis",
         paddingRight: '40px',
         position: 'relative',
+        fontWeight: 'normal',
       },
       "& .MuiTab-root:hover": {
         // color: theme.palette.primary.light
-      },
-      "& .MuiTab-root.Mui-selected": {
-        color: `${theme.type === 'dark' ? theme.themeData.palette.sidebarSelectedItem.color : theme.themeData.palette.base.colorC} !important` ,
-        backgroundColor: `${theme.themeData.palette.main.backgroundColor} !important`,
-        fontWeight: 'bold',
-        borderTopLeftRadius: '0.6rem',
-        borderTopRightRadius: '0.6rem',
       },
       "& .MuiTab-root.Mui-selected > .v-line": {
         border: "0 !important"
@@ -164,7 +161,7 @@ export const useTabContentStyles = makeStyles(theme => (
         border: "0 !important"
       },
       "& .MuiTabs-scrollButtons": {
-        color: theme.themeData.palette.color.white,
+        color: theme.themeData.palette.base.colorF,
       }
     },
   }
@@ -209,14 +206,26 @@ export const useSearchAreaStyles = makeStyles(theme => (
       border: 'none',
       overflowX: 'hidden',
       overflowY: 'auto',
+      position: 'relative',
     },
     searchAreaLeftContainer: {
       display: 'flex',
       flexDirection: 'column',
       height: '100%',
     },
+    searchAreaLeftResizer: {
+      position: 'absolute',
+      top: 0,
+      right: 0,
+      width: '5px',
+      height: '100%',
+      cursor: 'ew-resize',
+      backgroundColor: '#e2e2e2',
+      backgroundImage: 'radial-gradient(#d1d1d1 1px, transparent 1px)',
+      backgroundSize: '6px 3px',
+    },
     searchCollapse: {
-      height: "calc(95%)",
+      height: "calc(95%)!important",
       "& .MuiCollapse-wrapper": {
         height: "100%",
       },
@@ -240,13 +249,22 @@ export const useSearchAreaStyles = makeStyles(theme => (
     },
     searchAreaButton: {
     },
+    searchAreaToggleButton: {
+      width: 54,
+      height: 40,
+      minWidth: 30,
+      fontSize: 12,
+      backgroundColor: theme.themeData.palette.color.white,
+      border: '1px solid #A1A5AB !important',
+      borderRadius: '8px'
+    },
   }
 ))
 
 export const useContentInnerStyles = makeStyles(theme => (
   {
     content: {
-      padding: '0 20px 5px 20px',
+      padding: '10px',
       display: 'flex',
       alignContent: 'stretch',
       alignItems: 'stretch',
@@ -287,7 +305,7 @@ export const useTabSetupStyles = makeStyles(theme => (
       }
     },
     tabIcon: {
-      color: theme.themeData.palette.color.white
+      color: theme.themeData.palette.base.colorF
     }
   }
 ))
@@ -333,8 +351,6 @@ export const useFloatIssueListStyles = makeStyles(theme => (
   }
 ))
 
-
-
 export const usePopupDialogStyles = makeStyles(theme => (
   {
     resizable: {
@@ -356,18 +372,44 @@ export const usePopupDialogStyles = makeStyles(theme => (
       }
     },
     popupDialogTitle: {
-      cursor: "move",
-      display: "flex",
-      height: '40px',
-      background: theme.type === 'dark' ? '#1b1e25' : '#222e3c',
+      fontSize: "15px",
+      background: theme.themeData.palette.primary.dark,
       color: "#fff",
-      alignItems: "center",
-      justifyContent: "space-between",
-      padding: "12px 14px"
+      "& .MuiTypography-root": {
+        color: "#fff",
+      }
     },
     popupDialogTitleIcon: {
       cursor: "pointer"
     },
+    alertDialog: {
+      "& .MuiPaper-root": {
+        minWidth: "300px",
+        minHeight: "150px"
+      },
+      "& .MuiDialogTitle-root": {
+        fontSize: "15px",
+        backgroundColor: theme.themeData.palette.primary.dark,
+        color: "#fff",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+        padding: "8px 16px",
+        "& .MuiIconButton-root": {
+          padding: "0px"
+        },
+        "& .MuiSvgIcon-root": {
+          color: "#fff",
+        }
+      },
+      "& .MuiDialogContent-root": {
+        padding: "16px",
+        whiteSpace: 'pre-line'
+      },
+      "& .MuiDialogContent-root > .MuiTypography-root": {
+        color: theme.themeData.palette.typography.color,
+      }
+    }
   }
 ))
 
@@ -377,6 +419,7 @@ export const useResultAreaStyles = makeStyles(theme => (
       margin: "3px 0",
       width: props => props.style !== undefined && props.style.width !== undefined ? props.style.width : '100%',
       height: props => props.style !== undefined && props.style.height !== undefined ? props.style.height : '100%',
+      flexGrow: 1,
     },
   }
 ))
@@ -384,17 +427,23 @@ export const useResultAreaStyles = makeStyles(theme => (
 export const useViewPathStyles = makeStyles(theme => (
   {
     viewPath: {
-      margin: "2px 20px"
+      margin: "10px 10px 0px 10px",
+      fontSize: "13px",
+      "& .MuiCheckbox-root": {
+        padding: "0px"
+      },
+      "& .MuiGrid-root": {
+        alignItems: "flex-start"
+      }
     },
     viewPathIconButton: {
       borderRadius: "6px",
       width: "35px",
       height: "30px",
-      border: theme.type == 'dark' ? 'none' : "1px solid #bebec0",
+      border: theme.type == 'dark' ? 'none' : "1px solid " + theme.themeData.palette.base.colorA,
+      backgroundColor: theme.themeData.palette.color.white,
       "& .Mui-disabled": {
-        backgroundColor: "#f8f8fa",
-        border: "1px solid #bebec0",
-        borderRadius: "0",
+        backgroundColor: theme.themeData.palette.color.greyB
       },
     },
   }
@@ -434,7 +483,12 @@ export const useHistoryStyles = makeStyles(theme => (
       justifyContent: 'space-between',
       margin: '4px 0px',
       borderRadius: '5px',
-      backgroundColor: theme.type == 'dark' ? '#1c2a3e' : '#f3f3f3'
+      backgroundColor: theme.type == 'dark' ? '#1c2a3e' : '#f3f3f3',
+      "& .MuiSvgIcon-root": {
+        height: 24,
+        width: 24,
+        color: theme.themeData.palette.typography.color,
+      },
     },
     historyListItemText: {
       paddingLeft: "10px",
@@ -479,7 +533,12 @@ export const useFavoriteStyles = makeStyles(theme => (
       justifyContent: 'space-between',
       margin: '4px 0px',
       borderRadius: '5px',
-      backgroundColor: theme.type == 'dark' ? '#1c2a3e' : '#f3f3f3'
+      backgroundColor: theme.type == 'dark' ? '#1c2a3e' : '#f3f3f3',
+      "& .MuiSvgIcon-root": {
+        height: 24,
+        width: 24,
+        color: theme.themeData.palette.typography.color,
+      },
     },
     favoriteListItemText: {
       paddingLeft: "10px"
@@ -615,7 +674,7 @@ export const useLocaleSetupStyles = makeStyles(theme => (
       display: "flex",
       height: "4%",
       // background: theme.themeData.palette.color.white,
-      padding: "5px",
+      padding: "8px 2px",
       "& .MuiTypography-root": {
         fontSize: theme.themeData.palette.typography.fontSize,
         color: theme.themeData.palette.typography.color,
@@ -653,7 +712,7 @@ export const useButtonAreaStyles = makeStyles(theme => (
         content: "''",
         display: "inline-block",
         padding: "3px 7px 9px 0px",
-        border: "1px solid #d24b4b",
+        border: `1px solid ${theme.themeData.palette.base.colorC}`,
         borderWidth: "0 0 0 3px",
       },
       color: theme.themeData.palette.typography.color,
@@ -661,7 +720,10 @@ export const useButtonAreaStyles = makeStyles(theme => (
       fontSize: "15px",
       marginRight: "15px"
     },
-    textButton: {}
+    textButton: {
+      border: theme.type == 'dark' ? `1px solid ${theme.themeData.palette.typography.color}` : null,
+      color: theme.type == 'dark' ? theme.themeData.palette.typography.color : null,
+    }
   }
 ))
 
@@ -735,6 +797,7 @@ export const useSidebarStyles = makeStyles((theme) => ({
     height: "100%",
     background: theme.themeData.palette.base.colorA,
     borderRight: theme.themeData.palette.sidebar.borderRight,
+    borderRadius: 0
   },
   brandLogo: {
     fontWeight: "600",
@@ -757,33 +820,33 @@ export const useSidebarStyles = makeStyles((theme) => ({
     height: "90%",
     margin: 0,
     padding: 0,
-    color: "#ebe9e9",
+    color: theme.themeData.palette.base.colorF,
     background: theme.themeData.palette.base.colorA,
     boxShadow: "none",
   },
   list: {
     width: "100%",
     maxWidth: 260,
-    color: "#ebe9e9",
+    color: theme.themeData.palette.base.colorF,
     "& span": {
       fontWeight: 400,
-      color: '#ffffff',
+      color: theme.themeData.palette.base.colorF,
     },
   },
   item: {
     paddingTop: 4,
     paddingBottom: 4,
     background: theme.themeData.palette.sidebarItem.background,
-    color: "#ebe9e9",
+    color: theme.themeData.palette.base.colorF,
     fontWeight: 400,
     "& :hover": {
-      color: "#ebe9e9",
+      color: theme.themeData.palette.base.colorF,
     },
   },
   selectedItem: {
     paddingTop: 4,
     paddingBottom: 4,
-    background: theme.themeData.palette.base.colorA,
+    background: theme.themeData.palette.sidebarSelectedItem.background,
     "& span": {
       color: theme.themeData.palette.sidebarSelectedItem.color,
       fontWeight: "bold",
@@ -791,6 +854,7 @@ export const useSidebarStyles = makeStyles((theme) => ({
   },
   span: {
     marginLeft: 4,
+    color: theme.themeData.palette.base.colorF,
     "& span::before": {
       display: "block",
       position: "relative",
@@ -803,6 +867,104 @@ export const useSidebarStyles = makeStyles((theme) => ({
       background: theme.themeData.palette.sidebarSpanBefore.background,
     },
   },
+}));
+
+export const useTopbarStyles = makeStyles((theme) => ({
+  root: {
+    display: "flex",
+    width: "100%",
+    maxHeight: "44px",
+    transition: "max-height 0.25s ease-in",
+    whiteSpace: "nowrap",
+    zIndex: 100,
+    background: theme.themeData.palette.base.colorA,
+    color: theme.themeData.palette.base.colorF,
+    "& .MuiListItemText-primary": {
+      color: theme.themeData.palette.base.colorF,
+      fontWeight: 400,
+    },
+  },
+  groupList: {
+    display: "flex",
+    position: "unset",
+    padding: 0,
+    overflowX: "scroll",
+    "& .MuiListItemText-root": {
+      margin: 0,
+    },
+    "&::-webkit-scrollbar": {
+      display: "none",
+      width: 0,
+      height: 0,
+    },
+  },
+  groupItem: {
+    position: "unset",
+    padding: 0,
+    paddingRight: "8px",
+    "& > .MuiListItemText-root": {
+      "&:hover": {
+        background: theme.themeData.palette.base.colorB,
+      },
+    },
+    "&:hover": {
+      "& > .MuiList-root": {
+        display: "block",
+      },
+    },
+  },
+  groupItemText: {
+    display: "block",
+    padding: "0.625rem 1.625rem",
+    cursor: "pointer",
+    transition: "background .1s ease-in-out",
+    "& > span": {
+      fontSize: "14px",
+      fontWeight: "bold",
+    }
+  },
+  menuList: {
+    display: "none",
+    position: "absolute",
+    top: "94px",
+    minWidth: "150px",
+    padding: 0,
+    zIndex: "100 !important",
+    background: theme.themeData.palette.sidebarItem.background,
+    border: "0.5px solid gray",
+    "& a": {
+      color: theme.themeData.palette.base.colorF,
+    },
+  },
+  menuListItem: {
+    position: "relative !important",
+    paddingRight: "8px",
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    cursor: "pointer",
+    transition: "background .1s ease-in-out",
+    "& .MuiList-root": {
+      position: "absolute",
+      top: "-1px",
+      left: "100%",
+      minWidth: "180px",
+      maxHeight: '360px',
+      overflowY: "auto",
+    },
+    "&:hover": {
+      background: theme.themeData.palette.sidebarItemHover.background,
+      "& .MuiList-root": {
+        display: "block",
+      }
+    },
+    "& .MuiList-root::-webkit-scrollbar": {
+      width: "6px",
+    },
+    "& .MuiList-root::-webkit-scrollbar-thumb": {
+      backgroundColor: "#ccc",
+      borderRadius: "3px",
+    },
+  }
 }));
 
 export const useAllMenuStyles = makeStyles((theme) =>
@@ -837,7 +999,7 @@ export const useAllMenuStyles = makeStyles((theme) =>
       width: 'fit-content',
       display: 'inline-flex',
       flexDirection: 'column',
-      padding: '0px 10px',
+      padding: '0px 10px 10px 10px',
       backgroundColor: theme.type === 'dark' ? '#242832' : '#f8f8f8',
       borderRadius: '5px',
       margin: '5px'
@@ -888,7 +1050,7 @@ export const useFloatMenuStyles = makeStyles((theme) => createStyles({
   },
   container: {
     maxHeight: 800,
-    width: 310,
+    width: 280,
     border: "1px solid #e9e9e9",
     borderRadius: 2,
     boxShadow:
@@ -929,7 +1091,7 @@ export const useFloatMenuStyles = makeStyles((theme) => createStyles({
     }
   },
   paper: {
-    m: 0, padding: '20px', color: '#ebe9e9', background: '#222E3C'
+    m: 0, padding: '10px', color: '#ebe9e9', background: '#222E3C'
   },
   titleStyle: {
     fontFamily: '"Noto Sans KR", "Helvetica", "Arial", sans-serif',
@@ -963,27 +1125,6 @@ export const useLargeMenuDropdownStyles = makeStyles((theme) => createStyles({
     zIndex: 9999999
   }
 }));
-
-export function CustomIcon(props) {
-  const { type, size } = props;
-  useEffect(() => {
-  });
-
-  const styles = {
-    img: {
-      width: `${size}`,
-      height: `${size}`,
-    },
-  };
-
-  switch (type) {
-    case 'FILE_SAVE':
-      return <Avatar><Icon.FILE_SAVE /></Avatar>;
-    default:
-      return <Avatar><Icon.FILE_SAVE /></Avatar>;
-  }
-}
-
 
 export const useDashboardStyle = makeStyles((theme) => createStyles({
   //DashboardPanel
@@ -1052,8 +1193,6 @@ export const useDashboardStyle = makeStyles((theme) => createStyles({
   //DashboardPanel WidgetList Popover 끝
 }));
 
-
-
 export const useWidgetStyle = makeStyles((theme) => createStyles({
   content: {
     padding: "5px 10px",
@@ -1064,11 +1203,10 @@ export const useWidgetStyle = makeStyles((theme) => createStyles({
     width: "100%",
     overflow: "hidden",
     backgroundColor: theme.themeData.palette.widget.backgroundColor,
-    borderRadius: "8px",
   },
   header: {
     display: "inline-flex",
-    borderBottom: "1px solid #3e84ab",
+    borderBottom: `1px solid ${theme.themeData.palette.color.greyB}`,
     padding: "2px 10px",
     overflow: "hidden",
     height: "30px",
@@ -1126,13 +1264,39 @@ export const useWidgetStyle = makeStyles((theme) => createStyles({
     fontWeight: 'bold',
     color: "#28247d"
   },
+  textButtonStyle: {
+    maxHeight: 100,
+    minWidth: 0,
+    minHeight: 0,
+    height: 22,
+    padding: 5,
+    fontSize: 11,
+    margin: 1,
+    borderRadius: 2,
+    boxShadow: `0 0 40px 40px $blue inset, 0 0 0 0 ${theme.themeData.palette.base.colorC}`,
+    transition: 'all 150ms ease-in-out',
+    '&:hover': {
+      transition: 'all .4s ease-in-out'
+    }
+  },
+  toggleButtonStyle: {
+    minWidth: 30,
+    fontSize: 10,
+    color: theme.type === 'dark' ? theme.themeData.palette.color.greyB : null,
+    '&.Mui-selected': {
+      color: theme.type === 'dark' ? `${theme.themeData.palette.typography.color} !important` : null,
+    },
+  }
 }));
 
-CustomIcon.propTypes = {
-  type: PropTypes.string.isRequired,
-  size: PropTypes.number,
-};
-
-CustomIcon.defaultProps = {
-  size: 32
-};
+export const usePaginationStyles = makeStyles((theme) => createStyles({
+  paginationStyle: {
+    "& .MuiButtonBase-root.MuiPaginationItem-root": {
+      color: theme.themeData.palette.typography.color
+    },
+    "& .MuiButtonBase-root.MuiPaginationItem-root.Mui-selected": {
+      backgroundColor: theme.type === 'dark' ? `${theme.themeData.palette.sidebarSelectedItem.color}` : `${theme.themeData.palette.base.colorC}`,
+      color: theme.type === 'dark' ? `${theme.themeData.palette.color.black}` : `${theme.themeData.palette.color.white}`,
+    }
+  }
+}));

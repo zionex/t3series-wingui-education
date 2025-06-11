@@ -11,16 +11,13 @@ export const uiSettings = {
   },
   appBar: {
     type: 'simple', //or ''
-    useLargeMenuCombo: false, //대메뉴가 보이는 메뉴 드롭다운
-    useSiteMapTree: false, //사이트 맵(전체메뉴) 트리 보기
+    useLargeMenuDropdown: false, //대메뉴가 보이는 메뉴 드롭다운
+    useSiteMapTree: true, //사이트 맵(전체메뉴) 트리 보기
     useBookMarkButton: true,
     useHistoryButton: true,
     useSearchMenu: true,
-    useIssueButton: false,
-    useWorkFlowButton: false
-  },
-  document: {
-    userManualPath: 'docs/manual'
+    useIssueButton: true,
+    useWorkFlowButton: true
   },
   component: {
     button: 'icon',
@@ -36,9 +33,11 @@ export const uiSettings = {
   },
   contextMenu: {
     excelExportSettings: {
-      // type: "excel",
-      // useTypePopup: true
     }
+  },
+  excelExportSettings: {
+    lookupDisplay: true,
+    // count: 10000
   },
   useUserViewHistory: false,
   axiosTimeout: 3600000

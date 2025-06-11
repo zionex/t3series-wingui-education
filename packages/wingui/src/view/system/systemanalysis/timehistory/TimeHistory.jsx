@@ -15,7 +15,7 @@ let thGridItems = [
   { name: "viewNm", dataType: "text", headerText: "MENU_NM", visible: true, editable: false, width: 100 },
   { name: "executionDttm", dataType: "datetime", headerText: "EXECUTION_DTTM", visible: true, editable: false, width: 80, format: "yyyy-MM-dd HH:mm:ss" },
   { name: "modifyDttm", dataType: "datetime", headerText: "MODIFY_DTTM", visible: false, editable: false, width: 80, format: "yyyy-MM-dd HH:mm:ss" },
-  { name: "runningTime", dataType: "number", headerText: "RUNNING_TIME", visible: true, editable: false, width: 80, format: "#,###.0" },
+  { name: "runningTime", dataType: "number", headerText: "RUNNING_TIME", visible: true, editable: false, width: 80 },
 ]
 
 function timehistory() {
@@ -61,6 +61,14 @@ function timehistory() {
     setThGrid(gridObj)
     gridView.displayOptions.fitStyle = "fill";
     gridView.displayOptions.rowHeight = 30;
+    
+		gridView.excelExportOptions = {
+      lookupDisplay: false,
+      separateRows: true,
+      footer: "default",
+      headerDepth: 2,
+      importExceptFields: { 0: "id" },
+		};
   };
 
   const onSubmit = () => {
@@ -76,15 +84,6 @@ function timehistory() {
       });
     }
   }
-
-  const excelExportOptions = {
-    lookupDisplay: false,
-    separateRows: true,
-    footer: "default",
-    headerDepth: 2,
-    importExceptFields: { 0: "id" },
-  };
-
 
   function loadData(page) {
     let dateRange = getValues("dateRage");
@@ -133,9 +132,7 @@ function timehistory() {
     <ContentInner>
       <SearchArea>
         <SearchRow>
-          <InputField type="dateRange" name={"dateRage"} width={"426px"} control={control} dateformat="yyyy-MM-dd"
-            rules={{ required: '기간은 필수값입니다.' }}
-          />
+          <InputField type="dateRange" name={"dateRage"} width={"426px"} control={control} displayType={"date"} rules={{ required: '기간은 필수값입니다.' }}/>
           <InputField name="menuCd" label={transLangKey("MENU_CD")} readonly={false} disabled={false} control={control} />
           <InputField name="menuName" label={transLangKey("MENU_NM")} readonly={false} disabled={false} control={control} />
           <InputField name="username" label={transLangKey("USER_NAME")} readonly={false} disabled={false} control={control} />
@@ -144,7 +141,7 @@ function timehistory() {
       <WorkArea>
         <ButtonArea>
           <LeftButtonArea>
-            <GridExcelExportButton type="icon" grid="thGrid" options={excelExportOptions} />
+            <GridExcelExportButton type="icon" grid="thGrid" />
           </LeftButtonArea>
           <RightButtonArea></RightButtonArea>
         </ButtonArea>

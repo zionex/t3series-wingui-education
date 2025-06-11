@@ -87,18 +87,31 @@ export const useInputStyles = makeStyles((theme) =>
       alignItems: 'center',
       padding: `${INPUT_PADDING}px`,
       '& .MuiSvgIcon-root': {
-        color: theme.type === 'dark'? theme.themeData.palette.typography.color : null
+        color: theme.type === 'dark' ? theme.themeData.palette.typography.color : null
       },
       '&:hover fieldset.MuiOutlinedInput-notchedOutline': {
-        border: `1px solid ${theme.themeData.palette.base.colorC}`
+        border: theme.type === 'dark' ? `1px solid ${theme.themeData.palette.sidebarSelectedItem.color}` : `1px solid ${theme.themeData.palette.base.colorC}`
       },
-      '& fieldset.Mui-focused.MuiOutlinedInput-notchedOutline': {
-        border: `2px solid ${theme.themeData.palette.base.colorC}`
+      // '& fieldset.Mui-focused.MuiOutlinedInput-notchedOutline': {
+      // },
+      '& .MuiInputBase-root.MuiOutlinedInput-root.Mui-focused fieldset.MuiOutlinedInput-notchedOutline': {
+        border: theme.type === 'dark' ? `2px solid ${theme.themeData.palette.sidebarSelectedItem.color} !important` : `2px solid ${theme.themeData.palette.base.colorC} !important`
+      },
+      '& .MuiFormLabel-root.MuiInputLabel-root.Mui-focused': {
+        color: theme.type === 'dark' ? `${theme.themeData.palette.sidebarSelectedItem.color} !important` : `${theme.themeData.palette.base.colorC} !important`
+      },
+      "& .MuiIconButton-root": {
+        width: 32,
+        color: theme.themeData.palette.typography.color,
+        padding: '6px'
       },
     },
     AutoComplete: {
     },
     AutoCompleteRenderInput: {
+      "& input": {
+        minWidth: '0px !important'
+      }
     },
     inputSelect: {
     },
@@ -122,6 +135,9 @@ export const useInputStyles = makeStyles((theme) =>
       "& .react-datepicker__input-container": {
         width: (props) => props ? props.defInputWidth : undefined,
       },
+    },
+    zDateTimePickerPopper: {
+      zIndex: "9999 !important",
     },
     zDateTimePickerInput: {
     },

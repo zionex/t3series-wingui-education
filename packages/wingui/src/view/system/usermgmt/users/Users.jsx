@@ -30,12 +30,12 @@ let baseGridItems = [
   { name: "etc", dataType: "text", headerText: "ETC", editable: true },
   { name: "adminYn", dataType: "boolean", headerText: "ADMIN_YN", editable: true, defaultValue: false, width: 50 },
   { name: "enabled", dataType: "boolean", headerText: "ACTV_YN", editable: false, defaultValue: true, width: 50 },
-  { name: "loginFailCount", dataType: "number", headerText: "LOGIN_FAIL_COUNT", editable: false, width: 65, numberFormat: '#,###' }
+  { name: "loginFailCount", dataType: "number", headerText: "LOGIN_FAIL_COUNT", editable: false, width: 65 },
 ];
 
-function Users() {
+function Users(props) {
+  const activeViewId = props.viewId
   const location = useLocation();
-  const activeViewId = getActiveViewId()
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const [viewData, getViewInfo, setViewInfo] = useViewStore(state => [state.viewData, state.getViewInfo, state.setViewInfo]);
@@ -65,7 +65,7 @@ function Users() {
   useEffect(() => {
     if (location.state !== undefined && location.state !== null && userGrid !== null) {
       setValue('username', location.state.username)
-      loadData();
+      loadData(location.state.username);
     }
   }, [location, userGrid])
   const onBeforeDelete = (targetGrid) => {
@@ -96,12 +96,10 @@ function Users() {
   function refresh() {
 
   }
-  function loadData() {
-    let name = ''
-    if (location.state !== undefined && location.state !== null) {
-      name = location.state.username
-    } else {
-      name = getValues('username')
+  function loadData(username) {
+    let name = getValues('username')
+    if (username !== undefined && username !== null) {
+      name = username
     }
     userGrid.gridView.commit(true);
 

@@ -116,7 +116,7 @@ function MenuBadge() {
     targetGrid.gridView.commit(true);
     if (targetGrid.gridView.getCheckedRows().length === targetGrid.dataProvider.getRowCount()) {
       //적어도 하나 이상의 공통코드는 존재해야 합니다.
-      showMessage(transLangKey('DELETE'), transLangKey('최소 하나 이상의 사용자는 존재해야 합니다.'), { close: false })
+      showMessage(transLangKey('DELETE'), transLangKey('MSG_SELECT_DELETE'), { close: false })
       return false;
     }
 

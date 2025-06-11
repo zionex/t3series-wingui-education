@@ -4,9 +4,9 @@ import {
   Box, ButtonGroup, IconButton, Tooltip, ToggleButtonGroup, ToggleButton, InputLabel, FormControl
   , TableContainer, Paper, Table, TableHead, TableBody, TableRow, TableCell, TextField, MenuItem, Select, NativeSelect
 } from "@mui/material";
-import LocalizationProvider from '@mui/lab/LocalizationProvider';
-import TimePicker from '@mui/lab/TimePicker';
-import AdapterDateFns from '@mui/lab/AdapterDateFns';
+import { LocalizationProvider } from '@mui/x-date-pickers';
+import { TimePicker } from '@mui/x-date-pickers/TimePicker';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { styled } from '@mui/material/styles';
 import { DeleteForever, Add, Save, EditOff, Edit, SubdirectoryArrowLeft } from '@mui/icons-material';
 import { useForm, Controller } from "react-hook-form";
@@ -98,7 +98,6 @@ function SchedulerJobMgmt(props) {
   const [insert, setInsert] = useState(false);
   const [edit, setEdit] = useState(false);
   const [jobDataArr, setJobDataArr] = useState([]);
-
 
   const { reset, control, getValues, setValue, watch, handleSubmit } = useForm({
     defaultValues: {
@@ -194,9 +193,13 @@ function SchedulerJobMgmt(props) {
     return (
       jobDataArr?.length > 0 && jobDataArr.map((data, inx) => {
         return (
+          <>
           <TableRow key={inx}>
             <TableCell align="center" style={{ width: "30%" }}>
-              <TextField sx={keyFieldStyle} id={"jobDataKey_" + String(inx)} size="small" disabled={!data.keyEdit} defaultValue={!data.keyEdit ? data.key : ""} />
+              { data.keyEdit ?
+                <TextField sx={keyFieldStyle} id={"jobDataKey_" + String(inx)} size="small" disabled={!data.keyEdit} defaultValue={!data.keyEdit ? data.key : ""} /> :
+                <InputLabel style={labelFontStyle} id={"jobDataKey_" + String(inx)}>{data.key}</InputLabel>
+              } 
             </TableCell>
             <TableCell style={{ width: "60%" }} align="left">
               {
@@ -218,7 +221,8 @@ function SchedulerJobMgmt(props) {
                     }
                   </NativeSelect> :
                   <TextField sx={textFieldStyle} type={"text"} label="" id={"jobDataValue_" + String(inx)} size="small"
-                    disabled={!edit && !data.valueEdit} defaultValue={!data.valueEdit ? data.value : ""} />
+                     defaultValue={!data.valueEdit ? data.value : ""} InputProps={{readOnly: !edit && !data.valueEdit}}
+                    />
               }
             </TableCell>
             <TableCell style={{ width: "10%" }} align="right">
@@ -234,6 +238,7 @@ function SchedulerJobMgmt(props) {
               }
             </TableCell>
           </TableRow>
+        </>
         )
       })
     )
@@ -247,7 +252,7 @@ function SchedulerJobMgmt(props) {
             addRow("TEXT");
           }}
         >
-          <SubdirectoryArrowLeft />
+          <Add />
         </IconButton>
       </Tooltip>
     )
@@ -360,6 +365,7 @@ function SchedulerJobMgmt(props) {
   const insertNewJob = () => {
     resetAll();
     setInsert(true);
+    setEdit(true);
     setValue("timeZoneId", timeZoneId);
   };
 
@@ -544,8 +550,12 @@ function SchedulerJobMgmt(props) {
       if (groupType === "Object" || groupType === undefined) {
         let groupedObj = {}
         jobDataArr.forEach((data, inx) => {
-          let key = document.getElementById("jobDataKey_" + inx).value.trim();
-          let value = document.getElementById("jobDataValue_" + inx).value.trim();
+          let keyEl = document.getElementById("jobDataKey_" + inx);
+          let valEl = document.getElementById("jobDataValue_" + inx);
+
+          let key = keyEl.tagName === "LABEL" ? keyEl.innerText.trim() : keyEl.value.trim();
+          let value = valEl.value.trim();
+
           jobKeyMap[key] = inx;
 
           if (assentialArr.includes(key)) {
@@ -560,8 +570,12 @@ function SchedulerJobMgmt(props) {
         let arr = [];
 
         jobDataArr.forEach((data, inx) => {
-          let key = document.getElementById("jobDataKey_" + inx).value.trim();
-          let value = document.getElementById("jobDataValue_" + inx).value.trim();
+          let keyEl = document.getElementById("jobDataKey_" + inx);
+          let valEl = document.getElementById("jobDataValue_" + inx);
+
+          let key = keyEl.tagName === "LABEL" ? keyEl.innerText.trim() : keyEl.value.trim();
+          let value = valEl.value.trim();
+
           jobKeyMap[key] = inx;
 
           if (assentialArr.includes(key)) {
@@ -800,8 +814,8 @@ function SchedulerJobMgmt(props) {
     if (deleteRows.length > 0) {
 
       zAxios({
-        method: "delete",
-        url: "scheduler-mgmt/jobs",
+        method: "post",
+        url: "scheduler-mgmt/jobs-delete",
         data: rows
       })
         .then(function (response) {
@@ -828,7 +842,11 @@ function SchedulerJobMgmt(props) {
         if (answer) {
           zAxios({
             method: "post",
-            url: `/scheduler-mgmt/execute/${jobName}/${jobGroup}`,
+            url: "/scheduler-mgmt/execute",
+            data:{
+              JOB_NAME: jobName,
+              JOB_GROUP: jobGroup
+            }
           })
             .then((res) => {
               if (res.status === HTTP_STATUS.SUCCESS) {
@@ -1120,7 +1138,7 @@ function SchedulerJobMgmt(props) {
                   </ButtonGroup>
                 </RightButtonArea>
               </ButtonArea>
-              <Box style={{ height: "calc(100% - 20px)" }}>
+              <Box style={{ height: "calc(100% - 42px)" }}>
                 <BaseGrid id="grid1" items={grid1Items} afterGridCreate={afterGridCreate1} onAfterDataSet={gridAfterSetDataLocal}/>
               </Box>
             </Box>
@@ -1159,13 +1177,16 @@ function SchedulerJobMgmt(props) {
                       {
                         !insert && getValues("jobName") && getValues("jobGroup") &&
                         <>
-                          <Tooltip title={transLangKey("UI_SCHEDULER_JOB_TOOLTIP_MODIFY")} placement="bottom" arrow>
+                          {
+                            !edit &&
+                            <Tooltip title={transLangKey("UI_SCHEDULER_JOB_TOOLTIP_MODIFY")} placement="bottom" arrow>
                             <IconButton
                               onClick={() => { jobEdit(true) }}
                             >
                               <Edit />
                             </IconButton>
                           </Tooltip>
+                          }
                           {
                             edit &&
                             <Tooltip title={transLangKey("UI_SCHEDULER_JOB_TOOLTIP_RE_REGISTER")} placement="bottom" arrow>
@@ -1197,7 +1218,7 @@ function SchedulerJobMgmt(props) {
                           <TableCell style={{ width: "70%" }} align="left" >
                             <Controller name='jobGroup' control={control} rules={{ required: true }}
                               render={({ field: { onChange, value }, fieldState: { error } }) => (
-                                <TextField sx={textFieldStyle} value={value} onChange={onChange} size="small" disabled={jobGropDisabled} />
+                                <TextField sx={textFieldStyle} value={value} onChange={onChange} size="small" disabled={edit && jobGropDisabled} InputProps={{readOnly: !edit && {jobGropDisabled}}} />
                               )}
                             />
                           </TableCell>
@@ -1211,7 +1232,7 @@ function SchedulerJobMgmt(props) {
                           <TableCell align="left">
                             <Controller name='jobName' control={control} rules={{ required: true }}
                               render={({ field: { onChange, value }, fieldState: { error } }) => (
-                                <TextField sx={textFieldStyle} value={value} onChange={onChange} size="small" disabled={jobNameDisabled} />
+                                <TextField sx={textFieldStyle} value={value} onChange={onChange} size="small" disabled={edit && jobNameDisabled} InputProps={{readOnly: !edit && {jobNameDisabled}}} />
                               )}
                             />
                           </TableCell>
@@ -1225,7 +1246,7 @@ function SchedulerJobMgmt(props) {
                           <TableCell align="left">
                             <Controller name='jobDescription' control={control} rules={{ required: true }}
                               render={({ field: { onChange, value }, fieldState: { error } }) => (
-                                <TextField sx={textFieldStyle} value={value} onChange={onChange} size="small" disabled={jobDescDisabled} />
+                                <TextField sx={textFieldStyle} value={value} onChange={onChange} size="small" disabled={edit && jobDescDisabled} InputProps={{readOnly: !edit && {jobDescDisabled}}} />
                               )}
                             />
                           </TableCell>
@@ -1238,7 +1259,7 @@ function SchedulerJobMgmt(props) {
                           </TableCell>
                           <TableCell align="left">
                             <InputField type="select" name="jobClass"
-                              control={control} options={jobClassArr} style={{ width: textFieldStyle.width, height: textFieldStyle.height }} disabled={jobClassDisabled} />
+                              control={control} options={jobClassArr} style={{ width: textFieldStyle.width, height: textFieldStyle.height }} disabled={edit && jobClassDisabled} readonly={!edit && jobClassDisabled} />
                           </TableCell>
                           <TableCell align="right">
                             {
@@ -1272,11 +1293,11 @@ function SchedulerJobMgmt(props) {
                               <InputLabel style={labelFontStyle}>{transLangKey("UI_SCHEDULER_JOB_DATE_RANGE")}</InputLabel>
                             </TableCell>
                             <TableCell align="left">
-                              <InputField style={{ width: '120px', height: textFieldStyle.height, margin: 0, padding: 0 }} type={"datetime"} name="startDate" control={control} disabled={dateRangeDisabled}
+                              <InputField style={{ width: '120px', height: textFieldStyle.height, margin: 0, padding: 0 }} type={"datetime"} name="startDate" control={control} disabled={edit && dateRangeDisabled} readOnly= {!edit && dateRangeDisabled}
                                 InputProps={{ style: { width: "120px", height: textFieldStyle.height, margin: 0, padding: 0 } }}
                               />
                               <Box sx={{ display: 'inline-flex', alignItems: 'center', margin: '0px 4px 0px 4px' }}>-</Box>
-                              <InputField style={{ width: '120px', height: textFieldStyle.height, margin: 0, padding: 0 }} type={"datetime"} name="endDate" control={control} disabled={dateRangeDisabled}
+                              <InputField style={{ width: '120px', height: textFieldStyle.height, margin: 0, padding: 0 }} type={"datetime"} name="endDate" control={control} disabled={edit && dateRangeDisabled} readOnly= {!edit && dateRangeDisabled}
                                 InputProps={{ style: { width: "120px", height: textFieldStyle.height, margin: 0, padding: 0 } }}
                               />
                             </TableCell>
@@ -1397,15 +1418,17 @@ function SchedulerJobMgmt(props) {
                                     <FormControl>
                                       <InputLabel id="cronDay-select">{transLangKey("UI_SCHEDULER_JOB_DAY")}</InputLabel>
                                       <Select
-                                        style={{ height: textFieldStyle.height }}
+                                        style={{ height: textFieldStyle.height}}
                                         value={value}
                                         labelId="cronDay-select"
                                         label={transLangKey("UI_SCHEDULER_JOB_DAY")}
                                         onChange={onChange}
                                         MenuProps={{
-                                          classes: { paper: classes.selectPaper }
+                                          classes: { paper: classes.selectPaper },
+                                          sx: { maxHeight:"460px" }
                                         }}
-                                        disabled={dayDisabled}
+                                        disabled={edit && dayDisabled}
+                                        inputProps={{ readOnly: !edit && {dayDisabled} }}
                                       >
                                         {cronDaySelectArr?.length > 0 &&
                                           cronDaySelectArr.map((day) => {
@@ -1430,6 +1453,7 @@ function SchedulerJobMgmt(props) {
                                   render={({ field: { onChange, value }, fieldState: { error } }) => (
                                     <LocalizationProvider dateAdapter={AdapterDateFns}>
                                       <TimePicker
+                                        sx={{ width: "120px", height:"40px", margin:"3.5px 3.5px", padding:"0px"}}
                                         ampm={false}
                                         openTo="hours"
                                         views={['hours', 'minutes', 'seconds']}
@@ -1437,7 +1461,8 @@ function SchedulerJobMgmt(props) {
                                         mask="__:__:__"
                                         value={value}
                                         onChange={onChange}
-                                        disabled={timeDisabled}
+                                        disabled={edit && timeDisabled}
+                                        readOnly={!edit && timeDisabled}
                                         onError={(error) => { setValue("cronTimeError", error ? true : false) }}
                                         renderInput={(params) => {
                                           return (<TextField size={"small"} sx={{
@@ -1471,7 +1496,7 @@ function SchedulerJobMgmt(props) {
                                           padding: "0px 12px"
                                         }
                                       }} 
-                                      value={value} onChange={onChange} size="small" disabled={timeZoneIdDisabled} 
+                                      value={value} onChange={onChange} size="small" disabled={edit && timeZoneIdDisabled}  InputProps={{readOnly: !edit && {timeZoneIdDisabled}}}
                                     />
                                   )}
                                 />
@@ -1484,7 +1509,7 @@ function SchedulerJobMgmt(props) {
                             <TableCell>
                               <Controller name='cronText' control={control} rules={{ required: true }}
                                 render={({ field: { onChange, value }, fieldState: { error } }) => (
-                                  <TextField sx={textFieldStyle} value={value} onChange={onChange} onKeyDown={(e) => setValue("cronTextKeyPress", true)} size="small" disabled={cronTextDisabled} />
+                                  <TextField sx={textFieldStyle} value={value} onChange={onChange} onKeyDown={(e) => setValue("cronTextKeyPress", true)} size="small" disabled={edit && cronTextDisabled} InputProps={{readOnly: !edit && {cronTextDisabled}}} />
                                 )}
                               />
                             </TableCell>

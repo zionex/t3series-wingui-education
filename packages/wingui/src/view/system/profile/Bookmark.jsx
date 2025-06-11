@@ -2,6 +2,7 @@ import React, { useState, useEffect, forwardRef, useImperativeHandle } from "rea
 import { useForm } from "react-hook-form";
 import { useViewStore, TreeGrid, zAxios } from "@wingui/common/imports";
 import { useMenuStore } from "@zionex/wingui-core/store/contentStore";
+import { Button, Box } from "@mui/material";
 
 const Bookmark = forwardRef((props, ref) => {
   const activeViewId = getActiveViewId()
@@ -196,12 +197,14 @@ const Bookmark = forwardRef((props, ref) => {
     })
   }
   return (
-    <form style={{ height: 'calc(100vh - 240px)' }} >
-      <div className="mb-3" style={{ height: '93%' }}>
+    <Box style={{ height: 'calc(100vh - 120px)' }} >
+      <Box className="mb-3" style={{ height: '93%' }}>
         <TreeGrid id="bookMarkGrid"></TreeGrid>
-      </div>
-      <button type="button" className="btn btn-primary" onClick={saveBookmark} >{transLangKey('SAVE')}</button>
-    </form>
+      </Box>
+      <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
+       <Button variant="contained" color="primary" onClick={saveBookmark}> {transLangKey('SAVE')} </Button>
+      </Box>
+    </Box>
   )
 });
 

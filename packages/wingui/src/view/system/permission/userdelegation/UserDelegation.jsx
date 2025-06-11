@@ -109,6 +109,38 @@ function UserDelegation() {
       grid.commit(true);
     }
   }
+
+  const onDelete = (targetGrid, deleteRows) => {
+    let changeRowData = [];
+    deleteRows.forEach(function (value) {
+      if (value.applyStartDttm && value.applyStartDttm instanceof Date) {
+        value.applyStartDttm = value.applyStartDttm.format("yyyy-MM-ddTHH:mm:ss");
+      }
+      if (value.applyEndDttm && value.applyEndDttm instanceof Date) {
+        value.applyEndDttm = value.applyEndDttm.format("yyyy-MM-ddTHH:mm:ss");
+      }
+      if (value.createDttm && value.createDttm instanceof Date) {
+        value.createDttm = value.createDttm.format("yyyy-MM-ddTHH:mm:ss");
+      }
+      changeRowData.push(value);
+    });
+
+    if (changeRowData.length > 0) {
+      return zAxios({
+        method: 'post',
+        url: 'system/users/delegations/delete',
+        headers: { 'content-type': 'application/json' },
+        data: changeRowData
+      })
+      .then(function (response) {
+        loadData();
+      })
+      .catch(function (e) {
+        console.error(e);
+      });
+    }
+  };
+
   /*------delete Row-------*/
   function deleteRow() {
     let deleteRows = [];
@@ -157,6 +189,7 @@ function UserDelegation() {
       }
     });
   };
+
   function saveData() {
     deleGrid.gridView.commit(true);
     showMessage(transLangKey('MSG_CONFIRM'), transLangKey('MSG_SAVE'), function (answer) {
@@ -198,8 +231,6 @@ function UserDelegation() {
             return;
           }
 
-          deleGrid.gridView.showToast(progressSpinner + 'Saving data...', true);
-
           zAxios({
             method: 'post',
             headers: { 'content-type': 'application/json' },
@@ -212,35 +243,32 @@ function UserDelegation() {
               console.log(err);
             })
             .then(function () {
-              deleGrid.gridView.hideToast();
               loadData()
             });
         }
       }
     });
   }
+
   function loadData() {
     deleGrid.gridView.commit(true);
-
-    deleGrid.gridView.showToast(progressSpinner + 'Load Data...', true);
 
     zAxios.get('system/users/delegations', {
       params: {
         'username': getValues('username'),
         'delegation-username': getValues('delegationUsername')
       },
-      waitOn: false
     }).then(function (res) {
       deleGrid.dataProvider.fillJsonData(res.data);
     }).catch(function (err) {
       console.log(err);
     }).then(function () {
-      deleGrid.gridView.hideToast();
       if (deleGrid.dataProvider.getRowCount() == 0) {
         deleGrid.gridView.setDisplayOptions({ showEmptyMessage: true, emptyMessage: transLangKey('MSG_NO_DATA') });
       }
     });
   }
+  
   return (
     <ContentInner>
       <SearchArea>
@@ -255,7 +283,7 @@ function UserDelegation() {
           <RightButtonArea>
             <ButtonGroup variant="outlined">
               <GridAddRowButton grid="deleGrid"></GridAddRowButton>
-              <GridDeleteRowButton grid="deleGrid" onClick={() => { deleteRow() }}></GridDeleteRowButton>
+              <GridDeleteRowButton grid="deleGrid" onDelete={onDelete}></GridDeleteRowButton>
               <GridSaveButton title={transLangKey("SAVE")} style={{ width: "60px" }} onClick={() => { saveData() }}></GridSaveButton>
             </ButtonGroup>
           </RightButtonArea>

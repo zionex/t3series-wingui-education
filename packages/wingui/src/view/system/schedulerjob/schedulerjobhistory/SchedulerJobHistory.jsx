@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import Pagination from "@zionex/wingui-core/component/Pagination";
+import Pagination from "@wingui/view/demandplan/common/Pagination";
 import { Box, ButtonGroup } from "@mui/material";
 import { useForm } from "react-hook-form";
 import {
@@ -104,7 +104,7 @@ function SchedulerJobHistory(props) {
 
     zAxios({
       method: "get",
-      url: "/scheduler-history/historys",
+      url: "/scheduler-history/histories",
       params:{
         page:pageVal,
         pageSize:pageSizeVal,

@@ -4,9 +4,9 @@ import { useForm } from "react-hook-form";
 import { Box, ButtonGroup, InputAdornment, TextField, Typography } from "@mui/material";
 import {
   ContentInner, WorkArea, SplitPanel, VLayoutBox, HLayoutBox, ResultArea, ButtonArea, LeftButtonArea, RightButtonArea, SearchArea, SearchRow, InputField, BaseGrid,
-  CommonButton, GridAddRowButton, GridDeleteRowButton, GridSaveButton, useViewStore, useContentStore, zAxios
+  CommonButton, GridAddRowButton, GridDeleteRowButton, GridSaveButton, useViewStore, useContentStore, zAxios, useSearchPositionStore
 } from "@wingui/common/imports";
-
+import KeyboardDoubleArrowLeftIcon from '@mui/icons-material/KeyboardDoubleArrowLeft';
 import PopColorPicker from "./PopColorPicker";
 import PropertiesPanel from "./PropertiesPanal";
 
@@ -64,7 +64,8 @@ function ThemeColorInput(props) {
 }
 
 function ThemeMgmt() {
-  const activeViewId = getActiveViewId()
+  const activeViewId = getActiveViewId();
+  const [setSearchPosition] = useSearchPositionStore((state) => [state.setSearchPosition]);
   const [viewData, getViewInfo, setViewInfo] = useViewStore(state => [state.viewData, state.getViewInfo, state.setViewInfo])
   const [dialogOpen, setDialogOpen] = useState(false);
   const [colorsChanges, setColorsChanges] = useState([])
@@ -75,9 +76,21 @@ function ThemeMgmt() {
   const [selectOptions, setSelectOptions] = useState([]);
 
   const themeMode = localStorage.getItem('themeMode');
+  const globalButtons = [
+    { name: "search", action: (e) => { loadMainData() }, visible: true, disable: false },
+    {
+      name: "openPanel",
+      title: "OPEN_PANEL",
+      icon: <KeyboardDoubleArrowLeftIcon />,
+      action: (e) => { openPanel() },
+      visible: true, disable: false
+    }
+  ];
   useEffect(() => {
     if (themeMode) {
       resetConditions(themeMode);
+      
+      setViewInfo(activeViewId, 'globalButtons', globalButtons);
     }
   }, [themeMode]);
 
@@ -99,19 +112,10 @@ function ThemeMgmt() {
     }).then(function () {
     });
   }
-  const globalButtons = [
-    { name: "search", action: (e) => { loadMainData() }, visible: true, disable: false },
-    {
-      name: "openPanel",
-      title: "OPEN_PANEL",
-      iconName: 'Grid',
-      action: (e) => { openPanel() },
-      visible: true, disable: false
-    }
-  ];
+  
   useEffect(() => {
     loadThemes()
-    setViewInfo(activeViewId, 'globalButtons', globalButtons);
+    setSearchPosition(activeViewId, "top");
     loadMainData()
   }, [])
 
@@ -184,8 +188,8 @@ function ThemeMgmt() {
               <InputField control={control} label={transLangKey("THEME_CD")} name="themeCd" type="select" options={selectOptions} rules={{}} onKeyDown={(e) => { if (e.key === 'Enter') { onSubmit() } }}></InputField>
             </SearchRow>
           </SearchArea>
-          <ResultArea sizes={[25, 30, 25]} direction={"vertical"}>
-            <Box id="mainPalette">
+          <ResultArea sizes={[30, 40, 30]} direction={"vertical"}>
+            <VLayoutBox id="mainPalette">
               <ButtonArea title={"Brand Colors"} >
                 <LeftButtonArea />
                 <RightButtonArea>
@@ -207,8 +211,8 @@ function ThemeMgmt() {
                   </Box>
                 </Box>
               </Box>
-            </Box>
-            <Box id="statusColors">
+            </VLayoutBox>
+            <VLayoutBox id="statusColors">
               <ButtonArea title={"Status Colors"} >
                 <LeftButtonArea />
                 <RightButtonArea>
@@ -242,8 +246,8 @@ function ThemeMgmt() {
                   </Box>
                 </Box>
               </Box>
-            </Box>
-            <Box id="muiPalette">
+            </VLayoutBox>
+            <VLayoutBox id="muiPalette">
               <ButtonArea title={"Mui Palette: button, Input, dropdown, dialog ,,"} >
                 <LeftButtonArea />
                 <RightButtonArea>
@@ -265,7 +269,7 @@ function ThemeMgmt() {
                   <ThemeColorInput label={'--palette-secondary-contrastText'} inputColors={inputColors} handleChange={handleChange} clickActionButton={(e) => clickActionButton('--palette-secondary-contrastText', e)} />
                 </Box>
               </Box>
-            </Box>
+            </VLayoutBox>
           </ResultArea>
           <PopColorPicker colorKey={colorKey} defaultPalette={defaultPalette} open={dialogOpen} onClose={() => setDialogOpen(false)} setInputColors={setInputColors} ></PopColorPicker>
         </WorkArea>

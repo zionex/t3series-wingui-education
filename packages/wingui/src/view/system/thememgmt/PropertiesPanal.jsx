@@ -3,20 +3,17 @@ import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { Box, Button, ClickAwayListener, Paper, Typography } from "@mui/material";
 import {
-  ContentInner, WorkArea, SplitPanel, VLayoutBox, HLayoutBox, ResultArea, ButtonArea, LeftButtonArea, RightButtonArea, SearchArea, SearchRow, InputField, BaseGrid,
-  CommonButton, GridAddRowButton, GridDeleteRowButton, GridSaveButton, useViewStore, useContentStore, zAxios
+  InputField, BaseGrid, CommonButton, GridAddRowButton, GridDeleteRowButton, GridSaveButton, zAxios
 } from "@wingui/common/imports";
-import { waitOn } from "@zionex/wingui-core";
 
 const styles = {
   position: 'absolute',
   top: 106,
   zIndex: 1200,
   height: '89%',
-  border: '1px solid #ffffff',
   borderRadius: '1',
   p: 1,
-  bgcolor: 'background.paper',
+  // bgcolor: 'background.paper',
   right: 0,
 };
 
@@ -92,7 +89,7 @@ let propsGridItems = [
 function PropertiesPanel(props) {
   const [propGrid, setPropGrid] = useState(null);
   const [themeCd, setThemeCd] = useState([]);
-  const searchPosition = getAppSettings('layout').searchArea
+  const classes = usePopupDialogStyles(props);
   const { control, getValues, watch } = useForm({
     defaultValues: {
     }
@@ -106,6 +103,7 @@ function PropertiesPanel(props) {
       PARAM: {},
       ALLFLAG: false,
       TRANSLANG_LABEL: false,
+      waitOn: false
     });
     if (cateogry) {
       propGrid.gridView.setColumnProperty("category", "lookupData", { value: "value", label: "label", list: cateogry });
@@ -118,6 +116,7 @@ function PropertiesPanel(props) {
       PARAM: {},
       ALLFLAG: false,
       TRANSLANG_LABEL: false,
+      waitOn: false
     });
     if (themeCode) {
       setThemeCd(themeCode)
@@ -159,8 +158,8 @@ function PropertiesPanel(props) {
       params: {
         category: getValues('category'),
         'prop-type': getValues('propertyType'),
-        waitOn: false
-      }
+      },
+      waitOn: false
     }).then(function (res) {
       propGrid.dataProvider.fillJsonData(res.data);
     }).catch(function (err) {
@@ -202,7 +201,8 @@ function PropertiesPanel(props) {
       headers: { 'content-type': 'application/json' },
       url: 'system/themes/' + getValues('themeCd'),
       data: changeRowData,
-      selector: 'propertiesPanel'
+      selector: 'propertiesPanel',
+      waitOn: false
     }).catch(function (error) {
       console.log(err);
     }).then(function () {
@@ -234,20 +234,20 @@ function PropertiesPanel(props) {
     <ClickAwayListener mouseEvent="onMouseDown" touchEvent="onTouchStart" onClickAway={handleClickAway}>
       <Box id='propertiesPanel'>
         {props.openPanel ? (
-          <Box sx={{ ...styles, boxShadow: 2, right: searchPosition === 'top' ? 0 : 'none' }} >
-            <Box sx={{ display: 'flex', height: '4%', width: '100%', color: '#000', p: '5px' }}>
-              <Typography style={{ fontSize: '15px', margin: "0 8px" }}>{transLangKey('All Colors')}</Typography>
-            </Box>
-            <Box sx={{}} >
-              <InputField control={control} label={transLangKey("CATEGORY")} name="category" onKeyDown={(e) => { if (e.key === 'Enter') { loadData() } }}></InputField>
-              <InputField control={control} label={transLangKey("PROPERTY_TYPE")} name="propertyType" onKeyDown={(e) => { if (e.key === 'Enter') { loadData() } }}></InputField>
-              <CommonButton title={transLangKey('SEARCH')} onClick={loadData}><Icon.Search /></CommonButton>
-              <GridAddRowButton grid="propGrid" />
-              <GridDeleteRowButton grid="propGrid" type="icon" onDelete={onDelete} onAfterDelete={afterToLoad} />
-              <GridSaveButton title={transLangKey('SAVE')} onClick={saveThemeData} />
-            </Box>
-            <Paper sx={{ height: '92%', borderRadius: 0, boxShadow: 'none', padding: '10px', backgroundColor: '#fff' }}>
-              <Box data-role='documentViewer' sx={{ height: '95%', width: '800px', overflowY: 'auto' }} >
+          <Box sx={{ ...styles, boxShadow: 2, right: '0px' }} >
+            <Paper sx={{ height: '98%', borderRadius: 0, boxShadow: 'none', padding: '4px' }}>
+              <Box className={classes.popupDialogTitle} sx={{ display: 'flex', height: '4%', width: '100%', p: '5px' }}>
+                <Typography style={{ fontSize: '15px', margin: "0 8px" }}>{transLangKey('All Colors')}</Typography>
+              </Box>
+              <Box sx={{}} >
+                <InputField control={control} label={transLangKey("CATEGORY")} name="category" onKeyDown={(e) => { if (e.key === 'Enter') { loadData() } }}></InputField>
+                <InputField control={control} label={transLangKey("PROPERTY_TYPE")} name="propertyType" onKeyDown={(e) => { if (e.key === 'Enter') { loadData() } }}></InputField>
+                <CommonButton title={transLangKey('SEARCH')} onClick={loadData}><Icon.Search /></CommonButton>
+                <GridAddRowButton grid="propGrid" />
+                <GridDeleteRowButton grid="propGrid" type="icon" onDelete={onDelete} onAfterDelete={afterToLoad} />
+                <GridSaveButton title={transLangKey('SAVE')} onClick={saveThemeData} />
+              </Box>
+              <Box data-role='panal' sx={{ height: '88%', width: '800px', overflowY: 'auto' }} >
                 <BaseGrid id="propGrid" items={propsGridItems} afterGridCreate={afterGridCreate}></BaseGrid>
               </Box>
               <Box sx={{

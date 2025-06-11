@@ -56,7 +56,7 @@ function Password(props) {
       confirmPassword: getValues('confirmPassword')
     }
 
-    zAxios.post('system/users/password', param, {
+    zAxios.post('system/users/password/init', param, {
       errorMessage: false
     })
       .then(res => {
@@ -66,7 +66,7 @@ function Password(props) {
         }
       }).catch((error) => {
         if (error.response.data.status === 400) {
-          setHelperPolicyText(<>{error.response.data.message}<br />{passwordRule}</>);
+          setHelperPolicyText(error.response.data.message + "\n" +passwordRule);
           setErrorPassword(true)
         }
       })

@@ -3,8 +3,8 @@ import { useForm } from "react-hook-form";
 import {
   ContentInner, WorkArea, StatusArea,
   InputField, GridDeleteRowButton, BaseGrid, zAxios, useUserStore, useViewStore, Pagination, ResultArea,
-  ButtonArea, LeftButtonArea, RightButtonArea,
-  SearchMenuInput, transLangKey, useContentStore
+  ButtonArea, LeftButtonArea, RightButtonArea, SearchArea,
+  SearchMenuInput, transLangKey, useContentStore, useSearchPositionStore 
 } from '@zionex/wingui-core/index'
 
 import PopIssue from "@zionex/wingui-core/utils/issue/PopIssue";
@@ -16,7 +16,7 @@ import { Button, ButtonGroup, ClickAwayListener, FormGroup, Grow, MenuItem, Menu
 import { createStyles, makeStyles } from "@mui/styles";
 
 const statusOptions = [
-  { value: '', label: transLangKey('ALL') },
+  { value: 'A', label: transLangKey('ALL') },
   { value: 'O', label: transLangKey('OPEN') },
   { value: 'C', label: transLangKey('CLOSED') }
 ];
@@ -25,6 +25,7 @@ const options = [{ value: 'all', label: transLangKey('ALL_ISSUE') }, { value: 'a
 
 function IssueMgmt() {
   const activeViewId = getActiveViewId()
+  const [setSearchPosition] = useSearchPositionStore(state => [state.setSearchPosition])
   const [username, systemAdmin] = useUserStore((state) => [state.username, state.systemAdmin]);
   const [setViewInfo] = useViewStore(state => [state.setViewInfo]);
   const [diabledPagination, setDisabledPagination] = useState(true);
@@ -44,20 +45,19 @@ function IssueMgmt() {
     },
     {
       name: "title", dataType: "text", headerText: "TITLE", visible: true, editable: false, width: "300",
+    },
+    {
+      name: "priority", dataType: "text", headerText: "IMPORTANCE", visible: true, editable: false, width: "50", textAlignment: "center", lookupDisplay: true, values: ['H', 'M', 'L'], labels: [transLangKey('HIGH'), transLangKey('MEDIUM'), transLangKey('LOW')],
       styleCallback: function (grid, dataCell) {
         let ret = {};
         let priority = grid.getValue(dataCell.index.itemIndex, "priority");
         let status = grid.getValue(dataCell.index.itemIndex, "status");
         if (priority == 'H' && status == 'O') {
-          ret.styleName = "issueOpenStatus column-textAlignt-near";
-        }
-        else if (status == 'C') {
-          ret.styleName = "issueCloseStatus column-textAlignt-near ";
+          ret.styleName = "issue-open-status";
         }
         return ret;
       },
     },
-    { name: "priority", dataType: "text", headerText: "IMPORTANCE", visible: true, editable: false, width: "50", textAlignment: "center", lookupDisplay: true, values: ['H', 'M', 'L'], labels: [transLangKey('HIGH'), transLangKey('MEDIUM'), transLangKey('LOW')] },
     { name: "assignees", dataType: "text", headerText: "ASSIGNEE", visible: true, editable: false, width: "100", textAlignment: "center" },
     { name: "grpAssignYn", dataType: "boolean", headerText: "GRP_AGGIN_YN", visible: false, editable: false, width: "50", textAlignment: "center" },
     { name: "startDttm", dataType: "datetime", headerText: "STRT_DTTM", visible: true, editable: false, width: "100", textAlignment: "center" },
@@ -95,7 +95,9 @@ function IssueMgmt() {
     defaultValues: {
       option: '1',
       search: '',
-      after15days: []
+      after15days: [],
+      issueOptions: 'all',
+      status: 'A'
     }
   });
 
@@ -113,6 +115,10 @@ function IssueMgmt() {
   const [popupMode, setPopupMode] = useState('READ')
 
   useEffect(() => {
+    setSearchPosition(activeViewId, "top");
+  }, []);
+  
+  useEffect(() => {
     if (issueMgmt) {
       const globalButtons = [
         {
@@ -127,6 +133,7 @@ function IssueMgmt() {
   }, [selectedIndex, issueMgmt])
   const afterGridCreate = (gridObj, gridView, dataProvider) => {
     setissueMgmt(gridObj);
+    gridView.setDisplayOptions({ rowHeight: 31 });
   };
   const openPopupCellDblClicked = (grid, clickData) => {
     if (clickData.cellType != "check" && clickData.column != "head" && clickData.cellType == "data" && clickData.column == 'title') {
@@ -149,7 +156,7 @@ function IssueMgmt() {
   const loadPage = (page) => {
     let status = getValues('status') ? getRadioValue(getValues('status')) : '';
     let assigned = null;
-    let selectOption = options[selectedIndex].value;
+    let selectOption = getValues('issueOptions');
     if (selectOption === 'assign') {
       assigned = false;
     } else if (selectOption === 'assigned') {
@@ -162,7 +169,7 @@ function IssueMgmt() {
         'option': getValues('option'),
         'view-cd': getValues('viewId') === 'COMMON_ISSUE' ? 'COMMON' : (getValues('viewId') || ''),
         'is-assigned': assigned,
-        'status': status,
+        'status': status === 'A' ? '' : status,
         'after15days': getValues('after15days')[0] === 'Y' ? 'Y' : '',
         'page': Math.max(page, 1) - 1,
         'size': settings.perPageSize
@@ -246,56 +253,19 @@ function IssueMgmt() {
   return (
     <ContentInner>
       <WorkArea>
+        <SearchArea>
+          <InputField type="select" name="issueOptions" label={transLangKey("이슈 타입")} control={control} options={options}></InputField>
+          <InputField type="select" name='status' label={transLangKey("STATUS")} control={control} options={statusOptions}></InputField>
+          <InputField name='search' label={transLangKey("FIND_ISSUE")} placeholder={transLangKey("FIND_ISSUE")} control={control} enterSelect></InputField>
+          <SearchMenuInput view="UI_UT_ISSUE_MGMT" name='viewId' label={transLangKey("VIEW")} control={control}></SearchMenuInput>
+          <InputField type="check" name='after15days' control={control} options={[{ label: transLangKey("15일 경과 제외"), value: "Y" }]} />
+        </SearchArea>
         <ButtonArea sx={{ width: "100%", display: 'flex' }} p={1}>
-          <LeftButtonArea sx={{ flexGrow: 1, display: 'flex', alignItems: 'center' }}>
-            <FormGroup row sx={{ display: 'flex', alignItems: 'center' }}>
-              <ButtonGroup variant="contained" ref={anchorRef} aria-label="split button">
-                <Button sx={{ margin: 0, height: '34px' }} >{options[selectedIndex].label}</Button>
-                <Button
-                  aria-controls={open ? 'split-button-menu' : undefined}
-                  aria-expanded={open ? 'true' : undefined}
-                  aria-label="select Issue View Type"
-                  aria-haspopup="menu"
-                  onClick={handleToggle}
-                  sx={{ margin: 0, width: '20px', height: '34px', borderRadius: '0' }}
-                >
-                  <ArrowDropDownIcon />
-                </Button>
-              </ButtonGroup>
-              <Popper sx={{ zIndex: 1, }} open={open} anchorEl={anchorRef.current} role={undefined} transition disablePortal>
-                {({ TransitionProps, placement }) => (
-                  <Grow {...TransitionProps} style={{ transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom', }}>
-                    <Paper>
-                      <ClickAwayListener onClickAway={handleClose}>
-                        <MenuList id="split-button-menu" autoFocusItem>
-                          {options.map((option, index) => (
-                            <MenuItem
-                              key={option.value}
-                              selected={index === selectedIndex}
-                              onClick={(event) => handleMenuItemClick(event, index, option.value)}
-                            >
-                              {option.label}
-                            </MenuItem>
-                          ))}
-                        </MenuList>
-                      </ClickAwayListener>
-                    </Paper>
-                  </Grow>
-                )}
-              </Popper>
-              <InputField inputType="floating" name='search' label={transLangKey("FIND_ISSUE")} placeholder={transLangKey("FIND_ISSUE")}
-                control={control} style={{ height: '34px' }} wrapBox={{ padding: '0px' }} enterSelect></InputField>
-            </FormGroup>
-            {/* <Box style={{ display: 'inline-flex', alignItems: 'center', height: '100%' }}> */}
-            <InputField inputType="floating" type="check" name='after15days' control={control} options={[{ label: transLangKey("15일 경과 제외"), value: "Y" }]} />
+          <LeftButtonArea>
             {/* </Box> */}
           </LeftButtonArea>
           <RightButtonArea sx={{ display: 'flex', alignItems: 'center' }}>
-            <Box style={{ display: 'inline-flex', alignItems: 'center' }}>
-              <SearchMenuInput view="UI_UT_ISSUE_MGMT" name='viewId' label={transLangKey("ISSUE_VIEW_ID")} control={control}></SearchMenuInput>
-              <InputField inputType="floating" name='status' width="250px" label={transLangKey("STATUS")} type='radio' control={control} options={statusOptions}></InputField>
-              <GridDeleteRowButton grid='noticeGrid' onClick={deleteBoard}></GridDeleteRowButton>
-            </Box>
+            <GridDeleteRowButton grid='noticeGrid' onClick={deleteBoard}></GridDeleteRowButton>
           </RightButtonArea>
         </ButtonArea>
         <ResultArea style={{ height: '84%' }}>
@@ -305,7 +275,7 @@ function IssueMgmt() {
         <StatusArea></StatusArea>
       </WorkArea>
       {openDetailPop ? <PopIssue open={openDetailPop} data={currentIssue} loadPage={() => loadPage(settings.currentPage)} popupMode={popupMode} onClose={() => setOpenDetailPop(false)} /> : null}
-    </ContentInner>
+    </ContentInner >
   )
 }
 

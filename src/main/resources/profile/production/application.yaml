@@ -5,13 +5,16 @@ spring:
     auto-startup: false
     job-store-type: jdbc
     timezone: Asia/Seoul
+  rest-template:
+    connect-timeout-sec: 5
+    read-timeout-sec: 1800
   datasource:
     name: T3SERIES
     hikari:
-      minimum-idle: 20
-      maximum-pool-size: 20
+      minimum-idle: 30
+      maximum-pool-size: 150
       pool-name: SpringBootJPAHikariCP
-      idle-timeout: 10000
+      idle-timeout: 60000
       connection-timeout: 30000
       validation-timeout: 5000
       max-lifetime: 1800000
@@ -35,11 +38,6 @@ spring:
       max-file-size: 1024MB
       max-request-size: 1024MB
 
-# logging:
-#   level:
-#     com.zaxxer.hikari.HikariConfig: DEBUG
-#     com.zaxxer.hikari: TRACE
-
 server:
   port: 8080
   compression:
@@ -57,6 +55,7 @@ server:
         name: T3SESSIONID
 
 app:
+  corporation:
   languages:
     - en
     - ja
@@ -67,7 +66,8 @@ app:
     default-url: home
     cors-allow-url:
       - http://localhost:3000
-    cors-allow-path: /sso/**
+    cors-allow-path: 
+      - /sso/**
     password-policy:
       usable-username: false
       min-length: 8
@@ -76,6 +76,7 @@ app:
       ucredit: 1
       dcredit: 1
       ocredit: 1
+      max-reuse-prevention: 0
     login-policy:
       max-failure-count: 5
       long-term-unvisited-days: 0
@@ -95,28 +96,37 @@ app:
         excel: upload-excel
         issue: issue
         calendar: calendar
+        meeting: meeting
       temporary-clean-fixed-rate: 86400000
     mailing:
       polling-rate: 50000
       smtp:
-        host: 127.0.0.1
+        host: 59.19.252.148
         port: 25
-        username: 
-        password: 
+        username: dev01@zionex.com
+        password: vivazio0527#
         encoding: UTF-8
         mailagentip: nomail
         protocols: TLSv1.2
-        trust: 
+        trust: 59.19.252.148
+  server:
+    bf:
+      id: T3SeriesBF
+      host: localhost
+    dp:
+      id: T3SeriesDP
+      host: localhost
+    mp:
+      id: T3SeriesMP
+      host: localhost
+    fp:
+      id: T3SeriesFP
+      host: localhost
   cache:
     enable: true
   session:
     token-valid-timeout: 43200
     timeout: 3600
-
-  # kafka-info:
-  #   enable: true
-  #   bootstrap-server:
-  #     - localhost:9092
 
 --- # MSSQL
 spring:
@@ -124,9 +134,9 @@ spring:
     activate:
       on-profile: mssql
   datasource:
-    url: jdbc:sqlserver://59.19.252.148:21433;database=T3SMARTSCM_EDUCATION
-    username: education1
-    password: T3SmartSCM_education!
+    url: jdbc:sqlserver://192.168.3.28:1433;database=T3SMARTSCM
+    username: sa
+    password: Vivazio2025!
   jpa:
     properties:
       hibernate:
@@ -141,7 +151,7 @@ spring:
     init:
       platform: oracle
   datasource:
-    url: jdbc:oracle:thin:@192.168.3.22:1521:zionex
+    url: jdbc:oracle:thin:@192.168.3.28:1521:zionex
     username: T3SMARTSCM
     password: T3SMARTSCM
   jpa:

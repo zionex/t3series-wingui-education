@@ -107,13 +107,17 @@ wingui.util.date.calendar = (function () {
     },
     toDate: function (date) {
       if (typeof date === 'string') {
-        date = new Date(date.replace(/\./g, '-'));
-      }
+        let repDate = date.replace(/\./g, '-');
+        const [year, month, day] = repDate.split('-').map(Number);
+        date = new Date(year, month - 1, day);
+      }      
       return date;
     },
     newDate: function (date) {
       if (typeof date === 'string') {
-        date = new Date(date.replace(/\./g, '-'));
+        let repDate = date.replace(/\./g, '-');
+        const [year, month, day] = repDate.split('-').map(Number);
+        date = new Date(year, month - 1, day);
       } else {
         date = new Date(date.getTime());
       }
@@ -650,9 +654,12 @@ wingui.util.grid.GridWrap = function (grid1, gridView, xmlGridOption) {
 
   this.addSummaryColumns = function (summaryInfo, totalSummaryInfos) {
     let priceMeasureArr = this.gridView.measureData?.length > 0 ? this.gridView.measureData.filter((measure)=>measure.MEASURE_CD.includes("_PRC")).map((measure)=>measure.MEASURE_CD) : [];
-
+    let versionData =  this.gridView.gridWrap.versionData;
+    let varBucket = versionData["VAR_BUKT"];
+    this.summaryColumn = new wingui.util.grid.SummaryColumnWithWeek(this, this.gridView, this.dateColumnNames, priceMeasureArr, varBucket);
+    
     // 1. ONLY MONTH SUM
-    this.summaryColumn = new wingui.util.grid.SummaryColumn(this, this.gridView, this.dateColumnNames, priceMeasureArr);
+    // this.summaryColumn = new wingui.util.grid.SummaryColumn(this, this.gridView, this.dateColumnNames, priceMeasureArr);
     // 2. MONTH, WEEK(PARTIAL OR WEEK) SUM
     // this.summaryColumn = new wingui.util.grid.SummaryColumnWithWeek(this, this.gridView, this.dateColumnNames, priceMeasureArr, "W");
     this.summaryColumn.create(summaryInfo, totalSummaryInfos);
@@ -682,7 +689,7 @@ wingui.util.grid.SummaryColumnWithWeek = function (gridWrap, gridView, dateColum
         arr.forEach((columnName)=>{
           var val = values[fields.indexOf(columnName)];
 
-          if(val !== null) {
+          if(val !== null && val !== undefined) {
             count += 1;
             sum += val;
           }
@@ -875,7 +882,8 @@ wingui.util.grid.SummaryColumnWithWeek = function (gridWrap, gridView, dateColum
 
     var newFields = this.dataProvider.getFields();
     var columns = this.gridView.dataColumns;
-
+    var layouts = this.grid1.gridView.currentLayout;
+    var cursor  = 0;
     for (var i = 0, len = this.summaryColumnKeys.length; i < len; i++) {
       var summaryColumnKey = this.summaryColumnKeys[i];
 
@@ -885,12 +893,12 @@ wingui.util.grid.SummaryColumnWithWeek = function (gridWrap, gridView, dateColum
       var summaryField = summaryFields[summaryColumnKey];
       var summaryColumn = summaryColumns[summaryColumnKey];
 
-      for (var j = 0, n = columns.length; j < n; j++) {
+      for (var j = cursor, n = columns.length; j < n; j++) {
         if (columns[j].name === targetColumnName) {
-          newFields.splice(i + j + 1, 0, summaryField);
-
-          this.grid1.addGridItem(summaryColumn, null, i + j + 1);
-          //console.log('summaryColumn',summaryColumn)
+          newFields.splice(j + 1, 0, summaryField);
+          columns.splice(j + 1, 0, summaryColumn);
+          layouts.splice(j + 1, 0, summaryColumn.name);
+          cursor = j + 1; 
           break;
         }
       }
@@ -899,7 +907,7 @@ wingui.util.grid.SummaryColumnWithWeek = function (gridWrap, gridView, dateColum
     if (this.totalSummaryInfos) {
       for (var i = 0, n = this.totalSummaryInfos.length; i < n; i++) {
         var totalSummaryInfo = this.totalSummaryInfos[i];
-        
+
         var summaryStyles = this.getSummaryStyles();
         var summaryHeader = this.getSummaryHeader(totalSummaryInfo.columnName);
         var summaryFooter = this.getSummaryFooter();
@@ -937,10 +945,13 @@ wingui.util.grid.SummaryColumnWithWeek = function (gridWrap, gridView, dateColum
         var index = newFields.length;
 
         newFields.splice(index, 0, summaryField);
-        this.grid1.addGridItem(summaryColumn, null, index)
+        columns.splice(index, 0, summaryColumn);
+        layouts.splice(index, 0, summaryField.fieldName);
       }
     }
-    //this.dataProvider.setFields(newFields);
+
+    this.grid1.addGridItems(columns, true);
+    this.gridView.setColumnLayout(layouts);
   };
 
   this.transHeaderText = function (columnName) {
@@ -1026,7 +1037,7 @@ wingui.util.grid.SummaryColumn = function (gridWrap, gridView, dateColumnNames, 
         arr.forEach((columnName)=>{
           var val = values[fields.indexOf(columnName)];
 
-          if(val !== null) {
+          if(val !== null && val !== undefined) {
             count += 1;
             sum += val;
           }
@@ -1121,7 +1132,8 @@ wingui.util.grid.SummaryColumn = function (gridWrap, gridView, dateColumnNames, 
 
     var newFields = this.dataProvider.getFields();
     var columns = this.gridView.dataColumns;
-
+    var layouts = this.grid1.gridView.currentLayout;
+    var cursor  = 0;
     for (var i = 0, len = this.summaryColumnKeys.length; i < len; i++) {
       var summaryColumnKey = this.summaryColumnKeys[i];
 
@@ -1131,12 +1143,12 @@ wingui.util.grid.SummaryColumn = function (gridWrap, gridView, dateColumnNames, 
       var summaryField = summaryFields[summaryColumnKey];
       var summaryColumn = summaryColumns[summaryColumnKey];
 
-      for (var j = 0, n = columns.length; j < n; j++) {
+      for (var j = cursor, n = columns.length; j < n; j++) {
         if (columns[j].name === targetColumnName) {
-          newFields.splice(i + j + 1, 0, summaryField);
-
-          this.grid1.addGridItem(summaryColumn, null, i + j + 1);
-          //console.log('summaryColumn',summaryColumn)
+          newFields.splice(j + 1, 0, summaryField);
+          columns.splice(j + 1, 0, summaryColumn);
+          layouts.splice(j + 1, 0, summaryColumn.name);
+          cursor = j + 1; 
           break;
         }
       }
@@ -1154,20 +1166,9 @@ wingui.util.grid.SummaryColumn = function (gridWrap, gridView, dateColumnNames, 
         totalSummaryInfo.header && Object.assign(summaryHeader, totalSummaryInfo.header);
         totalSummaryInfo.footer && Object.assign(summaryFooter, totalSummaryInfo.footer);
 
-        // var expression = this.dateColumnNames.map(function (columnName) {
-        //   return '((values["' + columnName + '"] is not nan) and values["' + columnName + '"])';
-        // });
-
-        // expression = expression.join(' + ');
-
-        // if (totalSummaryInfo.summaryType === 'average') {
-        //   expression = '(' + expression + ') / ' + this.dateColumnNames.length;
-        // }
-
         var summaryField = {
           fieldName: totalSummaryInfo.columnName,
           dataType: 'number',
-          // calculateExpression: expression
         };
 
         var summaryColumn = {
@@ -1181,17 +1182,27 @@ wingui.util.grid.SummaryColumn = function (gridWrap, gridView, dateColumnNames, 
           styleName: 'entry-summary-column',
           header: summaryHeader,
           footer: summaryFooter,
-          // valueExpression: summaryField.calculateExpression
+          styleCallback: function(grid, dataCell){
+            var ret = {};
+            let numberFormat = gridWrap.NUMBER_FORMAT_MAP.get(grid.getValue(dataCell.index.itemIndex, "CATEGORY"));
+            ret.numberFormat = numberFormat;
+            ret.excelFormat = numberFormat;
+            return ret;
+          }
         };
 
         this.summarySetValueCallback(summaryColumn, dateColumnNames, avgMeasureArr);
         var index = newFields.length;
 
         newFields.splice(index, 0, summaryField);
-        this.grid1.addGridItem(summaryColumn, null, index)
+        columns.splice(index, 0, summaryColumn);
+        layouts.splice(index, 0, summaryField.fieldName);
       }
     }
-    //this.dataProvider.setFields(newFields);
+
+    this.grid1.addGridItems(columns, true);
+    this.gridView.setColumnLayout(layouts);
+
   };
 
   this.transHeaderText = function (columnName) {
@@ -1288,6 +1299,7 @@ wingui.util.grid.SummaryFooter = function (gridWrap, gridView, dateColumnNames, 
     this.gridView.rowGroup.mergeExpanderVisibility = 'always';
     this.gridView.groupBy([]);
     this.gridView.setRowGroup({
+      resetOriginVindex: true,
       mergeMode: true,
       expandedAdornments: "footer",
       visible: true,
@@ -1593,12 +1605,14 @@ wingui.util.grid.filter = (function () {
           return columnFilter.name;
         });
 
-        var wheelScrollLines = filterNames.length;
-        if (wheelScrollLines > 0) {
-          var options = gridView.getDisplayOptions();
-          options.wheelScrollLines = filterNames.length;
+        if (column.name === "CATEGORY") {
+          var wheelScrollLines = filterNames.length;
+          if (wheelScrollLines > 0) {
+            var options = gridView.getDisplayOptions();
+            options.wheelScrollLines = filterNames.length;
 
-          gridView.setDisplayOptions(options);
+            gridView.setDisplayOptions(options);
+          }
         }
         gridView.filter.getFilters()[column.name] = filterNames;
       }
