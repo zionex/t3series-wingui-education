@@ -66,8 +66,7 @@ app:
     default-url: home
     cors-allow-url:
       - http://localhost:3000
-    cors-allow-path:
-      - /sso/**
+    cors-allow-path: /sso/**
     password-policy:
       usable-username: false
       min-length: 8
@@ -76,7 +75,6 @@ app:
       ucredit: 1
       dcredit: 1
       ocredit: 1
-      max-reuse-prevention: 0
     login-policy:
       max-failure-count: 5
       long-term-unvisited-days: 0
@@ -96,37 +94,28 @@ app:
         excel: upload-excel
         issue: issue
         calendar: calendar
-        meeting: meeting
       temporary-clean-fixed-rate: 86400000
     mailing:
       polling-rate: 50000
       smtp:
-        host: 59.19.252.148
+        host: 127.0.0.1
         port: 25
-        username: dev01@zionex.com
-        password: vivazio0527#
+        username: 
+        password: 
         encoding: UTF-8
         mailagentip: nomail
         protocols: TLSv1.2
-        trust: 59.19.252.148
-  server:
-    bf:
-      id: T3SeriesBF
-      host: localhost
-    dp:
-      id: T3SeriesDP
-      host: localhost
-    mp:
-      id: T3SeriesMP
-      host: localhost
-    fp:
-      id: T3SeriesFP
-      host: localhost
+        trust: 
   cache:
     enable: true
   session:
     token-valid-timeout: 43200
     timeout: 3600
+
+  # kafka-info:
+  #   enable: true
+  #   bootstrap-server:
+  #     - localhost:9092
 
 --- # MSSQL
 spring:
@@ -151,7 +140,7 @@ spring:
     init:
       platform: oracle
   datasource:
-    url: jdbc:oracle:thin:@192.168.3.28:1521:zionex
+    url: jdbc:oracle:thin:@192.168.3.22:1521:zionex
     username: T3SMARTSCM
     password: T3SMARTSCM
   jpa:
