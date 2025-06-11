@@ -134,9 +134,9 @@ spring:
     activate:
       on-profile: mssql
   datasource:
-    url: jdbc:sqlserver://192.168.3.28:1433;database=T3SMARTSCM
-    username: sa
-    password: Vivazio2025!
+    url: jdbc:sqlserver://59.19.252.148:21433;database=T3SMARTSCM_EDUCATION
+    username: education1
+    password: T3SmartSCM_education!
   jpa:
     properties:
       hibernate:
