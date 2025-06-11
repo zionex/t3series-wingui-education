@@ -37,12 +37,8 @@ public class SystemAccessQueryRepository {
                 .innerJoin(user)
                 .on(systemAccess.user.id.eq(user.id))
                 .where(containsParam(user.displayName, displayName),
-                        systemAccess.accessDttm.between(accessDttmFrom, accessDttmTo)
-                                .and(
-                                        systemAccess.logoutDttm.between(accessDttmFrom, accessDttmTo)
-                                                .or(systemAccess.logoutDttm.isNull()))
-
-                )
+                        systemAccess.accessDttm.goe(accessDttmFrom),
+                        systemAccess.accessDttm.loe(accessDttmTo))
                 .orderBy(systemAccess.accessDttm.desc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
@@ -52,13 +48,9 @@ public class SystemAccessQueryRepository {
                 .selectFrom(systemAccess)
                 .innerJoin(systemAccess.user, user)
                 .fetchJoin()
-                .where(containsParam(user.displayName, displayName),
-                systemAccess.accessDttm.between(accessDttmFrom, accessDttmTo)
-                        .and(
-                                systemAccess.logoutDttm.between(accessDttmFrom, accessDttmTo)
-                                        .or(systemAccess.logoutDttm.isNull()))
-
-                );
+                .where(containsParam(systemAccess.user.displayName, displayName),
+                        systemAccess.accessDttm.goe(accessDttmFrom),
+                        systemAccess.accessDttm.loe(accessDttmTo));
 
         if (systemAccessLogs == null) {
             return null;

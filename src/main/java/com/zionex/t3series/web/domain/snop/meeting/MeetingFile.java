@@ -37,10 +37,10 @@ public class MeetingFile extends BaseEntity {
     @Column(name = "FILE_STORAGE_ID")
     private int fileStorageId;
 
+    @Transient
+    private Integer agendaSeq;
+
     @Column(name = "SEQ")
     private Integer seq;
-
-    // @Transient
-    // private String meetDt;
 
 }

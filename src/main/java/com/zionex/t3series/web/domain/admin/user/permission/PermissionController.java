@@ -16,7 +16,7 @@ import com.zionex.t3series.web.domain.admin.account.AccountManager;
 import com.zionex.t3series.web.domain.admin.menu.Menu;
 import com.zionex.t3series.web.domain.admin.menu.MenuService;
 import com.zionex.t3series.web.domain.admin.user.UserService;
-import com.zionex.t3series.web.util.ResponseMessage;
+import com.zionex.t3series.web.util.data.ResponseMessage;
 
 import lombok.RequiredArgsConstructor;
 

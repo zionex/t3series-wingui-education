@@ -23,8 +23,8 @@ import com.zionex.t3series.web.domain.snop.meeting.MeetingMaster;
 import com.zionex.t3series.web.domain.util.filestorage.FileStorage;
 import com.zionex.t3series.web.security.authentication.AuthenticationInfo;
 import com.zionex.t3series.web.security.authentication.AuthenticationManager;
-import com.zionex.t3series.web.util.ResponseEntityUtil;
-import com.zionex.t3series.web.util.ResponseEntityUtil.ResponseMessage;
+import com.zionex.t3series.web.util.data.ResponseEntityUtil;
+import com.zionex.t3series.web.util.data.ResponseEntityUtil.ResponseMessage;
 import com.zionex.t3series.web.util.interceptor.ExecPermission;
 import com.zionex.t3series.web.util.query.QueryHandler;
 
@@ -44,8 +44,8 @@ public class CalendarController {
     private static final String ID = "id";
     private static final String MEET_ID = "meet-id";
     private static final String OPTION = "option";
+    private static final String USER_ID = "user-id";
 
-    // 일정 조회
     @ExecPermission(type = ServiceConstants.PERMISSION_TYPE_READ)
     @GetMapping("/calendar")
     public List<Calendar> getCalendar() {
@@ -53,99 +53,87 @@ public class CalendarController {
         return calendarService.getCalendar(authenticationInfo.getUserId());
     }
 
-    // 반복날짜 조회
-    // @ExecPermission(type = ServiceConstants.PERMISSION_TYPE_READ)
-    // @GetMapping("/calendar/repeat")
-    // public List<Calendar> getRepeatDate(@RequestParam(CATEGORY_ID) String
-    // categoryId,
-    // @RequestParam(SCH_ID) String schId) {
-    // AuthenticationInfo authenticationInfo =
-    // authenticationManager.getAuthenticationInfo();
-    // return calendarService.getRepeatDate(authenticationInfo.getUsername(),
-    // categoryId, schId);
-    // }
-
-    // 일정 저장
     @ExecPermission(type = ServiceConstants.PERMISSION_TYPE_UPDATE)
     @PostMapping("/calendar")
-    public ResponseEntity<ResponseMessage> saveCalendar(HttpServletRequest request)
-            throws JsonMappingException, JsonProcessingException {
-        final Calendar calendar = objectMapper.readValue(request.getParameter(ServiceConstants.PARAMETER_KEY_DATA),
-                new TypeReference<Calendar>() {
-                });
-        final MeetingMaster meetingMaster = objectMapper.readValue(request.getParameter("meetingChanges"),
-                new TypeReference<MeetingMaster>() {
-                });
-        final List<MeetingAttendee> meetingAttendees = objectMapper.readValue(request.getParameter("attendeeChanges"),
-                new TypeReference<List<MeetingAttendee>>() {
-                });
+    public ResponseEntity<ResponseMessage> saveCalendar(HttpServletRequest request) throws JsonMappingException, JsonProcessingException {
+        final Calendar calendar = objectMapper.readValue(request.getParameter(ServiceConstants.PARAMETER_KEY_DATA), new TypeReference<Calendar>() {});
+        final MeetingMaster meetingMaster = objectMapper.readValue(request.getParameter("meetingChanges"), new TypeReference<MeetingMaster>() {});
+        List<MeetingAttendee> meetingAttendees = objectMapper.readValue(request.getParameter("attendeeChanges"), new TypeReference<List<MeetingAttendee>>() {});
+
+        AuthenticationInfo authenticationInfo = authenticationManager.getAuthenticationInfo();        
+        String hostName = authenticationInfo.getUsername();
+        String hostId = authenticationInfo.getUserId();
+        
+        for (int i = 0; i < meetingAttendees.size(); i++) {
+            MeetingAttendee meetAtnd = meetingAttendees.get(i);            
+            if ( hostName.equals(meetAtnd.getUserId()) ) {
+                meetAtnd.setUserId(hostId);
+            }
+        }
 
         String saveType = request.getParameter("saveType");
         String repeatType = request.getParameter("repeatType"); // 'N','D','W','M','Y'
         String repeatOption = request.getParameter("repeatOption"); // N, D
         Date repeatEndDate = QueryHandler.getDate(request.getParameter("repeatEndDate"));
         String repeatNumber = request.getParameter("repeatNumber");
+        String newSchYn = request.getParameter("newSchYn");   //Y,N
+        String orgSchOwnerId = request.getParameter("orgSchOwnerId");
+
         int nRepeatNo = 0;
         if (!StringUtils.isBlankOrEmpty(repeatNumber) && "N".equals(repeatOption)) {
             nRepeatNo = Integer.parseInt(repeatNumber);
         }
 
-        AuthenticationInfo authenticationInfo = authenticationManager.getAuthenticationInfo();
-        calendar.setUserId(authenticationInfo.getUserId());
-        meetingMaster.setMeetOwnerId(authenticationInfo.getUserId());
+        if ("Y".equals(newSchYn)) {
+            calendar.setUserId(authenticationInfo.getUserId());
+            meetingMaster.setMeetOwnerId(authenticationInfo.getUserId());
+        } else {
+            calendar.setUserId(orgSchOwnerId);
+            meetingMaster.setMeetOwnerId(orgSchOwnerId);
+        }
 
         calendarService.saveCalendar(calendar, meetingMaster, meetingAttendees, saveType, repeatType, repeatOption, repeatEndDate, nRepeatNo);
         calendarService.saveCalendarFile(calendar);
         return ResponseEntityUtil.setResponseEntity(new ResponseMessage(HttpStatus.OK.value(), "Saved calendar"));
     }
 
-    // 일정 삭제
     @ExecPermission(type = ServiceConstants.PERMISSION_TYPE_DELETE)
     @PostMapping("/calendar/delete")
-    public ResponseEntity<ResponseMessage> deleteCalendar(@RequestParam(CATEGORY_ID) String categoryId,
-            @RequestParam(SCH_ID) String schId,
-            @RequestParam(ID) String id,
-            @RequestParam(MEET_ID) String meetId) {
-        AuthenticationInfo authenticationInfo = authenticationManager.getAuthenticationInfo();
+    public ResponseEntity<ResponseMessage> deleteCalendar(@RequestParam(CATEGORY_ID) String categoryId, @RequestParam(SCH_ID) String schId, @RequestParam(ID) String id,
+                                                          @RequestParam(MEET_ID) String meetId, @RequestParam(USER_ID) String userId) {
         calendarService.deleteMeetingMasterAndAroundById(meetId);
-        calendarService.deleteCalendarById(authenticationInfo.getUserId(), categoryId, schId, id);
-        calendarService.deleteCalendarFile(authenticationInfo.getUserId(), schId);
+        calendarService.deleteCalendarById(userId, categoryId, schId, id);
+        calendarService.deleteCalendarFile(userId, schId);
 
         return ResponseEntityUtil.setResponseEntity(new ResponseMessage(HttpStatus.OK.value(), "Deleted calendar"));
     }
 
-    // 일정 삭제(반복된 일정 모두삭제)
     @ExecPermission(type = ServiceConstants.PERMISSION_TYPE_DELETE)
     @PostMapping("/calendar/deleteall")
-    public ResponseEntity<ResponseMessage> deleteCalendarAll(@RequestParam(CATEGORY_ID) String categoryId,
-            @RequestParam(SCH_ID) String schId) {
-        AuthenticationInfo authenticationInfo = authenticationManager.getAuthenticationInfo();
+    public ResponseEntity<ResponseMessage> deleteCalendarAll(@RequestParam(CATEGORY_ID) String categoryId, @RequestParam(SCH_ID) String schId, @RequestParam(USER_ID) String userId ) {
         calendarService.deleteMeetingMaster(schId);
-        calendarService.deleteCalendar(authenticationInfo.getUserId(), categoryId, schId);
-        calendarService.deleteCalendarFile(authenticationInfo.getUserId(), schId);
+        calendarService.deleteCalendar(userId, categoryId, schId);
+        calendarService.deleteCalendarFile(userId, schId);
 
         return ResponseEntityUtil.setResponseEntity(new ResponseMessage(HttpStatus.OK.value(), "Deleted calendar"));
     }
 
     // 반복일정 삭제
     @PostMapping("/calendar/repeatdelete")
-    public ResponseEntity<ResponseMessage> deleteRepeatCalendar(@RequestParam(CATEGORY_ID) String categoryId,
-            @RequestParam(SCH_ID) String schId, @RequestParam(ID) String id,
-            @RequestParam(OPTION) String option, @RequestParam(MEET_ID) String meetId) {
-        AuthenticationInfo authenticationInfo = authenticationManager.getAuthenticationInfo();
+    public ResponseEntity<ResponseMessage> deleteRepeatCalendar(@RequestParam(CATEGORY_ID) String categoryId, @RequestParam(SCH_ID) String schId, @RequestParam(ID) String id,
+                                                                @RequestParam(OPTION) String option, @RequestParam(MEET_ID) String meetId, @RequestParam(USER_ID) String userId ) {
         if ("equal".equals(option)) {
             calendarService.deleteMeetingMasterAndAroundById(meetId);
-            calendarService.deleteCalendarById(authenticationInfo.getUserId(), categoryId, schId, id);
-            calendarService.deleteCalendarFile(authenticationInfo.getUserId(), schId);
+            calendarService.deleteCalendarById(userId, categoryId, schId, id);
+            calendarService.deleteCalendarFile(userId, schId);
         } else if ("greaterThenOrEqualTo".equals(option)) {
-            calendarService.deleteCalendarAfter(authenticationInfo.getUserId(), categoryId, schId, id);
-            calendarService.deleteCalendarFile(authenticationInfo.getUserId(), schId);
+            calendarService.deleteCalendarAfter(userId, categoryId, schId, id);
+            calendarService.deleteCalendarFile(userId, schId);  
         }
 
         return ResponseEntityUtil.setResponseEntity(new ResponseMessage(HttpStatus.OK.value(), "Deleted calendar"));
     }
 
-    // Category 조회
     @ExecPermission(type = ServiceConstants.PERMISSION_TYPE_READ)
     @GetMapping("/calendar-category")
     public List<CalendarCategory> getCalendarCategory() {
@@ -155,18 +143,14 @@ public class CalendarController {
 
     @ExecPermission(type = ServiceConstants.PERMISSION_TYPE_UPDATE)
     @PostMapping("/calendar-category")
-    public ResponseEntity<ResponseMessage> saveCalendarCategory(HttpServletRequest request)
-            throws JsonMappingException, JsonProcessingException {
-        final CalendarCategory calendarCategory = objectMapper.readValue(
-                request.getParameter(ServiceConstants.PARAMETER_KEY_DATA), new TypeReference<CalendarCategory>() {
-                });
+    public ResponseEntity<ResponseMessage> saveCalendarCategory(HttpServletRequest request) throws JsonMappingException, JsonProcessingException {
+        final CalendarCategory calendarCategory = objectMapper.readValue(request.getParameter(ServiceConstants.PARAMETER_KEY_DATA), new TypeReference<CalendarCategory>() {});
 
         AuthenticationInfo authenticationInfo = authenticationManager.getAuthenticationInfo();
         calendarCategory.setUserId(authenticationInfo.getUserId());
 
         calendarService.saveCalendarCategory(calendarCategory);
-        return ResponseEntityUtil
-                .setResponseEntity(new ResponseMessage(HttpStatus.OK.value(), "Saved calendar category"));
+        return ResponseEntityUtil.setResponseEntity(new ResponseMessage(HttpStatus.OK.value(), "Saved calendar category"));
     }
 
     @ExecPermission(type = ServiceConstants.PERMISSION_TYPE_DELETE)
@@ -175,8 +159,7 @@ public class CalendarController {
         AuthenticationInfo authenticationInfo = authenticationManager.getAuthenticationInfo();
         calendarService.deleteCalendarCategory(authenticationInfo.getUserId(), categoryId);
 
-        return ResponseEntityUtil
-                .setResponseEntity(new ResponseMessage(HttpStatus.OK.value(), "Deleted calendar category"));
+        return ResponseEntityUtil.setResponseEntity(new ResponseMessage(HttpStatus.OK.value(), "Deleted calendar category"));
     }
 
     @GetMapping("/calendar-file")

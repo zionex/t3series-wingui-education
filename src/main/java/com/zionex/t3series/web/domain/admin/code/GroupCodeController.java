@@ -16,7 +16,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zionex.t3series.web.constant.ServiceConstants;
-import com.zionex.t3series.web.util.ResponseMessage;
+import com.zionex.t3series.web.util.data.ResponseMessage;
 import com.zionex.t3series.web.util.interceptor.ExecPermission;
 
 import lombok.RequiredArgsConstructor;

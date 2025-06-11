@@ -27,11 +27,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.Builder;
 import lombok.Data;
-import lombok.extern.java.Log;
+import lombok.extern.slf4j.Slf4j;
 
 @Data
 @Builder
-@Log
+@Slf4j
 public class TableSchema {
 
     private static final String FILE_PATH = "tables/";
@@ -98,7 +98,7 @@ public class TableSchema {
     String prepareQuery;
     String exportQuery;
 
-    Map<String, String> columnSchema;
+    Map<String, String[]> columnSchema;
 
     public TableSchema initParser() {
         if (workType.equals("") || moduleName.equals("") || tableName.equals("") || databaseType.equals("")) {
@@ -167,10 +167,18 @@ public class TableSchema {
 
                     while (rs.next()) {
                         if (columnSchema == null) {
-                            columnSchema = new TreeMap<String, String>();
+                            columnSchema = new TreeMap<String, String[]>();
                             columnSchema.clear();
                         }
-                        columnSchema.put(rs.getString("COLUMN_NAME"), rs.getString("TYPE_NAME"));
+
+                        String columnDef = rs.getString("COLUMN_DEF");
+                        String[] properties = new String[] {
+                                rs.getString("TYPE_NAME"),
+                                rs.getString("NULLABLE"),
+                                columnDef == null ? "" : columnDef.replaceAll("[()']", "")
+                        };
+
+                        columnSchema.put(rs.getString("COLUMN_NAME"), properties);
                     }
 
                     if (columnSchema == null || columnSchema.size() == 0) {
@@ -181,11 +189,19 @@ public class TableSchema {
                     throw new BulkImportException("Failed get Column Info");
                 } finally {
                     if (rs != null) {
-                        try { rs.close(); } catch (Exception e) {e.printStackTrace();}
+                        try {
+                            rs.close();
+                        } catch (Exception e) {
+                            log.error("Failed to close the Result. \n {}", e.getMessage());
+                        }
                     }
 
                     if (connection != null) {
-                        try { connection.close(); } catch (Exception e) {e.printStackTrace();}
+                        try {
+                            connection.close();
+                        } catch (Exception e) {
+                            log.error("Failed to close the Connection. \n {}", e.getMessage());
+                        }
                     }
                 }
             }
@@ -198,8 +214,7 @@ public class TableSchema {
                     makeOfGroups(of);
                 }
             } catch (Exception e) {
-                e.printStackTrace();
-                //throw new BulkImportException("Failed get of Object JSON");
+                log.error("Failed get of Object JSON /n {}", e.getMessage());
             }
 
             isUseProcedure = false;
@@ -210,8 +225,7 @@ public class TableSchema {
                     makeProcedure(procedure);
                 }
             } catch (Exception e) {
-                e.printStackTrace();
-                //throw new BulkImportException("Failed get procedure Object JSON");
+                log.error("Failed get of Object JSON /n {}", e.getMessage());
             }
         }
 
@@ -219,7 +233,11 @@ public class TableSchema {
     }
 
     private void makeProcedure(JSONArray procedure) {
-        assert procedure != null;
+        if (procedure == null) {
+            procedures = null;
+            isUseProcedure = false;
+            return;
+        }
 
         try {
             for (int i = 0; i < procedure.length(); i++) {
@@ -240,13 +258,17 @@ public class TableSchema {
     }
 
     private void makeOfGroups(JSONArray of) {
-        assert of != null;
+        if (of == null) {
+            ofConstraints = null;
+            return;
+        }
 
         try {
             for (int i = 0; i < of.length(); i++) {
                 JSONArray groups = (JSONArray) (((JSONObject) of.get(i)).get("groups"));
-
-                assert groups != null;
+                if (groups == null) {
+                    continue;
+                }
 
                 OFConstraints ofObject = OFConstraints.builder()
                         .name("GROUP_" + i)
@@ -619,13 +641,13 @@ public class TableSchema {
                     columnSchema.remove(c.name);
                 }
 
-                boolean unique = (c.unique != null && c.unique.equals("Y") ? true : false);
+                boolean unique = (c.unique != null && c.unique.equals("Y"));
                 boolean update = false;
-                boolean notNull = (c.notNull != null && c.notNull.equals("Y") ? true : false);
+                boolean notNull = (c.notNull != null && c.notNull.equals("Y"));
 
                 boolean connected = false;
 
-                boolean hidden = (c.hidden != null && c.hidden.equals("Y") ? true : false);
+                boolean hidden = (c.hidden != null && c.hidden.equals("Y"));
 
                 //find Connected
                 if (isUseOfConstraints) {
@@ -655,7 +677,7 @@ public class TableSchema {
                 String defaultValue = (c.defaultValue != null ? c.defaultValue : "");
 
                 if (!unique) {
-                    update = (c.update == null || c.update.equals("Y") ? true : false);
+                    update = (c.update == null || c.update.equals("Y"));
                 }
 
                 ImportColumnType columnType = ImportColumnType.builder().build();
@@ -729,10 +751,10 @@ public class TableSchema {
 
                     schemaColumnType.params.add(ImportColumnType.Param.builder()
                                             .header(key)
-                                            .type(convertType(columnSchema.get(key)))
-                                            .isNotNull(false)
+                                            .type(convertType(columnSchema.get(key)[0]))
+                                            .isNotNull("0".equals(columnSchema.get(key)[1]) ? true : false)
                                             .isHidden(false)
-                                            .defaultValue("")
+                                            .defaultValue(columnSchema.get(key)[2])
                                             .valueIndex(0)
                                             .build());
                     importMap.put(importMap.size(), schemaColumnType);
@@ -804,6 +826,7 @@ public class TableSchema {
                     convertType = TYPE_NUMBER;
                     break;
                 case "DATE":
+                case "DATETIME":
                     convertType = TYPE_DATE;
                     break;
                 case "TIMESTAMP":

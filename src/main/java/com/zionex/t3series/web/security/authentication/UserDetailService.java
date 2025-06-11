@@ -30,9 +30,10 @@ public class UserDetailService implements UserDetailsService {
             throw new UsernameNotFoundException(username);
         }
 
-        userService.checkUserValidation(user);
-
         Set<GrantedAuthority> grantedAuthorities = authorityService.getGrantedAuthorities(username);
+        user.setAdminYn(userService.checkAdmin(grantedAuthorities));
+
+        userService.checkUserValidation(user);
 
         if (user.getEnabled()) {
             if (loginPolicy.checkFailureCount(user)) {

@@ -2,8 +2,6 @@ package com.zionex.t3series.web.domain.admin.user.preference;
 
 import java.util.List;
 
-import com.zionex.t3series.web.util.ResponseMessage;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,6 +9,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.zionex.t3series.web.util.data.ResponseMessage;
 
 import lombok.RequiredArgsConstructor;
 

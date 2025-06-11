@@ -13,10 +13,11 @@ import java.util.stream.Collectors;
 
 import javax.sql.DataSource;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.codehaus.jettison.json.JSONArray;
+import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
@@ -30,6 +31,7 @@ import com.zionex.t3series.web.domain.util.exception.NoContentException;
 import lombok.Builder;
 import lombok.Data;
 
+@Slf4j
 @Service
 public class ImportSchemaService {
 
@@ -55,7 +57,8 @@ public class ImportSchemaService {
                     .map(ModuleJson.Module::getModuleCd)
                     .distinct()
                     .collect(Collectors.toList());
-        } catch (Exception ignored) {
+        } catch (Exception e) {
+            log.error("An unexpected error occurred while retrieving import modules : {}", e.getMessage());
         }
         return Collections.emptyList();
     }
@@ -96,13 +99,16 @@ public class ImportSchemaService {
 
             moduleLevel.getLevels().forEach(level -> {
                 level.setTables(moduleTables.stream()
-                                .filter(table -> table.getLevel() == level.getLevel())
-                                .collect(Collectors.toList())
+                        .filter(table -> table.getLevel() == level.getLevel())
+                        .collect(Collectors.toList())
                 );
             });
 
             return moduleLevel;
-        } catch (Exception ignored) {
+        } catch (IllegalArgumentException e) {
+            log.error("Invalid argument provided: {}", e.getMessage());
+        } catch (Exception e) {
+            log.error("An unexpected error occurred while retrieving import tables for module: {}, {}", module, e.getMessage());
         }
         return null;
     }
@@ -113,7 +119,8 @@ public class ImportSchemaService {
             String jsonData = FileUtils.readFileToString(file, StandardCharsets.UTF_8);
 
             return mappingProcessJson(jsonData);
-        } catch (Exception ignored){
+        }  catch (Exception e) {
+            log.error("Failed to read process file for module: {}, {}", module, e.getMessage());
         }
         return null;
     }
@@ -122,7 +129,10 @@ public class ImportSchemaService {
         ObjectMapper objectMapper = new ObjectMapper();
         try {
             return objectMapper.readValue(jsonData, new TypeReference<ProcessJson>() {});
-        } catch (JsonProcessingException e) {
+        } catch (JsonProcessingException jpe) {
+            log.error("JSON processing error while loading module data: {}", jpe.getMessage());
+        } catch (Exception e) {
+            log.error("Unexpected error while loading module data: {}", e.getMessage());
         }
         return null;
     }
@@ -132,7 +142,10 @@ public class ImportSchemaService {
             String fileName = FILE_PATH + tableName.toUpperCase() + ".md";
             File file = new ClassPathResource(fileName).getFile();
             return FileUtils.readFileToString(file, StandardCharsets.UTF_8);
-        } catch (Exception ignored) {
+        } catch (IOException e) {
+            log.error("Failed to read the file: {} {}", tableName, e.getMessage());
+        } catch (Exception e) {
+            log.error("An unexpected error occurred while retrieving the help string for table: {} {}", tableName, e.getMessage());
         }
         return "";
     }
@@ -155,11 +168,11 @@ public class ImportSchemaService {
 
         // The SchemaItem
         ProcessJson.Table schemaItem = Optional.ofNullable(
-                schema.getTables().parallelStream()
-                    .filter(it -> it.getModule().equals(module) && it.getTable().equals(table))
-                    .findFirst()
-                    .orElseThrow(NoContentException::new))
-                    .orElse(null);
+                        schema.getTables().parallelStream()
+                                .filter(it -> it.getModule().equals(module) && it.getTable().equals(table))
+                                .findFirst()
+                                .orElseThrow(NoContentException::new))
+                .orElse(null);
 
         // Lower-level tables
         List<String> result = schema.getTables().parallelStream()
@@ -201,7 +214,12 @@ public class ImportSchemaService {
                     results.add(deleteArray.getString(i));
                 }
             }
-        } catch (Exception ignored) {
+        } catch (IOException e) {
+            log.error("Failed to read the JSON file: {}", e.getMessage());
+        } catch (JSONException e) {
+            log.error("Failed to parse JSON content: {}", e.getMessage());
+        } catch (Exception e) {
+            log.error("An unexpected error occurred: {}", e.getMessage());
         }
 
         return results;
@@ -226,8 +244,8 @@ public class ImportSchemaService {
         // Upper level tables
         List<String> upLevelTables = schema.getTables().parallelStream()
                 .filter(it -> it.getModule().equals(schemaItem.getModule()) &&
-                                it.getEssential().equals("Y") &&
-                                it.getLevel() < schemaItem.getLevel()
+                        it.getEssential().equals("Y") &&
+                        it.getLevel() < schemaItem.getLevel()
                 )
                 .map(ProcessJson.Table::getTable)
                 .collect(Collectors.toList());
@@ -248,10 +266,10 @@ public class ImportSchemaService {
     private boolean preCheckTableJobStatus(List<String> tables) {
         AtomicBoolean result = new AtomicBoolean(true);
         tables.forEach(it -> {
-                if (importJobRepository.findAllByJobTableAndCompleteYn(it, "N").size() > 0) {
-                    result.set(false);
-                }
-            });
+            if (importJobRepository.findAllByJobTableAndCompleteYn(it, "N").size() > 0) {
+                result.set(false);
+            }
+        });
 
         return result.get();
     }
@@ -282,10 +300,14 @@ public class ImportSchemaService {
                 throw new BulkImportException(e.getMessage());
             } finally {
                 try {
-                    if (statement != null) statement.close();
-                    if (resultSet != null) resultSet.close();
+                    if (statement != null) {
+                        statement.close();
+                    }
+                    if (resultSet != null) {
+                        resultSet.close();
+                    }
                 } catch (SQLException e) {
-                    e.printStackTrace();
+                    log.error("Failed to close the Statement or ResultSet. \n {}", e.getMessage());
                 }
             }
 
@@ -306,10 +328,14 @@ public class ImportSchemaService {
                 throw new NoContentException();
             } finally {
                 try {
-                    if (statement != null) statement.close();
-                    if (resultSet != null) resultSet.close();
+                    if (statement != null) {
+                        statement.close();
+                    }
+                    if (resultSet != null) {
+                        resultSet.close();
+                    }
                 } catch (SQLException e) {
-                    e.printStackTrace();
+                    log.error("Failed to close the Statement or ResultSet. \n {}", e.getMessage());
                 }
             }
         }
@@ -339,7 +365,7 @@ public class ImportSchemaService {
             try {
                 iConnection.close();
             } catch (SQLException e) {
-                e.printStackTrace();
+                log.error("Failed to close the Connection. \n {}", e.getMessage());
             }
         }
 

@@ -79,4 +79,8 @@ public class Issue extends BaseEntity {
     @Transient
     private String createByDisplayName;
 
+    @Transient
+    private String meetId;
+
+
 }

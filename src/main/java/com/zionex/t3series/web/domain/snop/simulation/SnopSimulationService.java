@@ -5,12 +5,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import com.zionex.t3series.web.domain.admin.user.UserService;
 import com.zionex.t3series.web.domain.snop.common.SnopCommonService;
-import com.zionex.t3series.web.security.authentication.UserDetail;
 
 import lombok.RequiredArgsConstructor;
 
@@ -21,6 +19,7 @@ public class SnopSimulationService {
     private final SnopSimulationRepository simulationRepository;
 
     private final SnopCommonService snopCommonService;
+    private final UserService userService;
 
     public Map<String, Object> getSimulationVersion(String parentId, String id) throws Exception {
         Map<String, Object> resultMap = new HashMap<String, Object>();
@@ -37,15 +36,12 @@ public class SnopSimulationService {
     }
 
     public Object createVersion(Map<String, Object> params) throws Exception {
+        String username = userService.getUserDetails().getUsername();
+
         params.remove("menu-cd");
-        params.put("P_USER_ID", getAuthUserName());
+        params.put("P_USER_ID", username);
 
         return simulationRepository.createVersion(params);
     }
 
-    private String getAuthUserName() {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        UserDetail user = (UserDetail)auth.getPrincipal();
-        return user.getUsername();
-    }
 }

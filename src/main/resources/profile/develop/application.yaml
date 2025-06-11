@@ -66,7 +66,8 @@ app:
     default-url: home
     cors-allow-url:
       - http://localhost:3000
-    cors-allow-path: /sso/**
+    cors-allow-path: 
+      - /sso/**
     password-policy:
       usable-username: false
       min-length: 8
@@ -75,6 +76,7 @@ app:
       ucredit: 1
       dcredit: 1
       ocredit: 1
+      max-reuse-prevention: 0
     login-policy:
       max-failure-count: 5
       long-term-unvisited-days: 0
@@ -94,6 +96,7 @@ app:
         excel: upload-excel
         issue: issue
         calendar: calendar
+        meeting: meeting
       temporary-clean-fixed-rate: 86400000
     mailing:
       polling-rate: 50000

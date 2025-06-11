@@ -46,8 +46,12 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zionex.t3series.util.ObjectUtils;
 import com.zionex.t3series.web.constant.ServiceConstants;
+
+import lombok.extern.slf4j.Slf4j;
+
 import org.apache.poi.ss.util.CellRangeAddress;
 
+@Slf4j
 public class ExcelConverter {
 
     private final List<String> DATETIME_DATA_TYPE = new ArrayList<>(Arrays.asList("DATETIME", "DATE"));
@@ -631,7 +635,7 @@ public class ExcelConverter {
         try {
             bindingInfo = (JSONObject) new JSONParser().parse(readExcelRowXLSX(workbook, sheet.getRow(0), null).get(0).toString());
         } catch (Exception e) {
-            // 바인딩 정보가 없을 수 있다.
+            log.error("Error parsing bindingInfo JSON : {}", e);
         }
 
         Map<String, String> bindingFieldsMap = null;
@@ -716,6 +720,7 @@ public class ExcelConverter {
         try {
             bindingInfo = (JSONObject) new JSONParser().parse(readExcelRowXLS(workbook, sheet.getRow(0), null).get(0).toString());
         } catch (Exception e) {
+            log.error("Error parsing bindingInfo JSON : {}", e);
         }
 
         Map<String, String> bindingFieldsMap = null;

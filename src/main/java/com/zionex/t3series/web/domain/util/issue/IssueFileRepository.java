@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 @Repository
-public interface IssueFileRepository extends JpaRepository<IssueFile, String> {
+public interface IssueFileRepository extends JpaRepository<IssueFile, IssueFile> {
 
     List<IssueFile> findByIssueId(String issueId);
 

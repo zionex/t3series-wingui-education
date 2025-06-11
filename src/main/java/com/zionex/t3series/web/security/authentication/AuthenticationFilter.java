@@ -108,18 +108,24 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     @Override
     public void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
         String userId = request.getParameter("username");
+        String errorCode;
         String errorMessage;
 
         if (exception instanceof UsernameNotFoundException) {
+            errorCode = "MSG_LOGIN_FAIL";
             errorMessage = "The username or password you entered is incorrect.";
         } else if (exception instanceof BadCredentialsException) {
+            errorCode = "MSG_LOGIN_FAIL";
             userService.incLoginFailCount(userId);
             errorMessage = "The username or password you entered is incorrect.";
         } else if (exception instanceof LockedException) {
+            errorCode = "MSG_LOGIN_FAIL_01";
             errorMessage = "User account is locked, Contact the Administrator";
         } else if (exception instanceof DisabledException) {
+            errorCode = "MSG_LOGIN_FAIL_02";
             errorMessage = "User account is Disabled, Contact the Administrator";
         } else {
+            errorCode = "MSG_LOGIN_FAIL_03";
             errorMessage = "Internal error occurred";
         }
 
@@ -127,7 +133,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 
         PrintWriter writer = response.getWriter();
-        writer.println(errorMessage);
+        writer.println(errorCode);
         writer.flush();
         writer.close();
     }

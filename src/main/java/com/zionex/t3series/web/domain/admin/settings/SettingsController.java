@@ -41,6 +41,8 @@ public class SettingsController {
                 .langpackVersion(langPackService.getLangPackVersion())
                 .languages(applicationProperties.getLanguages())
                 .authentication(authentication)
+                .corporation(applicationProperties.getCorporation())
+                .offset(applicationProperties.getOffset())
                 .build();
     }
 
@@ -54,5 +56,7 @@ class SettingsData {
     private String langpackVersion;
     private List<String> languages;
     private Map<String, String> authentication;
+    private String corporation;
+    private String offset;
 
 }

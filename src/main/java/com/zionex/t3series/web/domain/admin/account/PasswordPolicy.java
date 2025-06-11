@@ -6,24 +6,25 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.zionex.t3series.ApplicationProperties.Authentication;
 import com.zionex.t3series.web.domain.admin.lang.LangPackService;
+import com.zionex.t3series.web.domain.admin.user.password.PasswordHistoryService;
+import com.zionex.t3series.web.security.encoder.SecurityPasswordEncoder;
+
+import lombok.RequiredArgsConstructor;
 
 @Component
+@RequiredArgsConstructor
 public final class PasswordPolicy {
 
     private Authentication.PasswordPolicy policy;
 
-    @Autowired
-    private LangPackService langPackService;
+    private final LangPackService langPackService;
+    private final PasswordHistoryService passwordHistoryService;
 
     private String message = "";
-
-    public PasswordPolicy() {
-    }
 
     public void setPolicy(Authentication.PasswordPolicy policy) {
         this.policy = policy;
@@ -65,6 +66,19 @@ public final class PasswordPolicy {
 
         if (policy == null) {
             return true;
+        }
+
+        int maxReusePrevention = policy.getMaxReusePrevention();
+        if (maxReusePrevention > 0) {
+            SecurityPasswordEncoder passwordEncoder = new SecurityPasswordEncoder();
+
+            List<String> previousPasswords = passwordHistoryService.getPreviousPasswords(username, maxReusePrevention);
+            for (String oldPassword : previousPasswords) {
+                if (passwordEncoder.matches(password, oldPassword)) {
+                    message = langPackService.getLanguageValue("PW_ERROR_MSG_0014");
+                    return false;
+                }
+            }
         }
 
         if (!policy.isUsableUsername() && password.contains(username)) {
@@ -142,6 +156,10 @@ public final class PasswordPolicy {
         }
 
         return count < patternCount;
+    }
+
+    public boolean isLoggingPassword() {
+        return policy.getMaxReusePrevention() > 0;
     }
 
 }

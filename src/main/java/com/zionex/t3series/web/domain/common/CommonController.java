@@ -118,6 +118,7 @@ public class CommonController {
             pw.flush();
             pw.close();
         } catch (IOException e) {
+            log.error("Error occurred while sending response: {}", e.getMessage());
         }
     }
 

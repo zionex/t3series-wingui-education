@@ -15,6 +15,7 @@ import com.zionex.t3series.web.domain.admin.user.UserService;
 import com.zionex.t3series.web.domain.util.filestorage.FileStorage;
 import com.zionex.t3series.web.domain.util.filestorage.FileStorageService;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
@@ -24,9 +25,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import lombok.extern.java.Log;
-
-@Log
+@Slf4j
 @RestController
 public class BulkImportController {
 
@@ -151,10 +150,12 @@ public class BulkImportController {
                     .build();
 
         } catch (Exception e) {
+            log.error("Exception occurred during bulk insert process. \n {}", e.getMessage());
+
             try {
                 saveJobHistory(jobHistory, "Fail - Run File Bulk Insert AsyncTask", "Y");
             } catch (Exception ex) {
-                ex.printStackTrace();
+                log.error("Failed to save job history for job ID: {}, {}", jobHistory.getId(), e.getMessage());
             }
 
             return ResponseDataWithSingleMessage.builder()
@@ -243,8 +244,8 @@ public class BulkImportController {
         try {
             importFileRepository.saveAll(imports);
             return true;
-        } catch (Exception ex) {
-            ex.printStackTrace();
+        } catch (Exception e) {
+            log.error("Failed to insert file info for job ID: {}, {}", jobId, e.getMessage());
             return false;
         }
     }
@@ -256,8 +257,8 @@ public class BulkImportController {
 
             importJobRepository.save(jobHistory);
             return true;
-        } catch (Exception ex) {
-            ex.printStackTrace();
+        } catch (Exception e) {
+            log.error("Failed to save job history for job ID: {}, {}", jobHistory.getId(), e.getMessage());
             return false;
         }
     }

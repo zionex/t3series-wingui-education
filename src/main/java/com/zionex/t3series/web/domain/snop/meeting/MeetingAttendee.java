@@ -38,6 +38,9 @@ public class MeetingAttendee extends BaseEntity {
     private String username;
 
     @Transient
+    private String displayName;
+
+    @Transient
     private String department;
 
     @Transient

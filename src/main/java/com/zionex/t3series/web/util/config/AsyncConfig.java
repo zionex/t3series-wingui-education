@@ -11,6 +11,9 @@ import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.web.context.request.RequestContextListener;
 
+import lombok.extern.java.Log;
+
+@Log
 @Configuration
 @EnableAsync
 public class AsyncConfig implements AsyncConfigurer {
@@ -24,18 +27,6 @@ public class AsyncConfig implements AsyncConfigurer {
         taskExecutor.setThreadNamePrefix("csvJOBExecutor - ");
         taskExecutor.initialize();
         taskExecutor.setWaitForTasksToCompleteOnShutdown(true);// queue 대기열 및 task 가 완료된 이후에 shutdown 여부
-        return taskExecutor;
-    }
-
-    @Bean(name = "LogAsyncExecutor")
-    public Executor asyncTreadTaskExecutorType2() {
-        ThreadPoolTaskExecutor taskExecutor = new ThreadPoolTaskExecutor();
-        taskExecutor.setCorePoolSize(5);
-        taskExecutor.setMaxPoolSize(20);
-        taskExecutor.setQueueCapacity(200);
-        taskExecutor.setThreadNamePrefix("asyncService -");
-        taskExecutor.initialize();
-        taskExecutor.setWaitForTasksToCompleteOnShutdown(true);
         return taskExecutor;
     }
 
@@ -53,10 +44,8 @@ public class AsyncConfig implements AsyncConfigurer {
     public class CustomAsyncExceptionHandler implements AsyncUncaughtExceptionHandler {
         @Override
         public void handleUncaughtException(Throwable throwable, Method method, Object... obj) {
-            System.out.println("Exception message : " + throwable.getMessage());
-            System.out.println("Method name : " + method.getName());
             for (Object param : obj) {
-                System.out.println("Parameter value : " + param);
+                log.info("Parameter value : " + param);
             }
         }
     }

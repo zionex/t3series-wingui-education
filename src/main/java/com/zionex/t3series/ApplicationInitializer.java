@@ -1,5 +1,7 @@
 package com.zionex.t3series;
 
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 import org.springframework.boot.ApplicationArguments;
@@ -58,6 +60,9 @@ public class ApplicationInitializer implements ApplicationRunner {
                 account.getSystemAdmins().forEach(sa -> accountManager.addSystemAdmin(sa));
             }
         }
+
+        String timezoneOffset = ZonedDateTime.now(ZoneId.systemDefault()).getOffset().getId();
+        applicationProperties.setOffset("UTC" + (timezoneOffset.equals("Z") ? "+00:00" : timezoneOffset));
     }
 
 }

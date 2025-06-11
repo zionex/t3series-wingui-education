@@ -33,7 +33,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
             "/css/*",
             "/fonts/*",
             "/images/*",
-            "/docimages/*",
+            "/docimages/*"
     };
 
     private final String[] excludeUrl = {
@@ -53,11 +53,10 @@ public class WebMvcConfig implements WebMvcConfigurer {
             "/fonts/*",
             "/images/*",
             "/docimages/*",
-            "/docs/*",
+            "/document/*",
             "/license/*",
             "/zionex-msg/**",
             "/themes/**",
-            "/system/settings/{config}",
             "/workflow/**"
     };
 

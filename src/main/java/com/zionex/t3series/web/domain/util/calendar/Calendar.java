@@ -1,9 +1,6 @@
 package com.zionex.t3series.web.domain.util.calendar;
 
-//import java.time.LocalDateTime;
-import java.time.Period;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.UUID;
 
 import javax.persistence.Column;
@@ -99,4 +96,5 @@ public class Calendar extends BaseEntity {
             schId = UUID.randomUUID().toString().replace("-", "");
         }
     }
+
 }

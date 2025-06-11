@@ -8,4 +8,6 @@ public interface CalendarCategoryRepository extends JpaRepository<CalendarCatego
     @Transactional
     void deleteByUserIdAndId(String userId, String categoryId);
 
+    CalendarCategory findByCategoryNm(String categoryNm);
+
 }

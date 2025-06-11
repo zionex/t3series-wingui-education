@@ -4,12 +4,9 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
-
-import org.hibernate.annotations.GenericGenerator;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.zionex.t3series.web.util.audit.BaseEntity;
@@ -48,10 +45,10 @@ public class MeetingMaster extends BaseEntity {
     private String meetOwnerId;
 
     @Column(name = "MEET_START_DTTM")
-    private java.sql.Timestamp meetStartDttm;
+    private java.sql.Timestamp meetStartDttm;    
 
     @Column(name = "MEET_END_DTTM")
-    private java.sql.Timestamp meetEndDttm;
+    private java.sql.Timestamp meetEndDttm;    
 
     @Column(name = "MAIL_SEND_YN")
     private String mailSendYn;
@@ -104,4 +101,5 @@ public class MeetingMaster extends BaseEntity {
 
     @Transient
     private List<MeetingMenu> menu;
+    
 }

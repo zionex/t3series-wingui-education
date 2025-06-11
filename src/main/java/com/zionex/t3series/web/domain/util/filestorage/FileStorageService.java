@@ -23,6 +23,8 @@ import javax.servlet.http.HttpServletRequest;
 import com.zionex.t3series.ApplicationProperties;
 import com.zionex.t3series.web.domain.util.exception.NoContentException;
 
+import lombok.extern.slf4j.Slf4j;
+
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
@@ -32,6 +34,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+@Slf4j
 @Service
 public class FileStorageService {
 
@@ -57,7 +60,6 @@ public class FileStorageService {
     }
 
     public List<FileStorage> uploadMultiFiles(MultipartFile[] files, String category, String userId) {
-        // Verify category
         verifyCategory(category);
 
         String uuid = getUuid();
@@ -87,10 +89,11 @@ public class FileStorageService {
                                     .build());
                 });
 
-        if (category.equals(fileProps.getCategory().getTemporary()))
+        if (category.equals(fileProps.getCategory().getTemporary())) {
             return transferFiles;
-        else
+        } else {
             return fileStorageRepository.saveAll(transferFiles);
+        }
     }
 
     public FileStorage recordErrorFile(FileStorage csvFile) {
@@ -272,15 +275,20 @@ public class FileStorageService {
         String fileName = file.getOriginalFilename();
         String extension = getFileExtension(fileName);
 
-        assert fileName != null;
-        if (fileName.contains(".."))
+        if (fileName == null) {
+            throw new FileStorageUploadException("Failed to upload files : File name is null");
+        }
+
+        if (fileName.contains("..")) {
             throw new FileStorageUploadException();
+        }
 
         boolean checkInvalidExtension = Stream.of("asa", "asp", "cdx", "cer", "htr", "aspx", "jsp", "jspx", "html", "htm", "php", "php3", "php4", "php5")
                 .parallel().anyMatch(extension::equalsIgnoreCase);
 
-        if (checkInvalidExtension)
+        if (checkInvalidExtension) {
             throw new FileStorageUploadException("Failed to upload files : Invalid file extension");
+        }
 
         return true;
     }
@@ -288,16 +296,25 @@ public class FileStorageService {
     private void doFileTransfer(MultipartFile file, String absolutePath) {
         File fileDir = new File(absolutePath);
 
-        if (!(fileDir.exists() || fileDir.mkdirs()))
+        if (!(fileDir.exists() || fileDir.mkdirs())) {
             throw new FileStorageUploadException();
+        }
 
+        FileOutputStream out = null;
         try {
             byte[] data = file.getBytes();
-            FileOutputStream out = new FileOutputStream(absolutePath + PATH_SEPARATOR + file.getOriginalFilename());
+            out = new FileOutputStream(absolutePath + PATH_SEPARATOR + file.getOriginalFilename());
             out.write(data);
-            out.close();
         } catch (IOException e) {
             throw new FileStorageUploadException();
+        } finally {
+            try {
+                if (out != null) {
+                    out.close();
+                }
+            } catch (IOException e) {
+                log.error("Error occurred while closing the output stream: ", e);
+            }
         }
     }
 

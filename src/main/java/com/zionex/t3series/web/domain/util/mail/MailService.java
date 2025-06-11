@@ -1,7 +1,6 @@
 package com.zionex.t3series.web.domain.util.mail;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 

@@ -61,6 +61,24 @@ public class IssueController {
         return issueService.getIssues(search, option, menuCd, isAssigned, status, after15days, username, issueType, page, size);
     }
 
+    @ExecPermission(type = ServiceConstants.PERMISSION_TYPE_READ)
+    @GetMapping("/issue/meet")
+    public IssueResults getIssuesMeet(@RequestParam(SEARCH) String search,
+            @RequestParam(OPTION) int option,
+            @RequestParam("view-cd") String menuCd,
+            @RequestParam(value = "is-assigned", required = false) Boolean isAssigned,
+            @RequestParam(value = "issue-type", required = false) String issueType,
+            @RequestParam("status") String status,
+            @RequestParam("after15days") String after15days,
+            @RequestParam("meetId") String meetId,
+            @RequestParam(PAGE) int page, @RequestParam(SIZE) int size) {
+
+        UserDetails userDetail = userService.getUserDetails();
+        String username = (userDetail == null) ? "" : userDetail.getUsername();
+
+        return issueService.getIssuesMeet(search, option, menuCd, isAssigned, status, after15days, meetId, username, issueType, page, size);
+    }
+
     @GetMapping("/issue/my")
     public IssueResults getMyIssues(@RequestParam(PARAMETER_KEY_MENU_CD) String menuCd, @RequestParam(PAGE) int page, @RequestParam(SIZE) int size) {
         UserDetails userDetail = userService.getUserDetails();
@@ -83,8 +101,8 @@ public class IssueController {
     }
 
     @GetMapping("/issue/detail")
-    public IssueResults getIssueDetail(@RequestParam(ISSUE_ID) String issueId, @RequestParam(PAGE) int page, @RequestParam(SIZE) int size) {
-        return issueService.getIssueDetail(issueId, page, size);
+    public Issue getIssueDetail(@RequestParam(ISSUE_ID) String issueId) {
+        return issueService.getIssue(issueId);
     }
 
     @GetMapping("/issue/comment")
@@ -111,10 +129,7 @@ public class IssueController {
 
     @PostMapping("/issue/close")
     public void closeIssue(@RequestParam(ISSUE_ID) String issueId) {
-        Issue issue = issueService.getIssue(issueId);
-        issue.setStatus("C");
-
-        issueService.saveIssue(issue);
+        issueService.closeIssue(issueId);
     }
 
     @PostMapping("/issue/delete")

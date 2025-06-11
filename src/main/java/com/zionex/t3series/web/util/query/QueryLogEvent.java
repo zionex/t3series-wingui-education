@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 public class QueryLogEvent {
+
     String procName;
     Map<String, Object> inputParams;
     List<Map<String, Object>> procParams;
@@ -25,4 +26,5 @@ public class QueryLogEvent {
     public List<Map<String, Object>> getProcParams() {
         return this.procParams;
     }
+
 }

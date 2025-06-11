@@ -14,10 +14,12 @@ public interface MeetingMasterRepository extends JpaRepository<MeetingMaster, St
 
     List<MeetingMaster> findByDelYnOrderByMeetStartDttmAsc(String delYn);
 
-    List<MeetingMaster> findByMeetStartDttmOrderByMeetStartDttmAsc(Timestamp date);
+    // List<MeetingMaster> findByMeetStartDttmOrderByMeetStartDttmAsc(Timestamp date);
+    // MeetingMaster findById(String cpMeetId);
 
-    List<MeetingMaster> findByMeetStartDttmGreaterThanEqualOrderByMeetStartDttmAsc(Timestamp date);
-
+    // List<MeetingMaster> findByMeetStartDttmGreaterThanEqualOrderByMeetStartDttmAsc(Timestamp date);
+    List<MeetingMaster> findByMeetSubjectAndMeetStartDttmGreaterThanEqualOrderByMeetStartDttmAsc(String meetSbjt, Timestamp date);
+    
     @Transactional
     void deleteById(String id);
 

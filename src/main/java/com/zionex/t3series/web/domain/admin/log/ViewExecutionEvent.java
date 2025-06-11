@@ -1,6 +1,7 @@
 package com.zionex.t3series.web.domain.admin.log;
 
 public class ViewExecutionEvent {
+
     ViewExecution viewExecution;
 
     public ViewExecutionEvent(ViewExecution ve) {
@@ -10,4 +11,5 @@ public class ViewExecutionEvent {
     public ViewExecution getViewExecution() {
         return this.viewExecution;
     }
+
 }

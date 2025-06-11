@@ -20,6 +20,10 @@ public class IssueAssignService {
         issueAssignRepository.save(issueAssign);
     }
 
+    public void deleteIssueAssignees(String issueIds) {
+        issueAssignRepository.deleteByIssueId(issueIds);
+    }
+
     public void deleteIssueAssignees(List<String> issueIds) {
         issueAssignRepository.deleteByIssueIdIn(issueIds);
     }

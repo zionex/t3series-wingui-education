@@ -8,9 +8,12 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.stereotype.Component;
 
+import lombok.extern.java.Log;
+
 /**
  * 대용량 엑셀 import 시 아래 클래스를 template 으로 만들것.
  */
+@Log
 @Component
 public class DefExcelImporter implements ExcelImporter {
 
@@ -21,9 +24,9 @@ public class DefExcelImporter implements ExcelImporter {
         for (int i = 0; i < resultData.size(); i++) {
             Map<String, Object> row = resultData.get(i);
             for (String key : row.keySet()) {
-                System.out.println(String.format("%s=%s,", key, row.get(key)));
+                log.info(String.format("%s=%s,", key, row.get(key)));
             }
-            System.out.println("" + i);
+            log.info("" + i);
         }
         res.put("result", true);
         res.put("cnt", resultData.size());

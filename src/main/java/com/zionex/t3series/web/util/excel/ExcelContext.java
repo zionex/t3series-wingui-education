@@ -230,7 +230,7 @@ public class ExcelContext {
         getCell(sheet, cellnum, rownum).setCellComment(comment);
     }
 
-    public boolean equals(Object o, Object o2) {
+    public boolean isEqual(Object o, Object o2) {
         if (o == null || !(o instanceof XSSFClientAnchor) || o2 == null || !(o2 instanceof XSSFClientAnchor)) {
             return false;
         }
@@ -398,11 +398,15 @@ public class ExcelContext {
     }
 
     public static List<List<String>> readExcel(File file) throws IOException, InvalidFormatException {
-        return readExcel(new FileInputStream(file), file.getName(), 0);
+        try (FileInputStream fis = new FileInputStream(file)) {
+            return readExcel(fis, file.getName(), 0);
+        }
     }
 
     public static List<List<String>> readExcel(File file, int sheetAt) throws IOException, InvalidFormatException {
-        return readExcel(new FileInputStream(file), file.getName(), sheetAt);
+        try (FileInputStream fis = new FileInputStream(file)) {
+            return readExcel(fis, file.getName(), sheetAt);
+        }
     }
 
     public static List<List<String>> readExcel(InputStream is) throws IOException, InvalidFormatException {

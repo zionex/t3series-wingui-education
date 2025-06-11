@@ -3,13 +3,11 @@ package com.zionex.t3series.web.domain.util.mail;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.List;
 import java.util.Properties;
 import java.util.UUID;
@@ -47,7 +45,9 @@ import com.zionex.t3series.ApplicationProperties.Service.Mailing.Smtp;
 import com.zionex.t3series.web.domain.util.filestorage.FileStorageService;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.java.Log;
 
+@Log
 @Component
 @RequiredArgsConstructor
 public class MailTask {
@@ -77,12 +77,12 @@ public class MailTask {
         prop.put("mail.smtp.host", smtp.getHost());
         prop.put("mail.smtp.port", smtp.getPort());
 
-        if (StringUtils.isEmpty(password) == false) {
+        if (StringUtils.isNotEmpty(password)) {
             prop.put("mail.smtp.auth", "true");
         }
 
         String trustedServer = smtp.getTrust();
-        if (StringUtils.isEmpty(trustedServer) == false) {
+        if (StringUtils.isNotEmpty(trustedServer)) {
             prop.put("mail.smtp.ssl.trust", trustedServer);
         } else {
             prop.put("mail.smtp.ssl.trust", "*");
@@ -98,13 +98,13 @@ public class MailTask {
 
         // "TLSv1.2" 이상이어야 함
         String protocols = smtp.getProtocols();
-        if (StringUtils.isEmpty(protocols) == false) {
+        if (StringUtils.isNotEmpty(protocols)) {
             prop.put("mail.smtp.ssl.protocols", protocols);
         }
         prop.put("mail.smtp.starttls.enable", "true"); // TLS
 
         Session tempsession = null;
-        if (StringUtils.isEmpty(password) == false) {
+        if (StringUtils.isNotEmpty(password)) {
             tempsession = Session.getInstance(prop, new javax.mail.Authenticator() {
                 protected PasswordAuthentication getPasswordAuthentication() {
                     return new PasswordAuthentication(username, password);
@@ -129,7 +129,7 @@ public class MailTask {
                         mailService.updateProcessMail(mail);
 
                     } catch (MessagingException e) {
-                        e.printStackTrace();
+                        log.severe("Error sending mail");
 
                         if (tryCnt >= 3) {
                             mail.setStatus("999");
@@ -146,6 +146,8 @@ public class MailTask {
                     mailService.updateProcessMail(mail);
                 }
             } catch (Exception e) {
+                log.severe(e.getMessage());
+
                 mail.setStatus("999");
                 mail.setErrCause(e.getMessage());
                 mail.setTryCnt(tryCnt + 1);
@@ -189,12 +191,10 @@ public class MailTask {
 
         byte[] imageBytes = javax.xml.bind.DatatypeConverter.parseBase64Binary(data);
 
-        try {
-            FileOutputStream out = new FileOutputStream(absoluteFilePath);
+        try (FileOutputStream out = new FileOutputStream(absoluteFilePath)) {
             out.write(imageBytes);
-            out.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            log.severe("Error writing image file : " + e.getMessage());
             srcUrl = null;
         }
 
@@ -265,7 +265,7 @@ public class MailTask {
                             embededImage = true;
 
                         } catch (Exception e) {
-                            e.printStackTrace();
+                            log.severe("Error processing embedded image : " + e.getMessage());
                         }
                     }
                 }
@@ -282,50 +282,45 @@ public class MailTask {
             Message message = new MimeMessage(session);
 
             List<MailReciever> recievers = mail.getRecievers();
-            if (recievers == null || recievers.size() == 0) {
+            if (recievers == null || recievers.isEmpty()) {
                 return null;
             }
 
-            List<InternetAddress> toList = new ArrayList<InternetAddress>();
-            List<InternetAddress> ccList = new ArrayList<InternetAddress>();
+            List<InternetAddress> toList = new ArrayList<>();
+            List<InternetAddress> ccList = new ArrayList<>();
 
             recievers.forEach(reciever -> {
                 try {
+                    InternetAddress address = new InternetAddress(reciever.getEmail());
                     if ("T".equals(reciever.getRecieverTp())) {
-                        toList.add(new InternetAddress(reciever.getEmail()));
+                        toList.add(address);
                     } else if ("C".equals(reciever.getRecieverTp())) {
-                        ccList.add(new InternetAddress(reciever.getEmail()));
+                        ccList.add(address);
                     }
-                } catch (Exception ee) {
-                    ee.printStackTrace();
+                } catch (Exception e) {
+                    log.severe("Invalid email address: " + reciever.getEmail());
                 }
             });
 
-            if (toList.size() == 0) {
+            if (toList.isEmpty()) {
                 return null;
             }
 
             message.setFrom(new InternetAddress(mail.getSender()));
+            message.setRecipients(Message.RecipientType.TO, toList.toArray(new InternetAddress[0]));
 
-            if (toList.size() > 0) {
-                message.setRecipients(Message.RecipientType.TO, toList.stream().toArray(InternetAddress[]::new));
-            }
-
-            if (ccList.size() > 0) {
-                message.setRecipients(Message.RecipientType.CC, (InternetAddress[]) ccList.stream().toArray(InternetAddress[]::new));
+            if (!ccList.isEmpty()) {
+                message.setRecipients(Message.RecipientType.CC, ccList.toArray(new InternetAddress[0]));
             }
 
             message.setSubject(mail.getTitle());
 
-            List<MimeBodyPart> embededImage = new ArrayList<MimeBodyPart>();
-            String processedContent = preProcessContent(mail.getContent(), embededImage);
+            List<MimeBodyPart> embeddedImages = new ArrayList<>();
+            String processedContent = preProcessContent(mail.getContent(), embeddedImages);
 
             List<MailFile> files = mail.getFiles();
-            if ((files != null && files.size() > 0) || embededImage.size() > 0) {
-                // Create a multipar message
+            if ((files != null && !files.isEmpty()) || !embeddedImages.isEmpty()) {
                 Multipart multipart = new MimeMultipart();
-
-                // Set text message part
                 BodyPart messageBodyPart = new MimeBodyPart();
 
                 if ("html".equalsIgnoreCase(mail.getContentTp())) {
@@ -336,27 +331,24 @@ public class MailTask {
 
                 multipart.addBodyPart(messageBodyPart);
 
-                // Attach Part
                 files.forEach(file -> {
                     try {
                         BodyPart atchFilePart = new MimeBodyPart();
-
                         String filename = fileStorageService.getAbsoluteFilePath(file.getFileStorageId());
-
                         DataSource source = new FileDataSource(filename);
                         atchFilePart.setDataHandler(new DataHandler(source));
                         atchFilePart.setFileName(filename);
                         multipart.addBodyPart(atchFilePart);
-                    } catch (Exception ee) {
-                        ee.printStackTrace();
+                    } catch (Exception e) {
+                        log.severe("Error attaching file : " + e.getMessage());
                     }
                 });
 
-                embededImage.forEach(ei -> {
+                embeddedImages.forEach(image -> {
                     try {
-                        multipart.addBodyPart(ei);
-                    } catch (Exception eie) {
-                        eie.printStackTrace();
+                        multipart.addBodyPart(image);
+                    } catch (Exception e) {
+                        log.severe("Error adding embedded image : " + e.getMessage());
                     }
                 });
                 message.setContent(multipart);
@@ -369,7 +361,7 @@ public class MailTask {
             }
             return message;
         } catch (MessagingException e) {
-            e.printStackTrace();
+            log.severe("Error creating email message : " + e.getMessage());
         }
         return null;
     }
@@ -381,7 +373,7 @@ public class MailTask {
 
     public void internalProcessMail(boolean agent) {
         synchronized (this) {
-            if (agent == false || isMailAgent()) {
+            if (!agent || isMailAgent()) {
                 List<Mail> mailList = mailService.getProcessingMails();
                 if (mailList != null && mailList.size() > 0) {
                     sendMail(mailList);
@@ -397,16 +389,13 @@ public class MailTask {
     }
 
     private boolean isMailAgent() {
-        if (mailAgentCheck == true) {
+        if (mailAgentCheck) {
             return useThisMailAgent;
         }
 
-        // 메일 Agent로 지정된 것을 가져온다.
         Mailing mailing = applicationProperties.getService().getMailing();
         Smtp smtp = mailing.getSmtp();
-        String mailagentip = smtp.getMailagentip();
-
-        String mailServerIp = mailagentip;
+        String mailServerIp = smtp.getMailagentip();
 
         if (StringUtils.isEmpty(mailServerIp)) {
             return false;
@@ -415,30 +404,26 @@ public class MailTask {
         if (mailServerIp.equalsIgnoreCase("localhost")) {
             mailAgentCheck = true;
             useThisMailAgent = true;
-            return useThisMailAgent;
+            return true;
         }
 
         try {
-            Enumeration e = NetworkInterface.getNetworkInterfaces();
-            while (e.hasMoreElements()) {
-                NetworkInterface n = (NetworkInterface) e.nextElement();
-                Enumeration ee = n.getInetAddresses();
-                while (ee.hasMoreElements()) {
-                    InetAddress i = (InetAddress) ee.nextElement();
-                    String localIp = i.getHostAddress();
-                    if (localIp.equalsIgnoreCase(mailServerIp)) {
-                        useThisMailAgent = true;
-                        mailAgentCheck = true;
-                        return true;
-                    }
-                }
-            }
+            NetworkInterface.getNetworkInterfaces().asIterator()
+                    .forEachRemaining(n -> n.getInetAddresses().asIterator()
+                            .forEachRemaining(i -> {
+                                if (i.getHostAddress().equalsIgnoreCase(mailServerIp)) {
+                                    useThisMailAgent = true;
+                                    mailAgentCheck = true;
+                                }
+                            }));
         } catch (SocketException e) {
+            log.severe("Error checking network interfaces : " + e.getMessage());
+
             mailAgentCheck = false;
             useThisMailAgent = false;
-            e.printStackTrace();
             return false;
         }
+
         mailAgentCheck = true;
         useThisMailAgent = false;
         return false;

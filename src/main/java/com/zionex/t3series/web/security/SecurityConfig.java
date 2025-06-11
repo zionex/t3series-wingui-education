@@ -3,8 +3,8 @@ package com.zionex.t3series.web.security;
 import java.util.Arrays;
 import java.util.List;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -40,41 +40,21 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final UserDetailService userDetailService;
     private final JwtTokenProvider jwtTokenProvider;
     private final List<String> corsAllowUrl;
-    private final String corsAllowPath;
+    private final List<String> corsAllowPath;
 
     private static final String[] NOT_ALLOWED_PATTERN = { "/**", "/*" };
 
     private static final String DEV_SERVER = "http://localhost:3000";
 
-    public SecurityConfig(UserService userService, UserDetailService userDetailService,
-                          JwtTokenProvider jwtTokenProvider, ApplicationProperties applicationProperties) throws Exception {
-        this.userService = userService;
-        this.userDetailService = userDetailService;
-        this.jwtTokenProvider = jwtTokenProvider;
-        corsAllowUrl = applicationProperties.getAuthentication().getCorsAllowUrl();
-        corsAllowPath = applicationProperties.getAuthentication().getCorsAllowPath();
-
-        if (StringUtils.isNotEmpty(corsAllowPath)) {
-            if (!isValidPattern()) {
-                throw new Exception(corsAllowPath + " is not an allowed pattern. Please change the cors-allow-path value.(application.yaml)");
-            }
-
-            int count = accessAllUrl.length;
-            accessAllUrl = Arrays.copyOf(accessAllUrl, count + 1);
-            accessAllUrl[count] = corsAllowPath;
-        }
-    }
-
     private String[] accessAllUrl = {
             "/",
-            "/edu/**",
             "/js/**",
             "/css/**",
             "/fonts/**",
             "/images/**",
             "/docimages/**",
             "/externalimage/**",
-            "/docs/**",
+            "/document/**",
             "/favicon.ico",
             "/license/**",
             "/zionex-msg/**",
@@ -96,7 +76,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             "/system/users/{group-cd}/except",
             "/system/users/delegations/**",
             "/system/users/*/delegations",
-            "/meeting/**",
             "/system/themes/**"
     };
 
@@ -104,13 +83,38 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             "/system/users/{username}/permissions/{menu-cd}/{permission-type}",
             "/system/users/permissions/{menu-cd}",
             "/system/menus",
-            "/system/menus/badges"
+            "/system/menus/badges",
+            "/system/themes"
     };
 
     private final String[] accessUserPostUrl = {
             "/system/menus/bookmark*",
             "/system/logs/view-execution"
     };
+
+    public SecurityConfig(UserService userService, UserDetailService userDetailService,
+                          JwtTokenProvider jwtTokenProvider, ApplicationProperties applicationProperties) throws Exception {
+        this.userService = userService;
+        this.userDetailService = userDetailService;
+        this.jwtTokenProvider = jwtTokenProvider;
+        corsAllowUrl = applicationProperties.getAuthentication().getCorsAllowUrl();
+        corsAllowPath = applicationProperties.getAuthentication().getCorsAllowPath();
+
+        if (!CollectionUtils.isEmpty(corsAllowPath)) {
+            for (String path : corsAllowPath) {
+                if (!isValidPattern(path)) {
+                    throw new IllegalArgumentException(path + " is not an allowed pattern. Please change the cors-allow-path value.(application.yaml)");
+                }
+                int count = accessAllUrl.length;
+                accessAllUrl = Arrays.copyOf(accessAllUrl, count + 1);
+                accessAllUrl[count] = path;
+            }
+        }
+    }
+
+    private boolean isValidPattern(String path) {
+        return !ArrayUtils.contains(NOT_ALLOWED_PATTERN, path) || (corsAllowUrl.contains(DEV_SERVER) && corsAllowUrl.size() == 1);
+    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -148,7 +152,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         .antMatchers(accessAdminUrl).hasAuthority("ADMIN")
                         .anyRequest().authenticated())
                 .cors(cors -> {
-                    if (StringUtils.isEmpty(corsAllowPath)) {
+                    if (CollectionUtils.isEmpty(corsAllowPath)) {
                         cors.configure(http);
                     } else {
                         cors.configurationSource(corsConfigurationSource());
@@ -183,12 +187,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         configuration.setMaxAge(3600L);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration(corsAllowPath, configuration);
+        for (String path : corsAllowPath) {
+            source.registerCorsConfiguration(path, configuration);
+        }
         return source;
-    }
-
-    private boolean isValidPattern() {
-        return !ArrayUtils.contains(NOT_ALLOWED_PATTERN, corsAllowPath) || (corsAllowUrl.contains(DEV_SERVER) && corsAllowUrl.size() == 1);
     }
 
 }

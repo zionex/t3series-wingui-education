@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.zionex.t3series.web.domain.admin.user.group.Group;
-import com.zionex.t3series.web.util.ResponseMessage;
+import com.zionex.t3series.web.util.data.ResponseMessage;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

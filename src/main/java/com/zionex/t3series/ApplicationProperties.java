@@ -22,6 +22,7 @@ import lombok.Data;
 @ConfigurationProperties(prefix = "app")
 public class ApplicationProperties {
 
+    private String corporation;
     private List<String> languages;
     private Authentication authentication;
     private Service service;
@@ -29,6 +30,7 @@ public class ApplicationProperties {
     private Cache cache;
     private Session session;
     private KafkaInfo kafkaInfo;
+    private String offset;
 
     @Autowired
     private Servlet servlet;
@@ -47,7 +49,7 @@ public class ApplicationProperties {
         private String defaultUrl;
         private String loginUrl;
         private List<String> corsAllowUrl;
-        private String corsAllowPath;
+        private List<String> corsAllowPath;
         private PasswordPolicy passwordPolicy;
         private LoginPolicy loginPolicy;
         private Account account;
@@ -63,6 +65,7 @@ public class ApplicationProperties {
             private int ucredit;
             private int dcredit;
             private int ocredit;
+            private int maxReusePrevention;
 
         }
 
@@ -99,7 +102,8 @@ public class ApplicationProperties {
             private Category category;
 
             public List<String> getCategoryList() {
-                return Arrays.asList(category.getSystem(), category.getNoticeboard(), category.getTemporary(), category.getIssue(), category.getCalendar());
+                return Arrays.asList(category.getSystem(), category.getNoticeboard(), category.getTemporary(),
+                        category.getIssue(), category.getCalendar(), category.getMeeting());
             }
 
             @Data
@@ -111,6 +115,7 @@ public class ApplicationProperties {
                 private String excel;
                 private String issue;
                 private String calendar;
+                private String meeting;
 
             }
 
@@ -120,10 +125,10 @@ public class ApplicationProperties {
         public static class Mailing {
 
             private Smtp smtp;
-    
+
             @Data
             public static class Smtp {
-    
+
                 private String host;
                 private int port;
                 private String username;
@@ -133,9 +138,9 @@ public class ApplicationProperties {
                 private String imagerooturl;
                 private String trust;
                 private String protocols;
-    
+
             }
-    
+
         }
 
     }

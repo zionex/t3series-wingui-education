@@ -1,4 +1,4 @@
-package com.zionex.t3series.web.util;
+package com.zionex.t3series.web.util.data;
 
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;

@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.zionex.t3series.ApplicationProperties;
-import com.zionex.t3series.web.util.ResponseData;
+import com.zionex.t3series.web.util.data.ResponseData;
 
 import lombok.extern.java.Log;
 
@@ -64,7 +64,6 @@ public class ImageUploadController extends ResponseData {
             responseResult(response, fileUrl);
 
         } catch (Exception e) {
-            e.printStackTrace();
             log.warning(e.getMessage());
             responseError(response, e.getMessage());
         }

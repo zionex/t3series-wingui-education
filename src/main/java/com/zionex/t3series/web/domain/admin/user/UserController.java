@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,9 +36,10 @@ import com.zionex.t3series.web.domain.admin.user.delegation.DelegationService;
 import com.zionex.t3series.web.domain.admin.user.group.GroupService;
 import com.zionex.t3series.web.domain.admin.user.group.UserGroup;
 import com.zionex.t3series.web.domain.admin.user.group.UserGroupService;
+import com.zionex.t3series.web.domain.admin.user.password.PasswordHistoryService;
 import com.zionex.t3series.web.domain.admin.user.permission.PermissionService;
 import com.zionex.t3series.web.domain.admin.user.preference.PreferenceInfoService;
-import com.zionex.t3series.web.util.ResponseMessage;
+import com.zionex.t3series.web.util.data.ResponseMessage;
 
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -52,6 +54,7 @@ public class UserController {
     private final AccountManager accountManager;
     private final AuthorityService authorityService;
     private final PasswordPolicy passwordPolicy;
+    private final PasswordHistoryService passwordHistoryService;
 
     private final GroupService groupService;
     private final UserGroupService userGroupService;
@@ -69,49 +72,53 @@ public class UserController {
         return userService.checkAdmin(username);
     }
 
-    @PostMapping("/system/users/{username}/password")
-    public ResponseEntity<ResponseMessage> changePassword(@PathVariable("username") String username, @RequestBody PasswordData passwordData) {
+    @Transactional
+    @PostMapping("/system/users/password")
+    public ResponseEntity<ResponseMessage> changePassword(@RequestBody PasswordData passwordData) {
+        String username = userService.getUserDetails().getUsername();
+        
         String oldPassword = passwordData.getOldPassword();
         String newPassword = passwordData.getNewPassword();
         String confirmPassword = passwordData.getConfirmPassword();
 
-        String authUsername = userService.getUserDetails().getUsername();
-
-        if (authUsername.equals(username)) {
-            if (oldPassword.isEmpty() || newPassword.isEmpty() || confirmPassword.isEmpty()) {
-                langValue = langPackService.getLanguageValue("PW_ERROR_MSG_0001");
-                return new ResponseEntity<ResponseMessage>(new ResponseMessage(HttpStatus.BAD_REQUEST.value(), langValue), HttpStatus.BAD_REQUEST);
-            }
-
-            if (!newPassword.equals(confirmPassword)) {
-                langValue = langPackService.getLanguageValue("PW_ERROR_MSG_0002");
-                return new ResponseEntity<ResponseMessage>(new ResponseMessage(HttpStatus.BAD_REQUEST.value(), langValue), HttpStatus.BAD_REQUEST);
-            }
-
-            User user = userService.getUser(username);
-            if (!SecurityUtils.checkPassword(oldPassword, user.getPassword())) {
-                langValue = langPackService.getLanguageValue("PW_ERROR_MSG_0003");
-                return new ResponseEntity<ResponseMessage>(new ResponseMessage(HttpStatus.BAD_REQUEST.value(), langValue), HttpStatus.BAD_REQUEST);
-            }
-
-            if (!passwordPolicy.checkPassword(username, confirmPassword)) {
-                return new ResponseEntity<ResponseMessage>(new ResponseMessage(HttpStatus.BAD_REQUEST.value(), passwordPolicy.getMessage()), HttpStatus.BAD_REQUEST);
-            }
-
-            user.setPassword(SecurityUtils.encryptPassword(newPassword));
-            user.setPasswordModifyDttm(LocalDateTime.now());
-            user.setPasswordExpired(false);
-            userService.saveUser(user);
-
-            langValue = langPackService.getLanguageValue("PW_SUCCESS_MSG_0001");
-            return new ResponseEntity<ResponseMessage>(new ResponseMessage(HttpStatus.OK.value(), langValue), HttpStatus.OK);
-        } else {
-            return new ResponseEntity<ResponseMessage>(new ResponseMessage(HttpStatus.BAD_REQUEST.value(), "Not yourself"), HttpStatus.BAD_REQUEST);
+        if (StringUtils.isEmpty(oldPassword) || StringUtils.isEmpty(newPassword) || StringUtils.isEmpty(confirmPassword)) {
+            langValue = langPackService.getLanguageValue("PW_ERROR_MSG_0001");
+            return new ResponseEntity<ResponseMessage>(new ResponseMessage(HttpStatus.BAD_REQUEST.value(), langValue), HttpStatus.BAD_REQUEST);
         }
+
+        if (!newPassword.equals(confirmPassword)) {
+            langValue = langPackService.getLanguageValue("PW_ERROR_MSG_0002");
+            return new ResponseEntity<ResponseMessage>(new ResponseMessage(HttpStatus.BAD_REQUEST.value(), langValue), HttpStatus.BAD_REQUEST);
+        }
+
+        User user = userService.getUser(username);
+        if (!SecurityUtils.checkPassword(oldPassword, user.getPassword())) {
+            langValue = langPackService.getLanguageValue("PW_ERROR_MSG_0003");
+            return new ResponseEntity<ResponseMessage>(new ResponseMessage(HttpStatus.BAD_REQUEST.value(), langValue), HttpStatus.BAD_REQUEST);
+        }
+
+        if (!passwordPolicy.checkPassword(username, confirmPassword)) {
+            return new ResponseEntity<ResponseMessage>(new ResponseMessage(HttpStatus.BAD_REQUEST.value(), passwordPolicy.getMessage()), HttpStatus.BAD_REQUEST);
+        }
+
+        String encryptPassword = SecurityUtils.encryptPassword(newPassword);
+        user.setPassword(encryptPassword);
+        user.setPasswordModifyDttm(LocalDateTime.now());
+        user.setPasswordExpired(false);
+
+        userService.saveUser(user); 
+
+        if (passwordPolicy.isLoggingPassword()) {
+            passwordHistoryService.savePasswordHistory(user.getId(), encryptPassword);
+        }
+
+        langValue = langPackService.getLanguageValue("PW_SUCCESS_MSG_0001");
+        return new ResponseEntity<ResponseMessage>(new ResponseMessage(HttpStatus.OK.value(), langValue), HttpStatus.OK);
     }
 
-    @PostMapping("/system/users/password")
-    public ResponseEntity<ResponseMessage> savePassword(@RequestBody PasswordData passwordData) {
+    @Transactional
+    @PostMapping("/system/users/password/init")
+    public ResponseEntity<ResponseMessage> initPassword(@RequestBody PasswordData passwordData) {
         String username = userService.getUserDetails().getUsername();
 
         String password = passwordData.getNewPassword();
@@ -131,13 +138,19 @@ public class UserController {
             return new ResponseEntity<ResponseMessage>(new ResponseMessage(HttpStatus.BAD_REQUEST.value(), passwordPolicy.getMessage()), HttpStatus.BAD_REQUEST);
         }
 
+        String encryptPassword = SecurityUtils.encryptPassword(password);
         User user = userService.getUser(username);
-        user.setPassword(SecurityUtils.encryptPassword(password));
+        user.setPassword(encryptPassword);
         user.setPasswordExpired(false);
         user.setPasswordModifyDttm(LocalDateTime.now());
         user.setLoginFailCount(0);
         user.setEnabled(true);
+
         userService.saveUser(user);
+
+        if (passwordPolicy.isLoggingPassword()) {
+            passwordHistoryService.savePasswordHistory(user.getId(), encryptPassword);
+        }
 
         langValue = langPackService.getLanguageValue("PW_SUCCESS_MSG_0001");
         return new ResponseEntity<ResponseMessage>(new ResponseMessage(HttpStatus.OK.value(), langValue), HttpStatus.OK);
@@ -170,12 +183,7 @@ public class UserController {
 
     @GetMapping("/system/users/pop")
     public List<User> getUserList(@RequestParam("username") String username) throws UnsupportedEncodingException {
-        // return userService.getUsers(username, false);
-        List<User> users = userService.getAllUserForCache();
-        return users
-                .stream()
-                .filter(user -> userService.isLike(user, username) && !accountManager.isSystemAdmin(user.getUsername()))
-                .collect(Collectors.toList());
+        return userService.getUsers(username, false);
     }
 
     @GetMapping("/system/users/{group-cd}/except")
@@ -192,6 +200,7 @@ public class UserController {
         return userService.getUsersByGroupCd(groupcode, username, displayName);
     }
 
+    @Transactional
     @PostMapping("/system/users")
     public ResponseEntity<ResponseMessage> saveUsers(HttpServletRequest request) throws JsonMappingException, JsonProcessingException {
         final List<User> users = objectMapper.readValue(request.getParameter(ServiceConstants.PARAMETER_KEY_DATA), new TypeReference<List<User>>() {});
@@ -212,6 +221,9 @@ public class UserController {
                     user.setEnabled(existsUser.getEnabled());
                     user.setPasswordExpired(existsUser.getPasswordExpired());
                     user.setLoginFailCount(existsUser.getLoginFailCount());
+                    user.setPasswordModifyDttm(existsUser.getPasswordModifyDttm());
+                    user.setJti(existsUser.getJti());
+                    user.setSessionExpiredDttm(existsUser.getSessionExpiredDttm());
 
                     oldUsers.add(user);
                 }
@@ -286,19 +298,29 @@ public class UserController {
 
     @PostMapping("/system/users/{username}")
     public ResponseEntity<ResponseMessage> saveUser(@RequestBody User user) {
-        User existsUser = userService.getUserOrNull(user.getUsername());
-        if (existsUser != null) {
-            user.setId(existsUser.getId());
-            user.setPassword(existsUser.getPassword());
-            user.setPasswordExpired(existsUser.getPasswordExpired());
-            user.setLoginFailCount(existsUser.getLoginFailCount());
+        String authUsername = userService.getUserDetails().getUsername();
+        String username = user.getUsername();
 
-            userService.saveUser(user);
-
-            langValue = langPackService.getLanguageValue("MSG_SUCCESS_SAVE_MSG");
-            return new ResponseEntity<ResponseMessage>(new ResponseMessage(HttpStatus.OK.value(), langValue), HttpStatus.OK);
+        if (StringUtils.equals(authUsername, username)) {
+            User existsUser = userService.getUserOrNull(username);
+            if (existsUser != null) {
+                user.setId(existsUser.getId());
+                user.setPassword(existsUser.getPassword());
+                user.setPasswordExpired(existsUser.getPasswordExpired());
+                user.setLoginFailCount(existsUser.getLoginFailCount());
+                user.setPasswordModifyDttm(existsUser.getPasswordModifyDttm());
+                user.setJti(existsUser.getJti());
+                user.setSessionExpiredDttm(existsUser.getSessionExpiredDttm());
+    
+                userService.saveUser(user);
+    
+                langValue = langPackService.getLanguageValue("MSG_SUCCESS_SAVE_MSG");
+                return new ResponseEntity<ResponseMessage>(new ResponseMessage(HttpStatus.OK.value(), langValue), HttpStatus.OK);
+            } else {
+                return new ResponseEntity<ResponseMessage>(new ResponseMessage(HttpStatus.BAD_REQUEST.value(), "Failed update user entity"), HttpStatus.BAD_REQUEST);
+            }
         } else {
-            return new ResponseEntity<ResponseMessage>(new ResponseMessage(HttpStatus.BAD_REQUEST.value(), "Failed update user entity"),HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<ResponseMessage>(new ResponseMessage(HttpStatus.FORBIDDEN.value(), "Not yourself"), HttpStatus.FORBIDDEN);
         }
     }
 
@@ -309,9 +331,7 @@ public class UserController {
 class PasswordData {
 
     private String oldPassword;
-
     private String newPassword;
-
     private String confirmPassword;
 
 }

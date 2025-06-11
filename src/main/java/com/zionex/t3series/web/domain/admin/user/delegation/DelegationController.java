@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.zionex.t3series.web.util.ResponseMessage;
+import com.zionex.t3series.web.util.data.ResponseMessage;
 
 import lombok.RequiredArgsConstructor;
 

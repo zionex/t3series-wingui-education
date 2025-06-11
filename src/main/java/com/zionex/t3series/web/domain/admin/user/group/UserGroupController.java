@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.zionex.t3series.web.domain.admin.user.UserService;
-import com.zionex.t3series.web.util.ResponseMessage;
+import com.zionex.t3series.web.util.data.ResponseMessage;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

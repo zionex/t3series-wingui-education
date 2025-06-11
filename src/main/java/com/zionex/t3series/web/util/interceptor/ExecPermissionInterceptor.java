@@ -7,6 +7,7 @@ import java.io.PrintWriter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.text.StringEscapeUtils;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -75,7 +76,7 @@ public class ExecPermissionInterceptor implements HandlerInterceptor {
 
         JSONObject error = new JSONObject();
         error.put("errCode", HttpStatus.SERVICE_UNAVAILABLE.value());
-        error.put("errMsg", message);
+        error.put("errMsg", StringEscapeUtils.escapeHtml4(message));
 
         response.setContentType(CONTENT_TYPE_JSON);
         PrintWriter out = response.getWriter();

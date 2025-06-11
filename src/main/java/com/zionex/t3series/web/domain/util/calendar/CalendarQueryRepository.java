@@ -59,6 +59,28 @@ public class CalendarQueryRepository {
                                 .fetch();
         }
 
+        public List<Calendar> findCalendarsByMeetIdEqSchId(String meetId) {
+                return jpaQueryFactory.select(calendar)
+                        .from(calendar)
+                        .where(calendar.schId.eq(
+                                jpaQueryFactory.select(calendar.schId)
+                                        .from(calendar)
+                                        .where(calendar.meetId.eq(meetId))
+                        ))
+                        .fetch();
+            }
+
+        public List<Calendar> findCalendarsByDateAfterMeetIdEqSchId(java.sql.Timestamp schStartDttm, String meetId) {
+                return jpaQueryFactory.select(calendar)
+                        .from(calendar)
+                        .where(calendar.schId.eq(
+                                jpaQueryFactory.select(calendar.schId)
+                                        .from(calendar)
+                                        .where(calendar.meetId.eq(meetId))
+                        ).and(calendar.schStartDttm.goe(schStartDttm)))
+                        .fetch();
+        }
+
         public List<CalendarCategory> getCalendarCategory(String userId) {
                 return jpaQueryFactory
                                 .select(Projections.fields(CalendarCategory.class,

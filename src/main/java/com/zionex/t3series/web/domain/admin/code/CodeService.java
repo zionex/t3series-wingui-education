@@ -4,14 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.zionex.t3series.web.domain.admin.lang.LangPack;
 import com.zionex.t3series.web.domain.admin.lang.LangPackService;
-import com.zionex.t3series.web.util.config.CacheConfig;
-
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
-import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
 
@@ -26,11 +24,10 @@ public class CodeService {
 
     private final String COMN_CODE_DESCRIP_PREFIX = "COMN_CODE_DESCRIP";
 
-    @Cacheable(value = CacheConfig.CODE_CACHE)
     public List<Code> getCodesByGroupCd(String grpCode) {
-        GroupCode groupCode = groupCodeRepository.findByGrpCdAndUseYn(grpCode, true);
         List<Code> codes = new ArrayList<>();
 
+        GroupCode groupCode = groupCodeRepository.findByGrpCdAndUseYn(grpCode, true);
         if (groupCode != null) {
             codes = codeRepository.findBySrcIdAndUseYnAndDelYnNotAndComnCdNotNullOrderByDefaultValueYnDescSeqAscComnCdNmAsc(groupCode.getId(), true, true);
         }
@@ -42,11 +39,10 @@ public class CodeService {
         return codeRepository.findBySrcIdOrderBySeq(groupId);
     }
 
-    @Cacheable(value = CacheConfig.CODE_CACHE)
     public List<Code> getCodes(String srcId) {
-        List<Code> codes = codeRepository.findBySrcIdOrderBySeq(srcId);
         String langCd = langPackService.getCachedLanguageCode();
 
+        List<Code> codes = codeRepository.findBySrcIdOrderBySeq(srcId);
         codes.forEach(code -> {
             String langValue = langPackService.getCachedLangPacks(langCd, code.getDescrip());
             if (langValue == null) {
@@ -60,7 +56,7 @@ public class CodeService {
         return codes;
     }
 
-    @CacheEvict(value = CacheConfig.CODE_CACHE, allEntries = true)
+    @Transactional
     public void saveCodes(List<Code> codes) {
         List<LangPack> langPacks = new ArrayList<LangPack>();
         String langCd = langPackService.getCachedLanguageCode();
@@ -88,12 +84,15 @@ public class CodeService {
         codeRepository.saveAll(codes);
     }
 
-    @CacheEvict(value = CacheConfig.CODE_CACHE, allEntries = true)
+    @Transactional
     public void deleteCodes(List<Code> codes) {
         List<LangPack> langPacks = new ArrayList<LangPack>();
+
         codes.forEach(code -> {
             String langKey = code.getDescrip();
-            langPacks.addAll(langPackService.getLangPacks(null, langKey, null));
+            if (langKey != null) {
+                langPacks.addAll(langPackService.getLangPacks(null, langKey, null));
+            }
         });
 
         if (!langPacks.isEmpty()) {
@@ -104,14 +103,17 @@ public class CodeService {
         codeRepository.deleteByIdIn(ids);
     }
 
-    @CacheEvict(value = CacheConfig.CODE_CACHE, allEntries = true)
+    @Transactional
     public void deleteCodesByGroupIds(List<String> groupIds) {
         List<LangPack> langPacks = new ArrayList<LangPack>();
+
         groupIds.forEach(id -> {
             List<Code> codes = getCodes(id);
             codes.forEach(code -> {
                 String langKey = code.getDescrip();
-                langPacks.addAll(langPackService.getLangPacks(null, langKey, null));
+                if (langKey != null) {
+                    langPacks.addAll(langPackService.getLangPacks(null, langKey, null));
+                }
             });
         });
 
@@ -122,17 +124,11 @@ public class CodeService {
         codeRepository.deleteBySrcIdIn(groupIds);
     }
 
-    @CacheEvict(value = CacheConfig.CODE_CACHE, allEntries = true)
     public void updateCodeUseYnByGroupId(String groupId, boolean useYn) {
         List<Code> codes = getCodesByGroupId(groupId);
         codes.forEach(code -> code.setUseYn(useYn));
 
         codeRepository.saveAll(codes);
-    }
-
-    @CacheEvict(value = CacheConfig.CODE_CACHE, allEntries = true)
-    public void clearCodeCache() {
-
     }
 
 }

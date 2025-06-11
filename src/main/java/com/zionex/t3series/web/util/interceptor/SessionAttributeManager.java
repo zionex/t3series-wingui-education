@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.support.RequestContextUtils;
 
 import com.zionex.t3series.web.security.jwt.JwtTokenProvider;
-import com.zionex.t3series.web.util.BeanUtil;
+import com.zionex.t3series.web.util.data.BeanUtil;
 
 /**
  * JWT기준 세션 단위 속성을 유지 관리한다.
@@ -25,26 +25,28 @@ import com.zionex.t3series.web.util.BeanUtil;
 @Component
 public class SessionAttributeManager {
 
-    static Map<String, Map<String, Object>> properties=new HashMap<String, Map<String, Object>>();
+    static Map<String, Map<String, Object>> properties = new HashMap<String, Map<String, Object>>();
 
-    public static Map<String, Object> getAttribute(String tokenId){
-        if(tokenId ==null)
+    public static Map<String, Object> getAttribute(String tokenId) {
+        if (tokenId == null) {
             return null;
+        }
 
         Map<String, Object> attribute = properties.get(tokenId);
-        if(attribute ==null) {
-            attribute=new HashMap<String, Object>();
+        if (attribute == null) {
+            attribute = new HashMap<String, Object>();
             properties.put(tokenId, attribute);
         }
         return attribute;
-    }   
+    }
 
-    public static Object getAttribute(String tokenId,String key){
-        if(tokenId ==null)
+    public static Object getAttribute(String tokenId, String key) {
+        if (tokenId == null) {
             return null;
+        }
 
-        Map<String, Object> attr= getAttribute(tokenId);
-        if(attr !=null) {
+        Map<String, Object> attr = getAttribute(tokenId);
+        if (attr != null) {
             return attr.get(key);
         }
         return null;
@@ -54,78 +56,83 @@ public class SessionAttributeManager {
         ApplicationContext applicationContext = RequestContextUtils.findWebApplicationContext(request);
         JwtTokenProvider jwtTokenProvider = (JwtTokenProvider) applicationContext.getBean("jwtTokenProvider");
 
-        String token=jwtTokenProvider.resolveToken(request);
+        String token = jwtTokenProvider.resolveToken(request);
         return token;
     }
-    public static Map<String, Object> getAttributes(HttpServletRequest request){
+
+    public static Map<String, Object> getAttributes(HttpServletRequest request) {
         String tokenId = getTokenId(request);
-        if(tokenId==null)
+        if (tokenId == null) {
             return null;
+        }
         return getAttribute(tokenId);
     }
 
-    public static Object getAttribute(HttpServletRequest request,String key){
+    public static Object getAttribute(HttpServletRequest request, String key) {
         String tokenId = getTokenId(request);
-        if(tokenId==null)
+        if (tokenId == null) {
             return null;
+        }
 
-        Map<String, Object> attr= getAttribute(tokenId);
-        if(attr !=null) {
+        Map<String, Object> attr = getAttribute(tokenId);
+        if (attr != null) {
             return attr.get(key);
         }
         return null;
     }
 
-    public static Map<String, Object> setAttribute(HttpServletRequest request, String key, Object value){
-
+    public static Map<String, Object> setAttribute(HttpServletRequest request, String key, Object value) {
         String tokenId = getTokenId(request);
-        if(tokenId==null)
+        if (tokenId == null) {
             return null;
+        }
 
         Map<String, Object> attribute = properties.get(tokenId);
-        if(attribute==null) {
-            attribute=new HashMap<String, Object>();
+        if (attribute == null) {
+            attribute = new HashMap<String, Object>();
             properties.put(tokenId, attribute);
         }
 
         attribute.put(key, value);
 
         return attribute;
-    } 
+    }
 
-    public static Map<String, Object> setAttribute(String tokenId, String key, Object value){
-        if(tokenId==null)
+    public static Map<String, Object> setAttribute(String tokenId, String key, Object value) {
+        if (tokenId == null) {
             return null;
+        }
 
         Map<String, Object> attribute = properties.get(tokenId);
-        if(attribute==null) {
-            attribute=new HashMap<String, Object>();
+        if (attribute == null) {
+            attribute = new HashMap<String, Object>();
             properties.put(tokenId, attribute);
         }
 
         attribute.put(key, value);
 
         return attribute;
-    } 
-    
+    }
+
+    @SuppressWarnings("rawtypes")
     @Scheduled(fixedRateString = "50000")
     public void processValidation() {
+        JwtTokenProvider jwtTokenProvider = (JwtTokenProvider) BeanUtil.getBean("jwtTokenProvider");
+        Set<String> tokens = properties.keySet();
+        Iterator tokenIter = tokens.iterator();
 
-        JwtTokenProvider jwtTokenProvider = (JwtTokenProvider)BeanUtil.getBean("jwtTokenProvider");
-        Set<String> tokens=properties.keySet();
-        Iterator tokenIter=tokens.iterator();
-        
-        List<String> removeList=new ArrayList<String>();
-        while(tokenIter.hasNext()) {
-            String token = (String)tokenIter.next();
-            if(jwtTokenProvider.validateToken(token)==false) {
+        List<String> removeList = new ArrayList<String>();
+        while (tokenIter.hasNext()) {
+            String token = (String) tokenIter.next();
+            if (jwtTokenProvider.validateToken(token) == false) {
                 removeList.add(token);
             }
         }
 
-        for(int i=0; i < removeList.size();i++) {
+        for (int i = 0; i < removeList.size(); i++) {
             String token = removeList.get(i);
             properties.remove(token);
         }
     }
+
 }

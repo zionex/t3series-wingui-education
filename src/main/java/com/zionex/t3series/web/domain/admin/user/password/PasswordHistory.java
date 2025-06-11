@@ -1,4 +1,4 @@
-package com.zionex.t3series.web.domain.util.calendar;
+package com.zionex.t3series.web.domain.admin.user.password;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -8,18 +8,16 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.zionex.t3series.web.util.audit.BaseEntity;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Data
-@JsonIgnoreProperties(ignoreUnknown = true)
 @EqualsAndHashCode(callSuper = false)
-@Table(name = "TB_UT_CALENDAR_FILE")
 @Entity
-public class CalendarFile extends BaseEntity {
+@Table(name = "TB_AD_PASSWORD_HISTORY")
+public class PasswordHistory extends BaseEntity {
 
     @Id
     @GeneratedValue(generator = "generator-uuid")
@@ -27,10 +25,10 @@ public class CalendarFile extends BaseEntity {
     @Column(name = "ID")
     private String id;
 
-    @Column(name = "SCH_ID")
-    private String schId;
+    @Column(name = "USER_ID")
+    private String userId;
 
-    @Column(name = "FILE_STORAGE_ID")
-    private int fileStorageId;
+    @Column(name = "PASSWORD")
+    private String password;
 
 }

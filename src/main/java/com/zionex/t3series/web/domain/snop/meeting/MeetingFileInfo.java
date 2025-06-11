@@ -12,6 +12,8 @@ public class MeetingFileInfo {
     public String fileName; // fileStorage.fileName,
     public Long fileSize; // fileStorage.fileSize,
     public String fileType; // fileStorage.fileType
+    private Integer agendaSeq;
+    private Integer seq;
 
     public MeetingFileInfo() {
 

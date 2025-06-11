@@ -15,10 +15,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zionex.t3series.web.domain.admin.user.UserService;
 import com.zionex.t3series.web.domain.admin.user.group.GroupService;
 import com.zionex.t3series.web.domain.admin.user.group.UserGroupService;
-import com.zionex.t3series.web.util.ResponseMessage;
 import com.zionex.t3series.web.util.audit.BaseEntity;
 import com.zionex.t3series.web.util.crosstab.Crosstab;
 import com.zionex.t3series.web.util.crosstab.Crosstab.Item;
+import com.zionex.t3series.web.util.data.ResponseMessage;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

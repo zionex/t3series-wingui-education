@@ -676,6 +676,10 @@ public class CrosstabBuilderType2 extends CrosstabBuilder {
         String[] result = new String[values.length];
         for (int i = 0, n = values.length; i < n; i++) {
             String value = values[i];
+            if (value == null) {
+                result[i] = null;
+                continue;
+            }
 
             String[] split = value.split(":");
             if (split.length > 1) {

@@ -1,9 +1,7 @@
 package com.zionex.t3series.web.domain.admin.log;
 
-import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -21,7 +19,9 @@ import com.zionex.t3series.web.domain.admin.user.UserService;
 import com.zionex.t3series.web.security.jwt.JwtTokenProvider;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 public class ViewExecutionController {
@@ -66,7 +66,7 @@ public class ViewExecutionController {
             // 비동기 메시지 처리
             publisher.publishEvent(new ViewExecutionEvent(viewExecution));
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("Failed to log view execution", e);
         }
     }
 

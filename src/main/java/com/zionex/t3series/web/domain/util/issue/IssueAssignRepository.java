@@ -14,6 +14,9 @@ public interface IssueAssignRepository extends JpaRepository<IssueAssign, IssueA
     Boolean existsByIssueIdAndAssignee(String issueId, String assignee);
 
     @Transactional
+    void deleteByIssueId(String issueId);
+
+    @Transactional
     void deleteByIssueIdIn(List<String> issueIds);
 
 }

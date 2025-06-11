@@ -22,10 +22,15 @@ import com.zionex.t3series.web.domain.admin.user.User;
 import com.zionex.t3series.web.domain.admin.user.UserService;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.SignatureException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class JwtTokenProvider {
@@ -104,8 +109,21 @@ public class JwtTokenProvider {
     }
 
     public Claims parseClaims(String jwtToken) {
-        // TODO : Token exception handling
-        return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(jwtToken).getBody();
+        try {
+            return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(jwtToken).getBody();
+        } catch (SignatureException e) {
+            log.error("Invalid JWT signature: " + e.getMessage());
+            throw new IllegalArgumentException("Invalid JWT signature", e);
+        } catch (ExpiredJwtException e) {
+            log.error("Expired JWT token: " + e.getMessage());
+            throw new IllegalArgumentException("Expired JWT token", e);
+        } catch (MalformedJwtException e) {
+            log.error("Invalid JWT token: " + e.getMessage());
+            throw new IllegalArgumentException("Invalid JWT token", e);
+        } catch (Exception e) {
+            log.error("Error while parsing JWT token: " + e.getMessage());
+            throw new IllegalStateException("Error while parsing JWT token", e);
+        }
     }
 
     public boolean validateToken(String jwtToken) {
@@ -123,7 +141,7 @@ public class JwtTokenProvider {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("Exception occurred while validating token", e);
             return false;
         }
     }
@@ -134,7 +152,7 @@ public class JwtTokenProvider {
             Claims claims = parseClaims(token);
             return claims.isEmpty() ? null : claims.getId();
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("Exception occurred while parsing token", e);
             return null;
         }
     }

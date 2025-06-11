@@ -74,7 +74,9 @@ public class GroupCodeService {
         List<LangPack> langPacks = new ArrayList<LangPack>();
         groupCodes.forEach(gc -> {
             String langKey = gc.getDescrip();
-            langPacks.addAll(langPackService.getLangPacks(null, langKey, null));
+            if (langKey != null) {
+                langPacks.addAll(langPackService.getLangPacks(null, langKey, null));
+            }
         });
 
         if (!langPacks.isEmpty()) {

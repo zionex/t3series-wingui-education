@@ -1,29 +1,21 @@
 package com.zionex.t3series.web.domain.util.calendar;
 
-import java.time.LocalDateTime;
-import java.time.Period;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.zionex.t3series.util.StringUtils;
-import com.zionex.t3series.web.domain.snop.meeting.MeetingAgendaRepository;
 import com.zionex.t3series.web.domain.snop.meeting.MeetingAttendee;
 import com.zionex.t3series.web.domain.snop.meeting.MeetingAttendeeRepository;
 import com.zionex.t3series.web.domain.snop.meeting.MeetingMaster;
 import com.zionex.t3series.web.domain.snop.meeting.MeetingMasterRepository;
-import com.zionex.t3series.web.domain.snop.meeting.MeetingMenuRepository;
 import com.zionex.t3series.web.domain.snop.meeting.MeetingQueryRepository;
 import com.zionex.t3series.web.domain.util.filestorage.FileStorage;
 import com.zionex.t3series.web.domain.util.filestorage.FileStorageRepository;
-import com.zionex.t3series.web.domain.snop.meeting.MeetingFileRepository;
-import com.zionex.t3series.web.domain.snop.meeting.MeetingMinutesRepository;
-
 import com.zionex.t3series.web.domain.util.filestorage.FileStorageService;
 
 import lombok.RequiredArgsConstructor;
@@ -40,10 +32,6 @@ public class CalendarService {
     private final CalendarCategoryRepository calendarCategoryRepository;
     private final MeetingMasterRepository meetingMasterRepository;
     private final MeetingAttendeeRepository meetingAttendeeRepository;
-    private final MeetingAgendaRepository meetingAgendaRepository;
-    private final MeetingFileRepository meetingFileRepository;
-    private final MeetingMenuRepository meetingMenuRepository;
-    private final MeetingMinutesRepository meetingMinutesRepository;
     private final CalendarFileRepository calendarFileRepository;
     
     private final FileStorageService fileStorageService;
@@ -60,42 +48,34 @@ public class CalendarService {
         return calendarQueryRepository.getRepeatDate(username, categoryId, schId);
     }
 
-    public List<MeetingMaster> getRepeatDate(String meetId) {
-        return meetingQueryRepository.getRepeatDate(meetId);
+    public List<MeetingMaster> getRepeatDate(String schId) {
+        return meetingQueryRepository.getRepeatDate(schId);
     }
 
-    // 전체 삭제(calendar)
     @Transactional
     public synchronized void deleteCalendar(String userId, String categoryId, String schId) {
         calendarRepository.deleteByUserIdAndCategoryIdAndSchId(userId, categoryId, schId);
     }
 
-    // 전체 삭제(meeting master + 부속 테이블 데이터)
     @Transactional
     public void deleteMeetingMaster(String schId) {
         meetingQueryRepository.deleteMeetingMasterBySchId(schId);
     }
 
-    //단일 삭제(calendar)
     @Transactional
     public synchronized void deleteCalendarById(String userId, String categoryId, String schId, String id) {
         calendarRepository.deleteByUserIdAndCategoryIdAndSchIdAndId(userId, categoryId, schId, id);
     }
 
-    //단일 삭제(meeting master)
     @Transactional
     public void deleteMeetingMasterAndAroundById(String id) {
         if (!id.trim().equals("") && !id.trim().isEmpty()) {
-            meetingMasterRepository.deleteById(id);
-            meetingAttendeeRepository.deleteByMeetId(id);
-            meetingAgendaRepository.deleteByMeetId(id);
-            meetingFileRepository.deleteByMeetId(id);
-            meetingMenuRepository.deleteByMeetId(id);
-            meetingMinutesRepository.deleteByMeetId(id);
+            MeetingMaster meetMaster = meetingMasterRepository.findByIdAndDelYn(id, "N");
+            meetMaster.setDelYn("Y");
+            meetingMasterRepository.save(meetMaster);
         }
     }
 
-    //반복 삭제(calendar(+meeting master))
     @Transactional
     public synchronized void deleteCalendarAfter(String userId, String categoryId, String schId, String id) {
         Calendar calendar = calendarRepository.findByUserIdAndCategoryIdAndSchIdAndId(userId, categoryId, schId, id);
@@ -139,13 +119,11 @@ public class CalendarService {
      * @param nRepeatNo
      * @return
      */
-    private Calendar makeRepeatCalendar(Calendar startCal, Date baseStartDt, String repeatType, String repeatOption,
-            int nRepeatNo) {
+    private Calendar makeRepeatCalendar(Calendar startCal, Date baseStartDt, String repeatType, String repeatOption, int nRepeatNo) {
         Calendar repCalendar = new Calendar();
         repCalendar.copy(startCal);
 
         long diff = startCal.getSchEndDttm().getTime() - startCal.getSchStartDttm().getTime();
-
         java.util.Calendar stCalendar = java.util.Calendar.getInstance();
 
         stCalendar.setTime(baseStartDt);
@@ -178,14 +156,10 @@ public class CalendarService {
      * @param nRepeatNo
      * @return
      */
-    private Calendar makeRepeatCalendar(Calendar startCal, Calendar cal, Date baseStartDt, String repeatType,
-            String repeatOption,
-            int nRepeatNo) {
-
+    private Calendar makeRepeatCalendar(Calendar startCal, Calendar cal, Date baseStartDt, String repeatType, String repeatOption, int nRepeatNo) {
         Calendar repCalendar = cal.copy(startCal);
 
         long diff = startCal.getSchEndDttm().getTime() - startCal.getSchStartDttm().getTime();
-
         java.util.Calendar stCalendar = java.util.Calendar.getInstance();
 
         stCalendar.setTime(baseStartDt);
@@ -218,13 +192,11 @@ public class CalendarService {
      * @param nRepeatNo
      * @return
      */
-    private MeetingMaster makeRepeatMeetingCalendar(MeetingMaster startMeetingMaster, Date baseStartDt, String repeatType, String repeatOption,
-            int nRepeatNo) {
+    private MeetingMaster makeRepeatMeetingCalendar(MeetingMaster startMeetingMaster, Date baseStartDt, String repeatType, String repeatOption, int nRepeatNo) {
         MeetingMaster repCalendar = new MeetingMaster();
         repCalendar.copy(startMeetingMaster);
 
         long diff = startMeetingMaster.getMeetEndDttm().getTime() - startMeetingMaster.getMeetStartDttm().getTime();
-
         java.util.Calendar stCalendar = java.util.Calendar.getInstance();
 
         stCalendar.setTime(baseStartDt);
@@ -257,14 +229,10 @@ public class CalendarService {
      * @param nRepeatNo
      * @return
      */
-    private MeetingMaster makeRepeatMeetingCalendar(MeetingMaster meetingMaster, MeetingMaster meetMaster, Date baseStartDt, String repeatType,
-            String repeatOption,
-            int nRepeatNo) {
-
+    private MeetingMaster makeRepeatMeetingCalendar(MeetingMaster meetingMaster, MeetingMaster meetMaster, Date baseStartDt, String repeatType, String repeatOption, int nRepeatNo) {
         MeetingMaster repCalendar = meetMaster.copy(meetingMaster);
 
         long diff = meetingMaster.getMeetEndDttm().getTime() - meetingMaster.getMeetStartDttm().getTime();
-
         java.util.Calendar stCalendar = java.util.Calendar.getInstance();
 
         stCalendar.setTime(baseStartDt);
@@ -316,8 +284,7 @@ public class CalendarService {
      * @param repeatEndDate
      */
     @Transactional
-    public void saveRepeatCalendar(Calendar calendar, MeetingMaster meetingMaster, List<MeetingAttendee> meetingAttendees, String repeatType, String repeatOption, int nRepeatNo,
-            java.sql.Date repeatEndDate) {
+    public void saveRepeatCalendar(Calendar calendar, MeetingMaster meetingMaster, List<MeetingAttendee> meetingAttendees, String repeatType, String repeatOption, int nRepeatNo, java.sql.Date repeatEndDate) {
         Date baseStartDt = calendar.getSchStartDttm();
         if ("N".equals(repeatOption)) { // 반복 개수
             for (int i = 0; i < nRepeatNo; i++) {
@@ -326,7 +293,11 @@ public class CalendarService {
 
                 String uuid = UUID.randomUUID().toString().replaceAll("-", "");
                 repeatCal.setMeetId(uuid);
-                repeatMeetCal.setId(uuid);
+                
+                if (repeatMeetCal != null) {
+                    repeatMeetCal.setId(uuid);
+                }
+
                 for (MeetingAttendee attendee : meetingAttendees) {
                     String uuid2 = UUID.randomUUID().toString().replaceAll("-", "");
                     attendee.setMeetId(uuid);
@@ -343,7 +314,11 @@ public class CalendarService {
             while (compareDate(repeatEndDate, schDt) >= 0) {
                 String uuid = UUID.randomUUID().toString().replaceAll("-", "");
                 repeatCal.setMeetId(uuid);
-                repeatMeetCal.setId(uuid);
+
+                if (repeatMeetCal != null) {
+                    repeatMeetCal.setId(uuid);
+                }
+    
                 for (MeetingAttendee attendee : meetingAttendees) {
                     String uuid2 = UUID.randomUUID().toString().replaceAll("-", "");
                     attendee.setMeetId(uuid);
@@ -370,8 +345,8 @@ public class CalendarService {
      * @param repeatEndDate
      */
     @Transactional
-    public void saveRepeatCalendar(Calendar startCal, Calendar cal, MeetingMaster meetingMaster, MeetingMaster meetMaster, List<MeetingAttendee> meetingAttendees, int idx, String repeatType, String repeatOption,
-            java.sql.Date repeatEndDate) {
+    public void saveRepeatCalendar(Calendar startCal, Calendar cal, MeetingMaster meetingMaster, MeetingMaster meetMaster, List<MeetingAttendee> meetingAttendees,
+                                   int idx, String repeatType, String repeatOption, java.sql.Date repeatEndDate) {
         Date baseStartDt = startCal.getSchStartDttm();
         if ("N".equals(repeatOption)) { // 반복 개수
             startCal.setMeetId(cal.getMeetId());
@@ -419,10 +394,8 @@ public class CalendarService {
     }
 
     @Transactional
-    public void saveCalendar(Calendar calendar, MeetingMaster meetingMaster, List<MeetingAttendee> meetingAttendees, String saveType, String repeatType, String repeatOption,
-            java.sql.Date repeatEndDate, int nRepeatNo) {
-        
-        System.out.print(calendar);
+    public void saveCalendar(Calendar calendar, MeetingMaster meetingMaster, List<MeetingAttendee> meetingAttendees, String saveType,
+                             String repeatType, String repeatOption, java.sql.Date repeatEndDate, int nRepeatNo) {
         if ("N".equals(repeatType) || repeatType == null) {
             saveEvent(calendar, meetingMaster, meetingAttendees);
         } else { // 반복 일정
@@ -439,13 +412,11 @@ public class CalendarService {
 
                     // 이런경우엔 이후 일정 삭제 후 새롭게 생성
                     if (!calendar.getRepeatTp().equals(orgMe.getRepeatTp())) {
-                        deleteCalendarAfter(calendar.getUserId(), calendar.getCategoryId(), calendar.getSchId(),
-                                calendar.getId());
+                        deleteCalendarAfter(calendar.getUserId(), calendar.getCategoryId(), calendar.getSchId(), calendar.getId());
                         saveRepeatCalendar(calendar, meetingMaster, meetingAttendees, repeatType, repeatOption, nRepeatNo, repeatEndDate);
                     } else {
                         // 반복일정을 가져온다.
-                        List<Calendar> listCal = getRepeatDate(calendar.getUserId(), calendar.getCategoryId(),
-                                calendar.getSchId());
+                        List<Calendar> listCal = getRepeatDate(calendar.getUserId(), calendar.getCategoryId(), calendar.getSchId());
                         List<MeetingMaster> listMeeting = getRepeatDate(calendar.getSchId());
 
                         boolean proc = false;
@@ -453,6 +424,7 @@ public class CalendarService {
                         for (int i = 0; i < listCal.size(); i++) {
                             Calendar cal = listCal.get(i);
                             MeetingMaster meetCal = null;
+
                             if (listMeeting.size() != 0) {
                                 meetCal = listMeeting.get(i);
                             }
@@ -460,6 +432,11 @@ public class CalendarService {
                                 proc = true;
                             }
                             if (proc == true) {
+                                //1.기존 일정 삭제
+                                deleteMeetingMasterAndAroundById(cal.getMeetId());
+                                deleteCalendarById(cal.getUserId(), cal.getCategoryId(), cal.getSchId(), cal.getId());
+                                deleteCalendarFile(cal.getUserId(), cal.getSchId());
+                                //2.변경된 일정 저장
                                 saveRepeatCalendar(calendar, cal, meetingMaster, meetCal, meetingAttendees, idx, repeatType, repeatOption, repeatEndDate);
                                 idx++;
                             }

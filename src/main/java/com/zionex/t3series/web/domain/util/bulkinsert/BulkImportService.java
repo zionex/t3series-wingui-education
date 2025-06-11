@@ -1,10 +1,6 @@
 package com.zionex.t3series.web.domain.util.bulkinsert;
 
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.sql.BatchUpdateException;
 import java.sql.CallableStatement;
 import java.sql.Connection;
@@ -24,6 +20,7 @@ import com.zionex.t3series.ApplicationProperties;
 import com.zionex.t3series.web.domain.util.filestorage.FileStorage;
 import com.zionex.t3series.web.domain.util.filestorage.FileStorageService;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,10 +31,9 @@ import org.springframework.stereotype.Service;
 
 import lombok.Builder;
 import lombok.Data;
-import lombok.extern.java.Log;
 
 @Service
-@Log
+@Slf4j
 public class BulkImportService {
 
     private static final int MAX_BATCH_SIZE = 4000;
@@ -54,8 +50,18 @@ public class BulkImportService {
     public static final String MODE_EXPORT_DATA = "EXPORT_DATA";
     public static final String MODE_EXPORT_HEADER = "EXPORT_HEADER";
 
+    public static final String PARAM_WORK_TYPE_INSERT = "0";
+    public static final String PARAM_WORK_TYPE_UPDATE = "1";
+    public static final String PARAM_WORK_TYPE_ADD = "2";
+    public static final String PARAM_WORK_TYPE_DELETE_AND_INSERT = "3";
+
+    public static final String PARAM_WORK_TYPE_HEADER_ONLY = "0";
+    public static final String PARAM_WORK_TYPE_WITH_DATA = "1";
+
+    public static final String PARAM_SPLITER_COMMMAR = "0";
+    public static final String PARAM_SPLITER_TAB = "1";
+
     private String SPLITER;
-    private boolean bDelete;
 
     @Autowired
     DataSource dataSource;
@@ -82,49 +88,58 @@ public class BulkImportService {
     }
 
     public String makeCSVFromTable(final FileStorage fileStorage, final String workType, final String moduleName,
-            final String tableName, final String userId, final String spliterType) {
+                                   final String tableName, final String userId, final String spliterType) {
 
         try {
             setSpliter(spliterType);
-
-            final TableSchema tableSchema = getTableSchema(setMode(false, workType), moduleName, tableName, userId).initParser();
-
-            log.info("BulkImportService - Meta JSON Parsing and Make Query Starting");
-
-            tableSchema.doParsing();
-            tableSchema.makeQuery();
-
-            if (MODE_EXPORT_DATA.equals(tableSchema.getWorkType())) {
-                DBQuery dbQuery = null;
-
-                try {
-                    log.info("BulkImportService - Table (" + tableName + ")  Select Start for Export");
-
-                    dbQuery = getDBHandleForSelect(fileStorage, tableSchema).active();
-                    dbQuery.exportJob(MAX_BATCH_SIZE);
-
-                    log.info("BulkImportService - Table (" + tableName + ")  Select Complete");
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                } finally {
-                    assert dbQuery != null;
-                    try {
-                        dbQuery.finish();
-                    }
-                    catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            } else if (MODE_EXPORT_HEADER.equals(tableSchema.getWorkType())) {
-                makeCSVOnlyHeader(tableSchema, fileStorage);
-                log.info("BulkImportService - Table (" + tableName + ") Header Select Complete");
+            Map<String, Boolean> results = getMode(false, workType);
+            String mode = MODE_EXPORT_HEADER;
+            if (results != null && !results.isEmpty()) {
+                mode = results.keySet().iterator().next();
             }
 
-            return tableSchema.exportQuery;
+            TableSchema tableSchema = getTableSchema(mode, moduleName, tableName, userId);
+
+            if (tableSchema != null) {
+                tableSchema.initParser();
+
+                log.info("BulkImportService - Meta JSON Parsing and Make Query Starting");
+
+                tableSchema.doParsing();
+                tableSchema.makeQuery();
+
+                if (MODE_EXPORT_DATA.equals(tableSchema.getWorkType())) {
+                    DBQuery dbQuery = null;
+
+                    try {
+                        log.info("BulkImportService - Table (" + tableName + ")  Select Start for Export");
+
+                        dbQuery = getDBHandleForSelect(fileStorage, tableSchema).active();
+                        dbQuery.exportJob(MAX_BATCH_SIZE);
+
+                        log.info("BulkImportService - Table (" + tableName + ")  Select Complete");
+
+                    } catch (Exception e) {
+                        log.error("Error during data export for table: {}. \n {}", tableName, e.getMessage());
+                    } finally {
+                        if (dbQuery != null) {
+                            try {
+                                dbQuery.finish();
+                            } catch (Exception e) {
+                                log.error("Failed to finish DBQuery for table: {}. \n {}", tableName, e.getMessage());
+                            }
+                        }
+                    }
+                } else if (MODE_EXPORT_HEADER.equals(tableSchema.getWorkType())) {
+                    makeCSVOnlyHeader(tableSchema, fileStorage);
+                    log.info("BulkImportService - Table (" + tableName + ") Header Select Complete");
+                }
+
+                return tableSchema.exportQuery;
+            }
         }
         catch (Exception ex) {
-            ex.printStackTrace();
+            log.error("Error generating CSV from table: {}. \n {}", tableName, ex.getMessage());
         }
 
         return "";
@@ -140,21 +155,22 @@ public class BulkImportService {
             writer.write(csvString);
 
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("Failed to write CSV header. \n {}", e.getMessage());
         } finally {
-            assert writer != null;
-            try {
-                writer.close();
-            } catch (Exception e) {
-                e.printStackTrace();
+            if (writer != null) {
+                try {
+                    writer.close();
+                } catch (IOException e) {
+                    log.error("Failed to close FileWriter. \n {}", e.getMessage());
+                }
             }
         }
     }
 
     @Async("csvJOBExecutor")
     public Future<Map<Boolean, String>> saveAllDataInFiles(final String workType, final String moduleName, final String tableName,
-            final String jobLevel, final String jobStep, final List<FileStorage> files,  final String spliterType,
-            final String userId, ImportJobEntity jobHistory) {
+                                                           final String jobLevel, final String jobStep, final List<FileStorage> files,  final String spliterType,
+                                                           final String userId, ImportJobEntity jobHistory) {
 
         // Information
         final AtomicInteger totalInsertSum = new AtomicInteger();
@@ -174,174 +190,199 @@ public class BulkImportService {
         try {
             setSpliter(spliterType);
 
-            final TableSchema tableSchema = getTableSchema(setMode(true, workType), moduleName, tableName, userId).initParser();
+            Map<String, Boolean> results = getMode(true, workType);
+            String mode = MODE_INSERT;
+            boolean isDelete = false;
 
-            log.info("BulkImportService - Meta JSON Parsing and Make Query Starting");
-            tableSchema.doParsing();
-            tableSchema.makeQuery();
+            if (results != null && !results.isEmpty()) {
+                mode = results.keySet().iterator().next();
+                isDelete = results.values().iterator().next();
+            }
 
-            query = tableSchema.getPrepareQuery();
+            TableSchema tableSchema = getTableSchema(mode, moduleName, tableName, userId);
 
-            DBQuery deleteHandle = null;
+            if (tableSchema != null) {
+                tableSchema.initParser();
+                log.info("BulkImportService - Meta JSON Parsing and Make Query Starting");
+                tableSchema.doParsing();
+                tableSchema.makeQuery();
 
-            try {
-                if (bDelete) {
-                    deleteHandle = getDBHandleForDeleteAndProcedure().active();
+                query = tableSchema.getPrepareQuery();
 
-                    try {
-                        List<String> tables = importSchemaService.getDeleteTables(new ArrayList<>(), tableName);
-                        if (!tables.contains(tableName)) {
-                            tables.add(0, tableName);
-                        }
-                        assert tables != null;
-
-                        for (String table : tables) {
-                            log.info("BulkImportService - delete Start " + table + " table");
-                            deleteHandle.delete(table);
-                            log.info("BulkImportService - delete complete " + table + " table");
-                        }
-
-                    } catch (Exception ex) {
-                        ex.printStackTrace();
-                    }
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-
-                jobHistory.setSuccessSum(0);
-                jobHistory.setFailSum(0);
-                jobHistory.setEndDttm(new Timestamp((new Date()).getTime()));
-                jobHistory.setJobDescription(e.getMessage());
-                jobHistory.setCompleteYn("Y");
+                DBQuery deleteHandle = null;
 
                 try {
-                    jobHistory = importJobRepository.save(jobHistory);
-                } catch (Exception je) {
-                    je.printStackTrace();
-                }
+                    if (isDelete) {
+                        deleteHandle = getDBHandleForDeleteAndProcedure().active();
 
-                saveResult.put(false, e.getMessage());
+                        try {
+                            List<String> tables = importSchemaService.getDeleteTables(new ArrayList<>(), tableName);
+                            if (!tables.contains(tableName)) {
+                                tables.add(0, tableName);
+                            }
 
-                return new AsyncResult<>(saveResult);
-
-            } finally {
-                try {
-                    if (deleteHandle != null) {
-                        deleteHandle.finish();
+                            if (tables != null && !tables.isEmpty()) {
+                                for (String table : tables) {
+                                    log.info("BulkImportService - delete Start " + table + " table");
+                                    deleteHandle.delete(table);
+                                    log.info("BulkImportService - delete complete " + table + " table");
+                                }
+                            }
+                        } catch (Exception ex) {
+                            log.error("Error during delete operation. \n {}", ex.getMessage());
+                        }
                     }
                 } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
+                    log.error("Error during data import. \n {}", e.getMessage());
 
-            final ValueContext context = new ValueContext(failMessage) {
-                @Override
-                public void run() {
-                    files.parallelStream().forEach(it -> {
-                        DBQuery dbQuery = null;
+                    jobHistory.setSuccessSum(0);
+                    jobHistory.setFailSum(0);
+                    jobHistory.setEndDttm(new Timestamp((new Date()).getTime()));
+                    jobHistory.setJobDescription(e.getMessage());
+                    jobHistory.setCompleteYn("Y");
 
-                        try {
-                            log.info("BulkImportService - Starting File (" + it.getFileName() + ") Processing");
-
-                            dbQuery = getDBHandleForImport(it, tableSchema, jobId).active();
-                            dbQuery.importJob(MAX_BATCH_SIZE);
-
-                            log.info("BulkImportService - Success Import Job");
-
-                        } catch (Exception ex) {
-                            throw ex;
-
-                        } finally {
-                            if (dbQuery != null) {
-                                try {
-                                    totalInsertSum.addAndGet(dbQuery.iTotalInsertSum);
-                                    totalFailSum.addAndGet(dbQuery.iTotalFailSum);
-
-                                    log.info("BulkImportService - Import Job Result (Success : " + totalInsertSum + " / Fail : " + totalFailSum + ")");
-
-                                } catch (Exception e) { e.printStackTrace();
-                                }
-
-                                try { dbQuery.finish(); } catch (Exception e) { e.printStackTrace(); }
-                            }
-                        }
-
-                        if (dbQuery.iTotalFailSum > 0) {
-                            errorDetailSummary.add(dbQuery.getFailResponse());
-                            value = "Fail - Import Job Result (Success : " + totalInsertSum + " / Fail : " + totalFailSum + ")";
-                        }
-                    });
-                }
-            };
-
-            context.run();
-            failMessage = context.value;
-
-            if (failMessage != null && failMessage.length() > 0) {
-                jobHistory.setSuccessSum(totalInsertSum.get());
-                jobHistory.setFailSum(totalFailSum.get());
-                jobHistory.setEndDttm(new Timestamp((new Date()).getTime()));
-                jobHistory.setJobDescription(failMessage);
-                jobHistory.setCompleteYn("Y");
-
-                try {
                     jobHistory = importJobRepository.save(jobHistory);
-                } catch (Exception je) {
-                    je.printStackTrace();
+
+                    saveResult.put(false, e.getMessage());
+                    return new AsyncResult<>(saveResult);
+
+                } finally {
+                    try {
+                        if (deleteHandle != null) {
+                            deleteHandle.finish();
+                        }
+                    } catch (Exception e) {
+                        log.error("Error closing DBQuery for procedure. \n {}", e.getMessage());
+                    }
                 }
 
-                saveResult.put(false, failMessage);
-                return new AsyncResult<>(saveResult);
-            }
+                final ValueContext context = new ValueContext(failMessage) {
+                    @Override
+                    public void run() {
+                        files.parallelStream().forEach(it -> {
+                            DBQuery dbQuery = null;
 
-            if (tableSchema.isUseProcedure() && tableSchema.getProcedures() != null) {
-                String desc = "";
-                boolean bSuccess = true;
+                            try {
+                                log.info("BulkImportService - Starting File (" + it.getFileName() + ") Processing");
 
-                for (int key : tableSchema.getProcedures().keySet()) {
-                    String procedure = tableSchema.getProcedures().get(key);
-                    query = query + "\n" + procedure;
+                                dbQuery = getDBHandleForImport(it, tableSchema, jobId).active();
+                                dbQuery.importJob(MAX_BATCH_SIZE);
 
-                    if (bSuccess) {
-                        DBQuery dbHandProcedure = null;
+                                log.info("BulkImportService - Success Import Job");
 
-                        try {
-                            dbHandProcedure = getDBHandleForDeleteAndProcedure().active();
+                            } catch (Exception ex) {
+                                throw ex;
 
-                            List<String> result = dbHandProcedure.procedureJob(procedure, bDelete, userId);
-                            if (result != null && result.size() == 2) {
-                                if (result.get(0).equals("true")) {
-                                    desc = desc + procedure + " : Sucess " + System.getProperty("line.separator");
-                                    bSuccess = true;
+                            } finally {
+                                if (dbQuery != null) {
+                                    try {
+                                        totalInsertSum.addAndGet(dbQuery.iTotalInsertSum);
+                                        totalFailSum.addAndGet(dbQuery.iTotalFailSum);
+
+                                        log.info("BulkImportService - Import Job Result (Success : " + totalInsertSum + " / Fail : " + totalFailSum + ")");
+
+                                    } catch (Exception e) {
+                                        log.error("Error updating totals. \n {}", e.getMessage());
+                                    }
+
+                                    try {
+                                        dbQuery.finish();
+                                    } catch (Exception e) {
+                                        log.error("Error closing DBQuery. \n {}", e.getMessage());
+                                    }
+                                }
+                            }
+
+                            if (dbQuery.iTotalFailSum > 0) {
+                                errorDetailSummary.add(dbQuery.getFailResponse());
+                                value = "Fail - Import Job Result (Success : " + totalInsertSum + " / Fail : " + totalFailSum + ")";
+                            }
+                        });
+                    }
+                };
+
+                context.run();
+                failMessage = context.value;
+
+                if (failMessage != null && failMessage.length() > 0) {
+                    jobHistory.setSuccessSum(totalInsertSum.get());
+                    jobHistory.setFailSum(totalFailSum.get());
+                    jobHistory.setEndDttm(new Timestamp((new Date()).getTime()));
+                    jobHistory.setJobDescription(failMessage);
+                    jobHistory.setCompleteYn("Y");
+                    jobHistory = importJobRepository.save(jobHistory);
+
+                    saveResult.put(false, failMessage);
+                    return new AsyncResult<>(saveResult);
+                }
+
+                if (tableSchema.isUseProcedure() && tableSchema.getProcedures() != null) {
+                    String desc = "";
+                    boolean bSuccess = true;
+
+                    for (int key : tableSchema.getProcedures().keySet()) {
+                        String procedure = tableSchema.getProcedures().get(key);
+                        query = query + "\n" + procedure;
+
+                        if (bSuccess) {
+                            DBQuery dbHandProcedure = null;
+
+                            try {
+                                dbHandProcedure = getDBHandleForDeleteAndProcedure().active();
+
+                                List<String> result = dbHandProcedure.procedureJob(procedure, isDelete, userId);
+                                if (result != null && result.size() == 2) {
+                                    if (result.get(0).equals("true")) {
+                                        desc = desc + procedure + " : Sucess " + System.getProperty("line.separator");
+                                        bSuccess = true;
+                                    } else {
+                                        desc = desc + procedure + " : Faile (" + result.get(1) + ")" + System.getProperty("line.separator");
+                                        bSuccess = false;
+                                    }
+
                                 } else {
-                                    desc = desc + procedure + " : Faile (" + result.get(1) + ")" + System.getProperty("line.separator");
+                                    desc = desc + procedure + " : Fail " + System.getProperty("line.separator");
                                     bSuccess = false;
                                 }
 
-                            } else {
+                            } catch (Exception ex) {
                                 desc = desc + procedure + " : Fail " + System.getProperty("line.separator");
+                                desc = desc + ex.getMessage();
                                 bSuccess = false;
+
+                            } finally {
+                                if (dbHandProcedure != null) {
+                                    try {
+                                        dbHandProcedure.finish();
+                                    } catch (Exception e) {
+                                        log.error("Failed to finish dbHandProcedure for table: {}. \n {}", tableName, e.getMessage());
+                                    }
+                                }
                             }
 
-                        } catch (Exception ex) {
-                            desc = desc + procedure + " : Fail " + System.getProperty("line.separator");
-                            desc = desc + ex.getMessage();
-                            bSuccess = false;
-
-                        } finally {
-                            assert dbHandProcedure != null;
-                            try { dbHandProcedure.finish(); } catch (Exception e) {e.printStackTrace();}
+                        } else {
+                            desc = desc + procedure + " : Do Not Run " + System.getProperty("line.separator");
                         }
-
-                    } else {
-                        desc = desc + procedure + " : Do Not Run " + System.getProperty("line.separator");
                     }
+
+                    log.info(desc);
+
+                    procedureResult = bSuccess;
+                    procedureDesc = desc;
                 }
+            } else {
+                String message = "Failed make tableSchema";
 
-                log.info(desc);
+                jobHistory.setSuccessSum(totalInsertSum.get());
+                jobHistory.setFailSum(totalFailSum.get());
+                jobHistory.setEndDttm(new Timestamp((new Date()).getTime()));
+                jobHistory.setJobDescription(message);
+                jobHistory.setCompleteYn("Y");
 
-                procedureResult = bSuccess;
-                procedureDesc = desc;
+                jobHistory = importJobRepository.save(jobHistory);
+
+                saveResult.put(false, message);
+                return new AsyncResult<>(saveResult);
             }
 
         } catch (Exception e) {
@@ -352,13 +393,7 @@ public class BulkImportService {
             jobHistory.setEndDttm(new Timestamp((new Date()).getTime()));
             jobHistory.setJobDescription(e.getMessage());
             jobHistory.setCompleteYn("Y");
-
-            try {
-                jobHistory = importJobRepository.save(jobHistory);
-            } catch (Exception je) {
-                je.printStackTrace();
-            }
-
+            jobHistory = importJobRepository.save(jobHistory);
             saveResult.put(false, e.getMessage());
             return new AsyncResult<>(saveResult);
         }
@@ -369,58 +404,54 @@ public class BulkImportService {
 
         String resultMessage = procedureResult ? "Complete" : procedureDesc;
         jobHistory.setJobDescription(resultMessage);
-
         jobHistory.setCompleteYn("Y");
 
-        try {
-            jobHistory = importJobRepository.save(jobHistory);
-        } catch (Exception je) {
-            je.printStackTrace();
-        }
+        jobHistory = importJobRepository.save(jobHistory);
 
         saveResult.put(procedureResult, query);
         return new AsyncResult<>(saveResult);
     }
 
     private void setSpliter(final String spliterType) {
-        if (spliterType.equals("0")) {
+        if (PARAM_SPLITER_COMMMAR.equals(spliterType)) {
             SPLITER = SPLITER_COMMMAR;
-        } else if (spliterType.equals("1")) {
+        } else if (PARAM_SPLITER_TAB.equals(spliterType)) {
             SPLITER = SPLITER_TAB;
         } else {
             SPLITER = SPLITER_COMMMAR;
         }
     }
 
-    private String setMode(final boolean bImport, final String workType) {
+    private Map<String, Boolean> getMode(final boolean bImport, final String workType) {
         String mode;
-        bDelete = false;
+        boolean isDelete = false;
 
         if (bImport) {
-            if (workType.equals("0")) {
+            if (PARAM_WORK_TYPE_INSERT.equals(workType)) {
                 mode = MODE_INSERT;
-            } else if (workType.equals("1")) {
+            } else if (PARAM_WORK_TYPE_UPDATE.equals(workType)) {
                 mode = MODE_UPDATE;
-            } else if (workType.equals("2")) {
+            } else if (PARAM_WORK_TYPE_ADD.equals(workType)) {
                 mode = MODE_ADD;
-            } else if (workType.equals("3")) {
-                bDelete = true;
+            } else if (PARAM_WORK_TYPE_DELETE_AND_INSERT.equals(workType)) {
+                isDelete = true;
                 mode = MODE_INSERT;
             } else {
                 mode = MODE_INSERT;
             }
-
         } else {
-            if (workType.equals("0")) {
+            if (PARAM_WORK_TYPE_HEADER_ONLY.equals(workType)) {
                 mode = MODE_EXPORT_HEADER;
-            } else if (workType.equals("1")) {
+            } else if (PARAM_WORK_TYPE_WITH_DATA.equals(workType)) {
                 mode = MODE_EXPORT_DATA;
             } else {
                 mode = MODE_EXPORT_HEADER;
             }
         }
 
-        return mode;
+        Map<String , Boolean> result = new HashMap<>();
+        result.put(mode, isDelete);
+        return result;
     }
 
     private String getFilePath(final FileStorage fileStorage) {
@@ -509,11 +540,19 @@ public class BulkImportService {
             throw new BulkImportException("Error Read CSV Header");
         } finally {
             if (fileReader != null) {
-                try { fileReader.close(); } catch (final Exception e) {e.printStackTrace();}
+                try {
+                    fileReader.close();
+                } catch (final Exception e) {
+                    log.error("Failed to close {}. \n {}", "FileReader", e.getMessage());
+                }
             }
 
             if (bufferedReader != null) {
-                try { bufferedReader.close(); } catch (final Exception e) {e.printStackTrace();}
+                try {
+                    bufferedReader.close();
+                } catch (final Exception e) {
+                    log.error("Failed to close {}. \n {}", "BufferedReader", e.getMessage());
+                }
             }
         }
 
@@ -564,6 +603,13 @@ public class BulkImportService {
                     iConnection = iDataSource.getConnection();
                     iConnection.setAutoCommit(false);
                 } catch (final SQLException e) {
+                    if (iConnection != null) {
+                        try {
+                            iConnection.close();
+                        } catch (SQLException closeException) {
+                            log.error("Failed to close connection after SQLException: {}", closeException.getMessage());
+                        }
+                    }
                     throw new BulkImportException(BulkImportException.DB_CONNECTION_ERROR);
                 }
             }
@@ -572,57 +618,40 @@ public class BulkImportService {
         }
 
         public void exportJob(final int batchSize) {
-            try {
-                iPs = iConnection.prepareStatement(iTableSchema.getExportQuery());
-            } catch (final SQLException e) {
-                throw new BulkImportException(BulkImportException.DB_CONNECTION_ERROR);
-            } catch (final Exception ex) {
-                throw ex;
-            }
+            try (PreparedStatement iPs = iConnection.prepareStatement(iTableSchema.getExportQuery());
+                 FileWriter writer = new FileWriter(iCSVFilePath)) {
 
-            ResultSet rs = null;
-            FileWriter writer = null;
-            String csvString = null;
-
-            try {
-                writer = new FileWriter(iCSVFilePath);
-                csvString = String.join(iSpliter, iHeaderData);
+                String csvString = String.join(iSpliter, iHeaderData);
                 writer.write(csvString);
 
                 assert iTableSchema.getWorkType().equals(MODE_EXPORT_DATA);
 
-                rs = iPs.executeQuery();
+                try (ResultSet rs = iPs.executeQuery()) {
+                    if (rs != null) {
+                        while (rs.next()) {
+                            int i = 0;
+                            StringBuilder line = new StringBuilder();
 
-                assert rs != null;
+                            for (String header : iHeaderData) {
+                                if (i == 0) {
+                                    line.append(rs.getString(header) == null ? "" : rs.getString(header));
+                                } else {
+                                    line.append(iSpliter)
+                                            .append(rs.getString(header) == null ? "" : rs.getString(header));
+                                }
+                                i++;
+                            }
 
-                while (rs.next()) {
-                    int i = 0;
-                    String line = "";
-
-                    for (String header : iHeaderData) {
-                        if (i == 0) {
-                            line = rs.getString(header) == null ? "" : rs.getString(header);
-                        } else {
-                            line = line + iSpliter + (rs.getString(header) == null ? "" : rs.getString(header));
+                            writer.write(System.getProperty("line.separator"));
+                            writer.write(line.toString());
                         }
-                        i++;
                     }
-
-                    writer.write(System.getProperty("line.separator"));
-                    writer.write(line);
                 }
 
+            } catch (SQLException e) {
+                throw new BulkImportException(BulkImportException.DB_CONNECTION_ERROR);
             } catch (Exception e) {
                 throw new BulkImportException("Error Export Select");
-
-            } finally {
-                if (rs != null) {
-                    try { rs.close(); } catch (Exception e) {e.printStackTrace();}
-                }
-
-                if (writer != null) {
-                    try { writer.close(); } catch (Exception e) {e.printStackTrace();}
-                }
             }
         }
 
@@ -655,7 +684,11 @@ public class BulkImportService {
                 result.add(message);
 
             } catch (Exception e) {
-                try { iConnection.rollback(); } catch (Exception ex) {ex.printStackTrace();}
+                try {
+                    iConnection.rollback();
+                } catch (Exception ex) {
+                    log.error("Failed to roll back transaction after Procedure failure. \n {}", ex.getMessage());
+                }
                 throw new BulkImportException(e.getMessage());
             }
 
@@ -672,6 +705,7 @@ public class BulkImportService {
             try {
                 iPs = iConnection.prepareStatement(iTableSchema.getPrepareQuery());
             } catch (final SQLException e) {
+                log.error("Failed to prepare SQL statement. \n {}", e.getMessage());
                 throw new BulkImportException(BulkImportException.DB_CONNECTION_ERROR);
             }
 
@@ -696,7 +730,6 @@ public class BulkImportService {
                     }
 
                     List<String> readList = Arrays.asList(line.split(iSpliter, MAX_SPLIT_SIZE));
-
                     if (readList != null) {
                         recordLists.add(readList);
                     }
@@ -712,22 +745,36 @@ public class BulkImportService {
                 }
 
             } catch (final BulkImportException bulk) {
+                log.error("Bulk import error. \n {}", bulk.getMessage());
                 throw bulk;
 
             } catch (final Exception ex) {
+                log.error("Error reading CSV file. \n {}", ex.getMessage());
                 throw new BulkImportException(BulkImportException.CSV_FILE_READ_ERROR);
 
             } finally {
                 if (fileStream != null) {
-                    try { fileStream.close(); } catch (final Exception e) {e.printStackTrace();}
+                    try {
+                        fileStream.close();
+                    } catch (final Exception e) {
+                        log.error("Failed to close {}. \n {}", "FileInputStream", e.getMessage());
+                    }
                 }
 
                 if (inputStream != null) {
-                    try { inputStream.close(); } catch (final Exception e) {e.printStackTrace();}
+                    try {
+                        inputStream.close();
+                    } catch (final Exception e) {
+                        log.error("Failed to close {}. \n {}", "InputStreamReader", e.getMessage());
+                    }
                 }
 
                 if (bufferedReader != null) {
-                    try { bufferedReader.close(); } catch (final Exception e) {e.printStackTrace();}
+                    try {
+                        bufferedReader.close();
+                    } catch (final Exception e) {
+                        log.error("Failed to close {}. \n {}", "BufferedReader", e.getMessage());
+                    }
                 }
             }
         }
@@ -741,15 +788,22 @@ public class BulkImportService {
                 iConnection.commit();
 
             } catch (final SQLException e) {
-                try { iConnection.rollback(); } catch (Exception ex) {ex.printStackTrace();}
+                log.error("Failed to execute DELETE operation for table: {} \n {}", tableName, e.getMessage());
+
+                try {
+                    iConnection.rollback();
+                } catch (Exception ex) {
+                    log.error("Failed to roll back transaction after DELETE failure. \n {}", ex.getMessage());
+                }
                 throw new BulkImportException(BulkImportException.SQL_DELTE_ERROR);
 
             } finally {
-                try {
-                    assert statement != null;
-                    statement.close();
-                } catch (final SQLException e) {
-                     e.printStackTrace();
+                if (statement != null) {
+                    try {
+                        statement.close();
+                    } catch (final SQLException e) {
+                        log.error("Failed to close Statement. \n {}", e.getMessage());
+                    }
                 }
             }
         }
@@ -761,7 +815,7 @@ public class BulkImportService {
                 if (iCs != null) iCs.close();
                 if (iConnection != null) iConnection.close();
             } catch (final Exception e) {
-                e.printStackTrace();
+                log.error("An error occurred while closing resources. \n {}", e.getMessage());
             }
         }
 
@@ -816,9 +870,12 @@ public class BulkImportService {
                     iTotalInsertSum++;
                 }
             } catch (final Exception e) {
+                log.error("Error during data insertion. \n {}", e.getMessage());
+
                 try {
                     iConnection.rollback();
-                } catch (final SQLException ex) { ex.printStackTrace();
+                } catch (final SQLException ex) {
+                    log.error("Failed to roll back transaction after Insert failure. \n {}", ex.getMessage());
                 }
                 summaryFailRecord(recordList, e.getMessage());
             }
@@ -873,9 +930,12 @@ public class BulkImportService {
                 return true;
 
             } catch (final BatchUpdateException batchUpdateException) {
+                log.error("Batch update failed at record index {}. \n {}", recordIndex, batchUpdateException.getMessage());
+
                 try {
                     iConnection.rollback();
-                } catch (final SQLException ex) { ex.printStackTrace();
+                } catch (final SQLException ex) {
+                    log.error("Failed to rollback the transaction after batch update failure. \n {}", ex.getMessage());
                 }
 
                 try {
@@ -912,13 +972,21 @@ public class BulkImportService {
                     }
 
                 } catch (BulkImportException bulkImportException) {
+                    log.error("Bulk import exception occurred. \n {}", bulkImportException.getMessage());
                     throw bulkImportException;
                 } catch (Exception ex) {
+                    log.error("Unexpected error occurred during batch update processing. \n {}", ex.getMessage());
                     throw new BulkImportException("Processing Error - BatchUpdateException");
                 }
 
             } catch (final BulkImportException bulkE) {   //Parameter Not Matched
-                try { iConnection.rollback(); } catch (final SQLException ex) {ex.printStackTrace();}
+                log.error("Bulk import exception due to parameter mismatch at record index {}. \n {}", recordIndex, bulkE.getMessage());
+
+                try {
+                    iConnection.rollback();
+                } catch (final SQLException ex) {
+                    log.error("Failed to rollback the transaction after bulk import exception. \n {}", ex.getMessage());
+                }
                 if (recordIndex != 0) {
                     recordLists.remove(recordIndex - 1);
                 }
@@ -926,11 +994,21 @@ public class BulkImportService {
                 return false;
 
             } catch (final Exception e) {
-                try { iConnection.rollback(); } catch (final SQLException ex) {ex.printStackTrace();}
+                log.error("Unexpected error occurred at record index {}. \n {}", recordIndex, e.getMessage());
+
+                try {
+                    iConnection.rollback();
+                } catch (final SQLException ex) {
+                    log.error("Failed to rollback the transaction after unexpected error. \n {}", e.getMessage());
+                }
                 return false;
 
             } finally {
-                try { iPs.clearBatch(); } catch (Exception e) {e.printStackTrace();}
+                try {
+                    iPs.clearBatch();
+                } catch (Exception e) {
+                    log.error("Failed to clear the batch. \n {}", e.getMessage());
+                }
             }
         }
 
@@ -955,7 +1033,7 @@ public class BulkImportService {
                             for (String header : column.getHeaders()) {
 
                                 if (recordList.get(iTableSchema.getCsvMap().get(header)).equals("") ||
-                                    recordList.get(iTableSchema.getCsvMap().get(header)).toUpperCase().equals("NULL")) {
+                                        recordList.get(iTableSchema.getCsvMap().get(header)).toUpperCase().equals("NULL")) {
                                     column.setCheckHeaders(false);
 
                                     headerMap.remove(column.getPariority());
@@ -979,10 +1057,10 @@ public class BulkImportService {
                             errorMsg = errorHeaders + " Must be entered.";
 
                             return ParseResult.builder()
-                                .success(false)
-                                .error(errorMsg)
-                                .recordList(recordList)
-                                .build();
+                                    .success(false)
+                                    .error(errorMsg)
+                                    .recordList(recordList)
+                                    .build();
 
                         } else if (nCheckCount > 1) {
                             int beforKey = headerMap.firstKey();
@@ -1009,85 +1087,87 @@ public class BulkImportService {
 
                             if (param.isHidden()) {
                                 switch (param.getType()) {
-                                case TableSchema.TYPE_NUMBER:
-                                    iPs.setDouble(param.getValueIndex(), Double.parseDouble(param.getDefaultValue()));
-                                    break;
+                                    case TableSchema.TYPE_NUMBER:
+                                        iPs.setDouble(param.getValueIndex(), Double.parseDouble(param.getDefaultValue()));
+                                        break;
 
-                                case TableSchema.TYPE_STIRNG:
-                                    iPs.setString(param.getValueIndex(), param.getDefaultValue());
-                                    break;
+                                    case TableSchema.TYPE_STIRNG:
+                                        iPs.setString(param.getValueIndex(), param.getDefaultValue());
+                                        break;
 
-                                case TableSchema.TYPE_DATE:
-                                    String data = param.getDefaultValue().substring(0, 10);
-                                    iPs.setDate(param.getValueIndex(), java.sql.Date.valueOf(data));
-                                    break;
+                                    case TableSchema.TYPE_DATE:
+                                        String data = param.getDefaultValue().substring(0, 10);
+                                        iPs.setDate(param.getValueIndex(), java.sql.Date.valueOf(data));
+                                        break;
 
-                                case TableSchema.TYPE_DATETIME:
-                                    iPs.setTimestamp(param.getValueIndex(), java.sql.Timestamp.valueOf(param.getDefaultValue()));
-                                    break;
+                                    case TableSchema.TYPE_DATETIME:
+                                        iPs.setTimestamp(param.getValueIndex(), java.sql.Timestamp.valueOf(param.getDefaultValue()));
+                                        break;
 
-                                default:
-                                    throw new BulkImportException(BulkImportException.PARSER_PARM_NOT_MATCH);
+                                    default:
+                                        throw new BulkImportException(BulkImportException.PARSER_PARM_NOT_MATCH);
                                 }
 
                             } else {
                                 String value = recordList.get(iTableSchema.getCsvMap().get(param.getHeader()));
 
-                                if (!param.getDefaultValue().equals("")) {
+                                String defaultValue = param.getDefaultValue();
+                                if (!defaultValue.equals("")) {
                                     if (value.equals("") || value.toUpperCase().equals("NULL")) {
-                                        recordList.set(iTableSchema.getCsvMap().get(param.getHeader()), param.getDefaultValue());
+                                        recordList.set(iTableSchema.getCsvMap().get(param.getHeader()), defaultValue);
+                                        value = defaultValue;
                                     }
                                 }
 
                                 if (param.isNotNull()) {
-                                    if (value.equals("") || value.toUpperCase().equals("NULL")) {
+                                    if (value.toUpperCase().equals("NULL")) {
                                         String errorMsg;
-                                        errorMsg = "[" + param.getHeader() + "]" + " is a Reuired Value but " + param.getHeader() + " is Empty";
+                                        errorMsg = "[" + param.getHeader() + "]" + " is a Required Value but " + param.getHeader() + " is Empty";
 
                                         return ParseResult.builder()
-                                            .success(false)
-                                            .error(errorMsg)
-                                            .recordList(recordList)
-                                            .build();
+                                                .success(false)
+                                                .error(errorMsg)
+                                                .recordList(recordList)
+                                                .build();
                                     }
                                 }
 
                                 switch (param.getType()) {
-                                case TableSchema.TYPE_NUMBER:
-                                    if (value.equals("") || value.toUpperCase().equals("NULL")) {
-                                        iPs.setNull(param.getValueIndex(), java.sql.Types.DOUBLE);
-                                    } else {
-                                        iPs.setDouble(param.getValueIndex(), Double.parseDouble(value));
-                                    }
-                                    break;
+                                    case TableSchema.TYPE_NUMBER:
+                                        if (value.equals("") || value.toUpperCase().equals("NULL")) {
+                                            iPs.setNull(param.getValueIndex(), java.sql.Types.DOUBLE);
+                                        } else {
+                                            iPs.setDouble(param.getValueIndex(), Double.parseDouble(value));
+                                        }
+                                        break;
 
-                                case TableSchema.TYPE_STIRNG:
-                                    if (value.toUpperCase().equals("NULL")) {
-                                        iPs.setNull(param.getValueIndex(), java.sql.Types.VARCHAR);
-                                    } else {
-                                        iPs.setString(param.getValueIndex(), value);
-                                    }
-                                    break;
+                                    case TableSchema.TYPE_STIRNG:
+                                        if (value.toUpperCase().equals("NULL")) {
+                                            iPs.setNull(param.getValueIndex(), java.sql.Types.VARCHAR);
+                                        } else {
+                                            iPs.setString(param.getValueIndex(), value);
+                                        }
+                                        break;
 
-                                case TableSchema.TYPE_DATE:
-                                    if (value.equals("") || value.toUpperCase().equals("NULL")) {
-                                        iPs.setNull(param.getValueIndex(), java.sql.Types.DATE);
-                                    } else {
-                                        String dateStr = value.substring(0, 10);
-                                        iPs.setDate(param.getValueIndex(), java.sql.Date.valueOf(dateStr));
-                                    }
-                                    break;
+                                    case TableSchema.TYPE_DATE:
+                                        if (value.equals("") || value.toUpperCase().equals("NULL")) {
+                                            iPs.setNull(param.getValueIndex(), java.sql.Types.DATE);
+                                        } else {
+                                            String dateStr = value.substring(0, 10);
+                                            iPs.setDate(param.getValueIndex(), java.sql.Date.valueOf(dateStr));
+                                        }
+                                        break;
 
-                                case TableSchema.TYPE_DATETIME:
-                                    if (value.equals("") || value.toUpperCase().equals("NULL")) {
-                                        iPs.setNull(param.getValueIndex(), java.sql.Types.TIMESTAMP);
-                                    }  else {
-                                        iPs.setTimestamp(param.getValueIndex(), java.sql.Timestamp.valueOf(value));
-                                    }
-                                    break;
+                                    case TableSchema.TYPE_DATETIME:
+                                        if (value.equals("") || value.toUpperCase().equals("NULL")) {
+                                            iPs.setNull(param.getValueIndex(), java.sql.Types.TIMESTAMP);
+                                        }  else {
+                                            iPs.setTimestamp(param.getValueIndex(), java.sql.Timestamp.valueOf(value));
+                                        }
+                                        break;
 
-                                default:
-                                    throw new BulkImportException(BulkImportException.PARSER_PARM_NOT_MATCH);
+                                    default:
+                                        throw new BulkImportException(BulkImportException.PARSER_PARM_NOT_MATCH);
                                 }
                             }
                         }
@@ -1156,10 +1236,16 @@ public class BulkImportService {
                 }
 
             } catch (Exception e) {
+                log.error("Failed to create or write to the error file at: {} \n {}", iErrorFilePath, e.getMessage());
+
                 throw new BulkImportException(BulkImportException.CSV_ERROR_FILE_ERROR);
             } finally {
                 if (writer != null) {
-                    try { writer.close(); } catch (Exception ex) {ex.printStackTrace();}
+                    try {
+                        writer.close();
+                    } catch (Exception ex) {
+                        log.error("Failed to close the FileWriter. \n {}", ex.getMessage());
+                    }
                 }
             }
 

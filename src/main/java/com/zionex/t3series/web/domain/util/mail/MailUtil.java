@@ -3,7 +3,6 @@ package com.zionex.t3series.web.domain.util.mail;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
 import com.zionex.t3series.web.domain.admin.user.User;
@@ -19,7 +18,6 @@ public class MailUtil {
     private final UserService userService;
 
     /**
-     * 
      * @param title
      * @param sender  : USERNAME
      * @param recievers      : ID

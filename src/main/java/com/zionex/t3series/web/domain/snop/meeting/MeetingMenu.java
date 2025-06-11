@@ -49,6 +49,9 @@ public class MeetingMenu extends BaseEntity {
     @Transient
     private String menuNm;
 
+    @Transient
+    private Integer agendaSeq;
+
     @Column(name = "SEQ")
     private Integer seq;
 

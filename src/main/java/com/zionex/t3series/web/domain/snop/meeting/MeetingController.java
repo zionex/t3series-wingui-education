@@ -15,12 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.zionex.t3series.web.domain.util.filestorage.FileStorage;
-import com.zionex.t3series.web.security.authentication.AuthenticationInfo;
-import com.zionex.t3series.web.security.authentication.AuthenticationManager;
-import com.zionex.t3series.web.util.ResponseEntityUtil;
-import com.zionex.t3series.web.util.ResponseEntityUtil.ResponseMessage;
-import com.zionex.t3series.web.util.query.QueryHandler;
+import com.zionex.t3series.web.util.data.ResponseEntityUtil;
+import com.zionex.t3series.web.util.data.ResponseEntityUtil.ResponseMessage;
 
 import lombok.RequiredArgsConstructor;
 
@@ -30,7 +26,6 @@ import lombok.RequiredArgsConstructor;
 public class MeetingController {
 
     private final MeetingService meetingService;
-    private final AuthenticationManager authenticationManager;
 
     // 회의록 전체 날짜 조회
     @GetMapping("/dates")
@@ -46,11 +41,8 @@ public class MeetingController {
 
     // 회의록 저장
     @PostMapping
-    public ResponseEntity<ResponseMessage> saveMeeting(@RequestBody MeetingMaster meetingMaster) {
-        AuthenticationInfo authenticationInfo = authenticationManager.getAuthenticationInfo();
-        meetingMaster.setMeetOwnerId(authenticationInfo.getUserId());
-
-        meetingService.saveMeeting(meetingMaster);
+    public ResponseEntity<ResponseMessage> saveMeeting(@RequestParam("repeatTp") String repeatTp, @RequestBody MeetingMaster metting) {
+        meetingService.saveMeeting(repeatTp, metting);
         return ResponseEntityUtil.setResponseEntity(new ResponseMessage(HttpStatus.OK.value(), "Saved meeting"));
     }
 
@@ -71,16 +63,14 @@ public class MeetingController {
     @PostMapping("/attendee")
     public ResponseEntity<ResponseMessage> saveMeetingAttendee(@RequestBody List<MeetingAttendee> meetingAttendees) {
         meetingService.saveMeetingAttendee(meetingAttendees);
-        return ResponseEntityUtil
-                .setResponseEntity(new ResponseMessage(HttpStatus.OK.value(), "Saved meeting attendee"));
+        return ResponseEntityUtil.setResponseEntity(new ResponseMessage(HttpStatus.OK.value(), "Saved meeting attendee"));
     }
 
     // 참석자 삭제
     @PostMapping("/attendee/delete")
     public ResponseEntity<ResponseMessage> deleteMeetingAttendee(@RequestBody List<MeetingAttendee> meetingAttendees) {
         meetingService.deleteMeetingAttendee(meetingAttendees);
-        return ResponseEntityUtil
-                .setResponseEntity(new ResponseMessage(HttpStatus.OK.value(), "Deleted meeting attendee"));
+        return ResponseEntityUtil.setResponseEntity(new ResponseMessage(HttpStatus.OK.value(), "Deleted meeting attendee"));
     }
 
     // Agenda 조회
@@ -100,8 +90,7 @@ public class MeetingController {
     @PostMapping("/agenda/delete")
     public ResponseEntity<ResponseMessage> deleteMeetingAgenda(@RequestBody List<MeetingAgenda> meetingAgenda) {
         meetingService.deleteMeetingAgenda(meetingAgenda);
-        return ResponseEntityUtil
-                .setResponseEntity(new ResponseMessage(HttpStatus.OK.value(), "Deleted meeting agenda"));
+        return ResponseEntityUtil.setResponseEntity(new ResponseMessage(HttpStatus.OK.value(), "Deleted meeting agenda"));
     }
 
     // 화면 조회
@@ -112,16 +101,14 @@ public class MeetingController {
 
     // 화면 저장
     @PostMapping("/menu")
-    public ResponseEntity<ResponseMessage> saveMeetingMenu(@RequestBody List<MeetingMenu> meetingMenus,
-            HttpServletRequest request) {
+    public ResponseEntity<ResponseMessage> saveMeetingMenu(@RequestBody List<MeetingMenu> meetingMenus, HttpServletRequest request) {
         meetingService.saveMeetingMenu(meetingMenus);
         return ResponseEntityUtil.setResponseEntity(new ResponseMessage(HttpStatus.OK.value(), "Saved meeting menu"));
     }
 
     // 화면 삭제
     @PostMapping("/menu/delete")
-    public ResponseEntity<ResponseMessage> deleteMeetingMenu(@RequestBody List<MeetingMenu> meetingMenus,
-            HttpServletRequest request) {
+    public ResponseEntity<ResponseMessage> deleteMeetingMenu(@RequestBody List<MeetingMenu> meetingMenus, HttpServletRequest request) {
         meetingService.deleteMeetingMenu(meetingMenus);
         return ResponseEntityUtil.setResponseEntity(new ResponseMessage(HttpStatus.OK.value(), "Deleted meeting menu"));
     }
@@ -134,67 +121,36 @@ public class MeetingController {
 
     // 첨부파일 저장
     @PostMapping("/files")
-    public ResponseEntity<ResponseMessage> saveMeetingFile(@RequestBody List<MeetingFile> meetingFiles,
-            HttpServletRequest request) {
+    public ResponseEntity<ResponseMessage> saveMeetingFile(@RequestBody List<MeetingFile> meetingFiles, HttpServletRequest request) {
         meetingService.saveMeetingFile(meetingFiles);
         return ResponseEntityUtil.setResponseEntity(new ResponseMessage(HttpStatus.OK.value(), "Saved meeting files"));
     }
 
     // 첨부파일 삭제
     @PostMapping("/files/delete")
-    public ResponseEntity<ResponseMessage> deleteMeetingFile(@RequestBody List<MeetingFile> meetingFiles,
-            HttpServletRequest request) {
+    public ResponseEntity<ResponseMessage> deleteMeetingFile(@RequestBody List<MeetingFile> meetingFiles, HttpServletRequest request) {
         meetingService.deleteMeetingFile(meetingFiles);
-        return ResponseEntityUtil
-                .setResponseEntity(new ResponseMessage(HttpStatus.OK.value(), "Deleted meeting files"));
+        return ResponseEntityUtil.setResponseEntity(new ResponseMessage(HttpStatus.OK.value(), "Deleted meeting files"));
     }
-
-    // // issue 조회
-    // @GetMapping("/issue")
-    // public List<MeetingIssue> getMeetingIssue(@RequestParam("meet-id") String
-    // meetId) {
-    // return meetingService.getMeetingIssue(meetId);
-    // }
-
-    // // issue 저장
-    // @PostMapping("/issue")
-    // public ResponseEntity<ResponseMessage> saveMeetingIssue(@RequestBody
-    // List<MeetingIssue> meetingIssues,
-    // HttpServletRequest request) {
-    // meetingService.saveMeetingIssue(meetingIssues);
-    // return ResponseEntityUtil.setResponseEntity(new
-    // ResponseMessage(HttpStatus.OK.value(), "Saved meeting issue"));
-    // }
-
-    // // issue 삭제
-    // @PostMapping("/issue/delete")
-    // public ResponseEntity<ResponseMessage> deleteMeetingIssue(@RequestBody
-    // List<MeetingIssue> meetingIssues,
-    // HttpServletRequest request) {
-    // meetingService.deleteMeetingIssue(meetingIssues);
-    // return ResponseEntityUtil
-    // .setResponseEntity(new ResponseMessage(HttpStatus.OK.value(), "Deleted
-    // meeting issue"));
-    // }
 
     // 이전 회의록 복사
     @PostMapping("/copy")
-    public ResponseEntity<ResponseMessage> copyMeeting(@RequestBody Map<String, Object> param,
-            HttpServletRequest request) {
-        AuthenticationInfo authenticationInfo = authenticationManager.getAuthenticationInfo();
-
+    public ResponseEntity<ResponseMessage> copyMeeting(@RequestBody Map<String, Object> param, HttpServletRequest request) {
         String meetId = (String) param.get("meetId");
         MeetingMaster sourceMeeting = meetingService.getMeeting(meetId);
+        String cpMeetId = (String) param.get("cpMeetId");
+        String meetSbjt = (String) param.get("orgMeetSbjt");
+        java.sql.Timestamp targetStartDt = Timestamp.valueOf(param.get("targetStartDt").toString());
+        java.sql.Timestamp targetEndDt = Timestamp.valueOf(param.get("targetEndDt").toString());
 
-        sourceMeeting.setMeetOwnerId(authenticationInfo.getUserId());
-        java.sql.Date targetDt = QueryHandler.getDate(param.get("targetDt"));
-        String postApply = (String) param.get("postApply");
+        meetingService.copyMeeting(sourceMeeting, cpMeetId, meetSbjt, targetStartDt, targetEndDt);        
 
-        List keyCopy = (List) param.get("keyCopy");
-        List extraCopy = (List) param.get("extraCopy");
-
-        meetingService.copyMeeting(sourceMeeting, targetDt, postApply, keyCopy, extraCopy);
-        return ResponseEntityUtil.setResponseEntity(new ResponseMessage(HttpStatus.OK.value(), "Saved meeting"));
+        return ResponseEntityUtil.setResponseEntity(new ResponseMessage(HttpStatus.OK.value(), "Copied meeting"));
     }
 
+    // 반복 회의 체크
+    @GetMapping("/check-repeat-type")
+    public boolean isRepeatType(@RequestParam("meet-id") String meetId) {
+        return meetingService.isRepeatType(meetId);
+    }
 }

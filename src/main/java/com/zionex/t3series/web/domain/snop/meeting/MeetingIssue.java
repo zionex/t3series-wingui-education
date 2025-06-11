@@ -1,4 +1,4 @@
-package com.zionex.t3series.web.domain.util.calendar;
+package com.zionex.t3series.web.domain.snop.meeting;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -17,9 +17,9 @@ import lombok.EqualsAndHashCode;
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 @EqualsAndHashCode(callSuper = false)
-@Table(name = "TB_UT_CALENDAR_FILE")
+@Table(name = "TB_SA_MEET_ISSUE")
 @Entity
-public class CalendarFile extends BaseEntity {
+public class MeetingIssue extends BaseEntity {
 
     @Id
     @GeneratedValue(generator = "generator-uuid")
@@ -27,10 +27,10 @@ public class CalendarFile extends BaseEntity {
     @Column(name = "ID")
     private String id;
 
-    @Column(name = "SCH_ID")
-    private String schId;
+    @Column(name = "ISSUE_ID")
+    private String issueId;
 
-    @Column(name = "FILE_STORAGE_ID")
-    private int fileStorageId;
+    @Column(name = "MEET_ID")
+    private String meetId;
 
 }

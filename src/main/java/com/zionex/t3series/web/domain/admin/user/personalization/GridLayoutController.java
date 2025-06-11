@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.zionex.t3series.web.domain.admin.user.User;
 import com.zionex.t3series.web.domain.admin.user.UserService;
-import com.zionex.t3series.web.util.ResponseEntityUtil;
-import com.zionex.t3series.web.util.ResponseEntityUtil.ResponseMessage;
+import com.zionex.t3series.web.util.data.ResponseEntityUtil;
+import com.zionex.t3series.web.util.data.ResponseEntityUtil.ResponseMessage;
 
 import lombok.RequiredArgsConstructor;
 

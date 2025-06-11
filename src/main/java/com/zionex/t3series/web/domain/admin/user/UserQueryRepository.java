@@ -79,10 +79,6 @@ public class UserQueryRepository {
             clause.set(user.sessionExpiredDttm, updateUser.getSessionExpiredDttm());
         }
 
-        if (updateUser.getPasswordExpired() != null) {
-            clause.set(user.passwordExpired, updateUser.getPasswordExpired());
-        }
-
         if (updateUser.getJti() != null) {
             clause.set(user.jti, updateUser.getJti());
         }

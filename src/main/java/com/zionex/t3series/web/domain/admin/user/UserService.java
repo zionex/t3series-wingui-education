@@ -1,10 +1,10 @@
 package com.zionex.t3series.web.domain.admin.user;
 
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -48,6 +48,8 @@ public class UserService {
     @Autowired
     private GroupService groupService;
 
+    private static final String ADMIN_ROLE = "ADMIN";
+
     public UserDetails getUserDetails() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null || !authentication.isAuthenticated()) {
@@ -58,11 +60,17 @@ public class UserService {
     }
 
     public boolean checkAdmin() {
-        return getUserDetails().getAuthorities()
+        return checkAdmin(getUserDetails().getAuthorities());
+    }
+
+    public boolean checkAdmin(Collection<? extends GrantedAuthority> grantedAuthorities) {
+        if (grantedAuthorities == null || grantedAuthorities.isEmpty()) {
+            return false;
+        }
+
+        return grantedAuthorities
                 .stream()
-                .map(GrantedAuthority::getAuthority)
-                .collect(Collectors.toList())
-                .contains("ADMIN");
+                .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals(ADMIN_ROLE));
     }
 
     public boolean checkAdmin(String username) {
@@ -112,17 +120,6 @@ public class UserService {
         }
     }
 
-    public List<User> getAllUserForCache() {
-        return userRepository.findAll();
-    }
-
-    public boolean isLike(User user, String keyword) {
-        String username = user.getUsername();
-        String displayName = user.getDisplayName();
-
-        return (StringUtils.containsIgnoreCase(username, keyword) || StringUtils.containsIgnoreCase(displayName, keyword));
-    }
-
     public List<User> getUsers(String username, Boolean includeAdmin) {
         List<User> users = userRepository.findByUsernameContainingOrDisplayNameContaining(username, username);
 
@@ -149,7 +146,7 @@ public class UserService {
             List<UserGroup> userGroups = userGroupService.getUserGroupByGrpId(grpId);
             List<String> unselectableUserIds = userGroups
                     .stream()
-                    .map(userGroup -> getUserById(userGroup.getUserId()).getId())
+                    .map(userGroup -> userGroup.getUserId())
                     .collect(Collectors.toList());
             users.removeIf(user -> unselectableUserIds.contains(user.getId()));
         }
@@ -203,7 +200,7 @@ public class UserService {
             if (user.getAdminYn()) {
                 accountManager.addAdminAuthority(user.getId());
             } else {
-                authorityService.deleteAuthority(user.getId(), "ADMIN");
+                authorityService.deleteAuthority(user.getId(), ADMIN_ROLE);
             }
         });
     }
@@ -213,7 +210,7 @@ public class UserService {
     }
 
     public User checkUserValidation(User user) {
-        if (!checkAdmin(user.getUsername())) {
+        if (!user.getAdminYn()) {
             SystemAccess latestSystemAccess = systemAccessService.getLatestSystemAccessLog(user.getId());
             LocalDateTime latestSystemAccessTime = user.getCreateDttm();
             if (latestSystemAccess != null) {

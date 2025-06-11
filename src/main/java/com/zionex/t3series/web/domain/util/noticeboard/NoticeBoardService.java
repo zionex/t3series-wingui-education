@@ -46,6 +46,10 @@ public class NoticeBoardService {
             notice.setCreateByDisplayName(user.getDisplayName());
         });
 
+        if(size <= certainList.size()) {
+            size = certainList.size() + 5;
+        }
+
         Page<NoticeBoard> pageContent;
         if (option == TITLE_SEARCH) {
             pageContent = noticeBoardRepository
@@ -90,6 +94,7 @@ public class NoticeBoardService {
 
         notice.setContent(this.cleanXss(notice.getContent()));
         notice.setDeleteYn("N");
+        notice.setNoticeYn(notice.getNoticeYn());
 
         if (notice.getId() == null) {
             notice.setCreateDttm(now);

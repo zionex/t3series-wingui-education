@@ -1,7 +1,5 @@
 package com.zionex.t3series.web.util.query;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.sql.BatchUpdateException;
@@ -17,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -28,22 +27,20 @@ import javax.persistence.StoredProcedureQuery;
 import org.apache.commons.collections4.map.CaseInsensitiveMap;
 import org.apache.commons.lang3.time.StopWatch;
 import org.hibernate.Session;
-import org.hibernate.exception.GenericJDBCException;
 import org.hibernate.exception.SQLGrammarException;
 import org.hibernate.jdbc.AbstractReturningWork;
 import org.hibernate.procedure.internal.ProcedureOutputsImpl;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.zionex.t3series.util.ObjectUtils;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.java.Log;
+import lombok.extern.slf4j.Slf4j;
 import oracle.jdbc.OracleCallableStatement;
 import oracle.jdbc.OracleTypes;
 
-@Log
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class QueryHandler {
@@ -76,13 +73,12 @@ public class QueryHandler {
 
             return query.getResultList();
         } catch (Exception e) {
-            log.warning(String.format("Exception occurs when query. (sql = %s) ", sqlString) + e.getMessage());
+            log.error(String.format("Exception occurs when query. (sql = %s) ", sqlString), e);
             throw e;
         }
     }
 
-    public List<?> getNativeQueryData(String sqlString, Class<?> resultClass, Map<String, Object> params)
-            throws Exception {
+    public List<?> getNativeQueryData(String sqlString, Class<?> resultClass, Map<String, Object> params) throws Exception {
         try {
             Query query;
             if (resultClass == null) {
@@ -99,7 +95,7 @@ public class QueryHandler {
 
             return query.getResultList();
         } catch (Exception e) {
-            log.warning(String.format("Exception occurs when query. (sql = %s) ", sqlString) + e.getMessage());
+            log.error(String.format("Exception occurs when query. (sql = %s) ", sqlString), e);
             throw e;
         }
     }
@@ -115,18 +111,10 @@ public class QueryHandler {
         return this.getProcedureData(procedureName, resultClass, null);
     }
 
-    public static String getStackTrace(final Throwable throwable) {
-        final StringWriter sw = new StringWriter();
-        final PrintWriter pw = new PrintWriter(sw, true);
-        throwable.printStackTrace(pw);
-        return sw.getBuffer().toString();
-    }
-
-    public List<?> getProcedureData(String procedureName, Class<?> resultClass, Map<String, Object> params)
-            throws Exception {
-
-        if (resultClass != null)
+    public List<?> getProcedureData(String procedureName, Class<?> resultClass, Map<String, Object> params) throws Exception {
+        if (resultClass != null) {
             return getProcedureData(procedureName, resultClass, params);
+        }
 
         StoredProcedureQuery spq = entityManager.createStoredProcedureQuery(procedureName);
         try {
@@ -167,15 +155,12 @@ public class QueryHandler {
 
             return spq.getResultList();
         } catch (SQLException se) {
-            // se.printStackTrace();
             throw se;
         } catch (SQLGrammarException ge) {
-            // ge.printStackTrace();
             SQLException se = ge.getSQLException();
             throw new Exception(se.getMessage());
         } catch (Exception e) {
-            log.warning(String.format("Exception occurs when procedure. (procedureName = %s) ", procedureName)
-                    + e.getMessage());
+            log.error(String.format("Exception occurs when procedure. (procedureName = %s) ", procedureName), e);
             throw e;
         } finally {
             if (spq != null) {
@@ -184,9 +169,7 @@ public class QueryHandler {
         }
     }
 
-    public List<?> getProcedureData2(String procedureName, Class<?> resultClass, Map<String, Object> params)
-            throws Exception {
-
+    public List<?> getProcedureData2(String procedureName, Class<?> resultClass, Map<String, Object> params) throws Exception {
         StoredProcedureQuery spq = entityManager.createStoredProcedureQuery(procedureName, resultClass);
         try {
             CaseInsensitiveMap<String, Object> caseIgnoreInputParams = new CaseInsensitiveMap<>();
@@ -226,15 +209,12 @@ public class QueryHandler {
 
             return spq.getResultList();
         } catch (SQLException se) {
-            // se.printStackTrace();
             throw se;
         } catch (SQLGrammarException ge) {
-            // ge.printStackTrace();
             SQLException se = ge.getSQLException();
             throw new Exception(se.getMessage());
         } catch (Exception e) {
-            log.warning(String.format("Exception occurs when procedure. (procedureName = %s) ", procedureName)
-                    + e.getMessage());
+            log.error(String.format("Exception occurs when procedure. (procedureName = %s) ", procedureName), e);
             throw e;
         } finally {
             if (spq != null) {
@@ -271,10 +251,10 @@ public class QueryHandler {
 
                         while (rs.next()) {
                             Map<String, Object> param = new HashMap<>();
-                            int ColType = rs.getInt("COLUMN_TYPE");
+                            int colType = rs.getInt("COLUMN_TYPE");
 
                             // SET NOCOUNT ON 처리
-                            if (ColType == DatabaseMetaData.procedureColumnReturn && setNoCount) {
+                            if (colType == DatabaseMetaData.procedureColumnReturn && setNoCount) {
                                 setNoCount = false;
                                 continue;
                             }
@@ -302,13 +282,11 @@ public class QueryHandler {
                             param.put("ORDINAL_POSITION", rs.getInt("ORDINAL_POSITION"));
                             param.put("IS_NULLABLE", rs.getString("IS_NULLABLE"));
 
-                            if (ColType == DatabaseMetaData.procedureColumnIn
-                                    || ColType == DatabaseMetaData.procedureColumnInOut
-                                    || ColType == DatabaseMetaData.procedureColumnOut) {
+                            if (colType == DatabaseMetaData.procedureColumnIn || colType == DatabaseMetaData.procedureColumnInOut || colType == DatabaseMetaData.procedureColumnOut) {
                                 if (!result.contains(param)) {
                                     result.add(param);
                                 }
-                            } else if (ColType == DatabaseMetaData.procedureColumnResult) {
+                            } else if (colType == DatabaseMetaData.procedureColumnResult) {
                                 resultSet.add(param);
                             }
                         }
@@ -318,14 +296,14 @@ public class QueryHandler {
                                 rs.close();
                             }
                         } catch (Exception e) {
-                            e.printStackTrace();
+                            log.error("Error occurred while closing ResultSet", e);
                         }
                     }
                     return 0;
                 }
             });
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("Error occurred while executing selectProcParams", e);
             throw e;
         }
         return result;
@@ -349,7 +327,6 @@ public class QueryHandler {
      * DATA_TYPE: java.sql.Types.OTHER 로 넘어온다.
      */
     public List<Map<String, Object>> getList(String procName, Map<String, Object> inputParams) throws Exception {
-
         CaseInsensitiveMap<String, Object> caseIgnoreInputParams = new CaseInsensitiveMap<>();
         if (inputParams != null) {
             caseIgnoreInputParams.putAll(inputParams);
@@ -364,8 +341,7 @@ public class QueryHandler {
                     String parameterName = (String) procParam.get("COLUMN_NAME");
                     int columnType = (int) procParam.get("COLUMN_TYPE");
 
-                    if (columnType == DatabaseMetaData.procedureColumnIn
-                            || columnType == DatabaseMetaData.procedureColumnInOut) {
+                    if (columnType == DatabaseMetaData.procedureColumnIn || columnType == DatabaseMetaData.procedureColumnInOut) {
                         Object paramValue = caseIgnoreInputParams.get(parameterName);
                         procParam.put("PARAM_VALUE", paramValue);
                     }
@@ -376,8 +352,7 @@ public class QueryHandler {
         return getProcedureDataMapList(procName, procParams);
     }
 
-    public List<Map<String, Object>> getProcedureDataMapList(String procedureName,
-            List<Map<String, Object>> procParams) throws Exception {
+    public List<Map<String, Object>> getProcedureDataMapList(String procedureName, List<Map<String, Object>> procParams) throws Exception {
         final List<Map<String, Object>> result = new ArrayList<>();
         Session hibernateSession = null;
         try {
@@ -399,17 +374,17 @@ public class QueryHandler {
                 }
             });
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("An exception occurred: ", e);
             throw e;
         } finally {
-            if (hibernateSession != null)
+            if (hibernateSession != null) {
                 hibernateSession.close();
+            }
         }
         return result;
     }
 
-    public void getProcedureMapDataListMssql(Connection connection, String procedureName,
-            List<Map<String, Object>> procParams, List<Map<String, Object>> result) throws SQLException {
+    public void getProcedureMapDataListMssql(Connection connection, String procedureName, List<Map<String, Object>> procParams, List<Map<String, Object>> result) throws SQLException {
         StringBuilder sqlBuilder = new StringBuilder();
         sqlBuilder.append("{ call ");
         sqlBuilder.append(procedureName);
@@ -426,9 +401,10 @@ public class QueryHandler {
             sqlBuilder.append(")");
         }
         sqlBuilder.append(" }");
-        System.out.println(sqlBuilder);
+        log.info(sqlBuilder.toString());
 
         CallableStatement cstmt = null;
+        ResultSet rs = null;
         try {
             cstmt = connection.prepareCall(sqlBuilder.toString());
 
@@ -446,8 +422,7 @@ public class QueryHandler {
                             } else {
                                 cstmt.registerOutParameter(parameterName, sqlDataType);
                             }
-                        } else if (columnType == DatabaseMetaData.procedureColumnInOut
-                                || columnType == DatabaseMetaData.procedureColumnIn) {
+                        } else if (columnType == DatabaseMetaData.procedureColumnInOut || columnType == DatabaseMetaData.procedureColumnIn) {
                             switch (sqlDataType) {
                                 case java.sql.Types.DECIMAL:
                                 case java.sql.Types.NUMERIC:
@@ -500,13 +475,13 @@ public class QueryHandler {
                             }
                         }
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        log.error("An error occurred while setting the parameter: ", e);
                         throw e;
                     }
                 }
             }
 
-            ResultSet rs = cstmt.executeQuery();
+            rs = cstmt.executeQuery();
 
             ResultSetMetaData rsmd = rs.getMetaData();
             int colCnt = rsmd.getColumnCount();
@@ -517,26 +492,27 @@ public class QueryHandler {
             }
 
             while (rs.next()) {
-                Map<String, Object> data = new HashMap<>();
-                Arrays.asList(aliases).forEach(k -> {
+                Map<String, Object> data = new LinkedHashMap<>();
+                for (String alias : aliases) {
                     try {
-                        data.put(k, rs.getObject(k));
+                        data.put(alias, rs.getObject(alias));
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        log.error("An error occurred while setting the parameter: ", e);
                     }
-                });
+                }
                 result.add(data);
             }
-
-            rs.close();
         } finally {
-            if (cstmt != null)
+            if (rs != null) {
+                rs.close();
+            }
+            if (cstmt != null) {
                 cstmt.close();
+            }
         }
     }
 
-    public void getProcedureMapDataListOracle(Connection connection, String procedureName,
-            List<Map<String, Object>> procParams, List<Map<String, Object>> result) throws SQLException {
+    public void getProcedureMapDataListOracle(Connection connection, String procedureName, List<Map<String, Object>> procParams, List<Map<String, Object>> result) throws SQLException {
         StringBuilder sqlBuilder = new StringBuilder();
         sqlBuilder.append("{ call ");
         sqlBuilder.append(procedureName);
@@ -553,7 +529,7 @@ public class QueryHandler {
             sqlBuilder.append(")");
         }
         sqlBuilder.append(" }");
-        System.out.println(sqlBuilder);
+       log.info(sqlBuilder.toString());
 
         CallableStatement cstmt = null;
         OracleCallableStatement ocstmt = null;
@@ -578,8 +554,7 @@ public class QueryHandler {
                             } else {
                                 ocstmt.registerOutParameter(columnPosition, sqlDataType);
                             }
-                        } else if (columnType == DatabaseMetaData.procedureColumnInOut
-                                || columnType == DatabaseMetaData.procedureColumnIn) {
+                        } else if (columnType == DatabaseMetaData.procedureColumnInOut || columnType == DatabaseMetaData.procedureColumnIn) {
                             switch (sqlDataType) {
                                 case java.sql.Types.DECIMAL:
                                 case java.sql.Types.NUMERIC:
@@ -632,7 +607,7 @@ public class QueryHandler {
                             }
                         }
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        log.error("An exception occurred: ", e);
                         throw e;
                     }
                 }
@@ -651,14 +626,14 @@ public class QueryHandler {
                 }
 
                 while (rs.next()) {
-                    Map<String, Object> data = new HashMap<>();
+                    Map<String, Object> data = new LinkedHashMap<>();
                     Arrays.asList(aliases).forEach(k -> {
-                        try {
-                            Object object = rs.getObject(k);
-                            data.put(k, convertOracleData(object));
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
+                            try {
+                                Object object = rs.getObject(k);
+                                data.put(k, convertOracleData(object));
+                            } catch (SQLException e) {
+                                log.error("An exception occurred: ", e);
+                            }
                     });
                     result.add(data);
                 }
@@ -666,25 +641,25 @@ public class QueryHandler {
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("An exception occurred:", e);
             throw e;
         } finally {
-            if (ocstmt != null)
+            if (ocstmt != null) {
                 ocstmt.close();
-            if (cstmt != null)
+            }
+            if (cstmt != null) {
                 cstmt.close();
+            }
         }
     }
 
-    @Transactional
     @SuppressWarnings("unchecked")
     public Map<String, Object> save(String procName, Map<String, Object> params) throws Exception {
         params.put("P_RT_ROLLBACK_FLAG", new Object[] { null, String.class, ParameterMode.OUT });
         params.put("P_RT_MSG", new Object[] { null, String.class, ParameterMode.OUT });
 
         Map<String, Object> resultMap = new HashMap<>();
-        Map<String, Object> result = checkResultFlag(
-                (List<Map<String, Object>>) getProcedureData(procName, null, params));
+        Map<String, Object> result = checkResultFlag((List<Map<String, Object>>) getProcedureData(procName, null, params));
 
         if (!ObjectUtils.toBoolean(result.get("success"))) {
             resultMap.putAll(result);
@@ -726,8 +701,7 @@ public class QueryHandler {
             } else if (value instanceof Number) {
                 ret = new BigDecimal(((Number) value).doubleValue());
             } else {
-                throw new ClassCastException("Not possible to coerce [" + value + "] from class " + value.getClass()
-                        + " into a BigDecimal.");
+                throw new ClassCastException("Not possible to coerce [" + value + "] from class " + value.getClass() + " into a BigDecimal.");
             }
         }
         return ret;
@@ -757,8 +731,7 @@ public class QueryHandler {
             } else if (value instanceof Number) {
                 ret = new Date(((Number) value).longValue());
             } else {
-                throw new ClassCastException("Not possible to coerce [" + value + "] from class " + value.getClass()
-                        + " into a BigDecimal.");
+                throw new ClassCastException("Not possible to coerce [" + value + "] from class " + value.getClass() + " into a BigDecimal.");
             }
         }
         return ret;
@@ -776,8 +749,9 @@ public class QueryHandler {
                 if (strDate.indexOf("T") >= 0) {
                     java.util.Calendar cal = javax.xml.bind.DatatypeConverter.parseDateTime((String) value);
                     ret = new Timestamp(cal.getTime().getTime());
-                } else
+                } else {
                     ret = Timestamp.valueOf((String) value);
+                }
             } else if (value instanceof BigInteger) {
                 ret = new Timestamp(((BigInteger) value).longValue());
             } else if (value instanceof Integer) {
@@ -787,8 +761,7 @@ public class QueryHandler {
             } else if (value instanceof Number) {
                 ret = new Timestamp(((Number) value).longValue());
             } else {
-                throw new ClassCastException("Not possible to coerce [" + value + "] from class " + value.getClass()
-                        + " into a BigDecimal.");
+                throw new ClassCastException("Not possible to coerce [" + value + "] from class " + value.getClass() + " into a BigDecimal.");
             }
         }
         return ret;
@@ -822,9 +795,7 @@ public class QueryHandler {
      * @return
      */
     public Map<String, Object> executeBulk(String procName, List<Map<String, Object>> batchParamList) throws Exception {
-
         Map<String, Object> resultMap = new HashMap<>();
-
         List<Map<String, Object>> procParams = selectProcParams(procName);
 
         StopWatch watch = new StopWatch();
@@ -832,9 +803,10 @@ public class QueryHandler {
 
         int totalCnt = batchParamList.size();
         int totalExecuteCnt = 0;
-        ArrayList<List<Map<String, Object>>> lastParamList = new ArrayList<>();
 
+        ArrayList<List<Map<String, Object>>> lastParamList = new ArrayList<>();
         ArrayList<List<Map<String, Object>>> paramArray = new ArrayList<>();
+
         try {
             for (int i = 0; i < batchParamList.size(); i++) {
                 Map<String, Object> inputParams = batchParamList.get(i);
@@ -850,8 +822,7 @@ public class QueryHandler {
                         String parameterName = (String) procParam.get("COLUMN_NAME");
                         int columnType = (int) procParam.get("COLUMN_TYPE");
 
-                        if (columnType == DatabaseMetaData.procedureColumnIn
-                                || columnType == DatabaseMetaData.procedureColumnInOut) {
+                        if (columnType == DatabaseMetaData.procedureColumnIn || columnType == DatabaseMetaData.procedureColumnInOut) {
                             Object paramValue = caseIgnoreInputParams.get(parameterName);
                             procParam.put("PARAM_VALUE", paramValue);
                         }
@@ -877,41 +848,25 @@ public class QueryHandler {
             executeBatchProcedure(procName, paramArray);
             totalExecuteCnt += paramArray.size();
             paramArray = null;
-
         } catch (SQLGrammarException se) {
             SQLException realSe = se.getSQLException();
-            se.printStackTrace();
+            log.error("Exception occurred during batch execution: ", se);
             resultMap.put("success", false);
-            resultMap.put("message",
-                    "TOTAL:" + totalCnt + ", COMPLETE:" + totalExecuteCnt + ", EXCEPTION: " + realSe.getMessage());
-        } catch (SQLException se) {
-            se.printStackTrace();
-            resultMap.put("success", false);
-            resultMap.put("message",
-                    "TOTAL:" + totalCnt + ", COMPLETE:" + totalExecuteCnt + ", EXCEPTION: " + se.getMessage());
-        } catch (GenericJDBCException ge) {
-            ge.printStackTrace();
-            SQLException see = ge.getSQLException();
-            resultMap.put("success", false);
-            resultMap.put("message",
-                    "TOTAL:" + totalCnt + ", COMPLETE:" + totalExecuteCnt + ", EXCEPTION: " + see.getMessage());
+            resultMap.put("message", "TOTAL:" + totalCnt + ", COMPLETE:" + totalExecuteCnt + ", EXCEPTION: " + realSe.getMessage());
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("Exception occurred during batch execution: ", e);
             resultMap.put("success", false);
-            resultMap.put("message",
-                    "TOTAL:" + totalCnt + ", COMPLETE:" + totalExecuteCnt + ", EXCEPTION: " + e.getMessage());
+            resultMap.put("message", "TOTAL:" + totalCnt + ", COMPLETE:" + totalExecuteCnt + ", EXCEPTION: " + e.getMessage());
         }
         watch.stop();
-        System.out.println("executeBulk:(" + procName + ") 수행시간: " + watch.getTime());
+        log.info("executeBulk:(" + procName + ") 수행시간: " + watch.getTime());
         return resultMap;
     }
 
-    ArrayList<List<Map<String, Object>>> getPartList(ArrayList<List<Map<String, Object>>> lst, int startIdx, int count,
-            ArrayList<List<Map<String, Object>>> partParamList) {
+    ArrayList<List<Map<String, Object>>> getPartList(ArrayList<List<Map<String, Object>>> lst, int startIdx, int count, ArrayList<List<Map<String, Object>>> partParamList) {
         partParamList.clear();
 
         int lastIdx = Math.min(lst.size(), startIdx + count);
-
         int idx = 0;
         for (int i = startIdx; i < lastIdx; i++) {
             partParamList.add(idx, lst.get(startIdx + idx));
@@ -929,12 +884,9 @@ public class QueryHandler {
      * @return
      */
 
-    public void executeBatchProcedure(String procedureName, ArrayList<List<Map<String, Object>>> procParams)
-            throws Exception, SQLException {
-
+    public void executeBatchProcedure(String procedureName, ArrayList<List<Map<String, Object>>> procParams) throws Exception, SQLException {
         Session hibernateSession = entityManager.unwrap(Session.class);
         try {
-
             hibernateSession.doReturningWork(new AbstractReturningWork<Integer>() {
 
                 public Integer execute(Connection connection) throws SQLException {
@@ -944,8 +896,7 @@ public class QueryHandler {
                     ArrayList<List<Map<String, Object>>> partBucket = new ArrayList<List<Map<String, Object>>>();
                     // 파라메터를 BATCH_CNT 개씩 쪼개서 커밋처리
                     int idx = 0;
-                    ArrayList<List<Map<String, Object>>> partParamList = getPartList(procParams, idx, BATCH_CNT,
-                            partBucket);
+                    ArrayList<List<Map<String, Object>>> partParamList = getPartList(procParams, idx, BATCH_CNT, partBucket);
                     while (partParamList.size() > 0) {
                         connection.setAutoCommit(false);
 
@@ -965,13 +916,13 @@ public class QueryHandler {
                 }
             });
         } finally {
-            if (hibernateSession != null)
+            if (hibernateSession != null) {
                 hibernateSession.close();
+            }
         }
     }
 
-    public void executeBatchProcedureMssql(Connection connection, String procedureName,
-            List<List<Map<String, Object>>> procParamsList) throws SQLException {
+    public void executeBatchProcedureMssql(Connection connection, String procedureName, List<List<Map<String, Object>>> procParamsList) throws SQLException {
         StringBuilder sqlBuilder = new StringBuilder();
         sqlBuilder.append("{ call ");
         sqlBuilder.append(procedureName);
@@ -995,7 +946,6 @@ public class QueryHandler {
         sqlBuilder.append(" }");
 
         CallableStatement cstmt = null;
-
         try {
             cstmt = connection.prepareCall(sqlBuilder.toString());
 
@@ -1066,7 +1016,6 @@ public class QueryHandler {
                             }
 
                         } catch (Exception e) {
-                            e.printStackTrace();
                             throw e;
                         }
                     }
@@ -1075,16 +1024,15 @@ public class QueryHandler {
             }
             cstmt.executeBatch();
         } catch (BatchUpdateException e) {
-            // e.printStackTrace();
             throw new SQLException(e);
         } finally {
-            if (cstmt != null)
+            if (cstmt != null) {
                 cstmt.close();
+            }
         }
     }
 
-    public void executeBatchProcedureOracle(Connection connection, String procedureName,
-            List<List<Map<String, Object>>> procParamsList) throws SQLException {
+    public void executeBatchProcedureOracle(Connection connection, String procedureName, List<List<Map<String, Object>>> procParamsList) throws SQLException {
         StringBuilder sqlBuilder = new StringBuilder();
         sqlBuilder.append("{ call ");
         sqlBuilder.append(procedureName);
@@ -1106,7 +1054,7 @@ public class QueryHandler {
             sqlBuilder.append(")");
         }
         sqlBuilder.append(" }");
-        System.out.println(sqlBuilder);
+        log.info(sqlBuilder.toString());
 
         CallableStatement cstmt = null;
         OracleCallableStatement ocstmt = null;
@@ -1179,7 +1127,6 @@ public class QueryHandler {
                                 }
                             }
                         } catch (Exception e) {
-                            e.printStackTrace();
                             throw e;
                         }
                     }
@@ -1188,13 +1135,15 @@ public class QueryHandler {
             }
             ocstmt.executeBatch();
         } catch (BatchUpdateException e) {
-            // e.printStackTrace();
             throw new SQLException(e);
         } finally {
-            if (ocstmt != null)
+            if (ocstmt != null) {
                 ocstmt.close();
-            if (cstmt != null)
+            }
+            if (cstmt != null) {
                 cstmt.close();
+            }
         }
     }
+
 }

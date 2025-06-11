@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -15,6 +16,8 @@ import com.zionex.t3series.web.domain.admin.user.UserService;
 import com.zionex.t3series.web.domain.admin.user.group.GroupUserResult;
 import com.zionex.t3series.web.domain.admin.user.group.UserGroupService;
 import com.zionex.t3series.web.domain.util.mail.MailUtil;
+import com.zionex.t3series.web.domain.snop.meeting.MeetingIssue;
+import com.zionex.t3series.web.domain.snop.meeting.MeetingIssueRepository;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
@@ -30,6 +33,8 @@ public class IssueService {
     private final IssueAssignService issueAssignService; 
     private final IssueCommentService issueCommentService;
     private final IssueFileService issueFileService;
+
+    private final MeetingIssueRepository meetingIssueRepository;
 
     private final UserService userService;
     private final UserGroupService userGroupService;
@@ -65,6 +70,20 @@ public class IssueService {
         return IssueResults.builder().pageComment(null).pageContent(pageContent).build();
     }
 
+    public IssueResults getIssuesMeet(String search, int option, String menuCd, Boolean isAssigned, String status, String after15days, String meetId,
+                                  String username, String issueType, int page, int size) {
+        boolean isAdmin = userService.checkAdmin(username);
+
+        Page<Issue> pageContent = issueQueryRepository.getIssuesMeet(option, search, menuCd, isAssigned, status,
+                after15days, meetId, username, isAdmin, issueType, PageRequest.of(page, size));
+
+        pageContent.forEach(issue -> {
+            buildIssue(issue);
+        });
+
+        return IssueResults.builder().pageComment(null).pageContent(pageContent).build();
+    }
+
     public IssueResults getIssuesByUser(String menuCd, String username, int page, int size) {
         Page<Issue> pageContent = issueQueryRepository.getIssuesByUser(menuCd, username, PageRequest.of(page, size));
         pageContent.forEach(issue -> {
@@ -90,11 +109,6 @@ public class IssueService {
 
     public IssueResults getIssueDetail(String issueId, int page, int size) {
         Page<IssueComment> issueComments = issueCommentService.getIssueComments(issueId, page, size);
-        // issueComments.forEach(issue -> {
-        // User user = userService.getUser(issue.getCreateBy());
-        // issue.setCreateByDisplayName(user.getDisplayName());
-        // });
-
         Page<Issue> issue = issueRepository.findById(issueId, PageRequest.of(0, 10));
         buildIssue(issue.getContent().get(0));
 
@@ -124,26 +138,55 @@ public class IssueService {
             });
         }
 
+        // meeting issue 저장 일때
+        if (issue.getIssueType().equals("S") && issue.getMeetId() != null) {
+            MeetingIssue meetingIssue = new MeetingIssue();
+            meetingIssue.setIssueId(issueId);  
+            meetingIssue.setMeetId(issue.getMeetId()); 
+            
+            // MeetingIssue 저장
+            meetingIssueRepository.save(meetingIssue);
+        }
+
+        List<String> originAssignees = issueAssignService.getIssueAssignees(issueId)
+                .stream()
+                .map(IssueAssign::getAssignee)
+                .collect(Collectors.toList());
+                
         AtomicInteger cnt = new AtomicInteger(0);
         List<String> assignees = issue.getAssignees();
+        
+        if (CollectionUtils.isEqualCollection(originAssignees, assignees)) {
+            return;
+        }
+
+        issueAssignService.deleteIssueAssignees(issueId);
+                
         if (assignees != null && !assignees.isEmpty()) {
+            Boolean isGroupIssue = issue.getGrpAssignYn();
+            List<String> groupUsers = new ArrayList<>();
             assignees.forEach(assignee -> {
-                // User user = userService.getUserById(assignee);
-                // if (user != null && StringUtils.isEmpty(user.getId()) == false) {
                     IssueAssign issueAssign = new IssueAssign();
                     issueAssign.setIssueId(issueId);
                     issueAssign.setSeq(cnt.getAndIncrement());
                     issueAssign.setAssignee(assignee);
-                    issueAssign.setGrpYn(issue.getGrpAssignYn());
+                    issueAssign.setGrpYn(isGroupIssue);
 
                     issueAssignService.saveIssueAssignee(issueAssign);
-                // }
             });
+
+            if (isGroupIssue) {
+                List<GroupUserResult> groupUserResults = userGroupService.getGroupUsers(assignees.get(0));
+                groupUserResults.forEach(user -> groupUsers.add(user.getUsername()));
+                assignees = groupUsers;
+            }
 
             if (issue.getMailYn().equals("Y")) {
                 mailUtil.sendMailWithId(issue.getTitle(), issue.getCreateBy(), assignees, null, issue.getContent(), issue.getFiles());
             }
         }
+
+        
     }
 
     private boolean isValidUpdate(Issue issue) {
@@ -219,6 +262,13 @@ public class IssueService {
         return cleanedValue;
     }
 
+    public void closeIssue(String issueId) {
+        Issue issue = getIssue(issueId);
+        issue.setStatus("C");
+
+        issueRepository.save(issue);
+    }
+
     @Transactional
     public void deleteIssue(List<String> issueIds) {
         if (!userService.checkAdmin()) {
@@ -231,6 +281,8 @@ public class IssueService {
         issueAssignService.deleteIssueAssignees(issueIds);
         issueCommentService.deleteIssueCommentsByIssue(issueIds);
         issueFileService.deleteIssueFiles(issueIds);
+
+        meetingIssueRepository.deleteByIssueIdIn(issueIds);
     }
 
 }

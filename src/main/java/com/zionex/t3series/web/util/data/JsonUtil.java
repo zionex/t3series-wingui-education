@@ -1,4 +1,4 @@
-package com.zionex.t3series.web.util;
+package com.zionex.t3series.web.util.data;
 
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;

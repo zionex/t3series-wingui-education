@@ -1,4 +1,4 @@
-package com.zionex.t3series.web.util;
+package com.zionex.t3series.web.util.data;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

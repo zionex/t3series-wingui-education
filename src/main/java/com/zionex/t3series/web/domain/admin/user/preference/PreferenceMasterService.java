@@ -9,6 +9,7 @@ import com.zionex.t3series.web.domain.admin.lang.LangPackService;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
@@ -96,13 +97,15 @@ public class PreferenceMasterService {
         preferenceMasterRepository.saveAll(preferenceMasters);
     }
 
+    @Transactional
     public void deletePreferenceMasters(List<PreferenceMaster> preferenceMasters) {
         List<LangPack> langPacks = new ArrayList<LangPack>();
 
         preferenceMasters.forEach(pm -> {
             String langKey = pm.getGridDescrip();
-            langPacks.addAll(langPackService.getLangPacks(null, langKey, null));
-
+            if (langKey != null) {
+                langPacks.addAll(langPackService.getLangPacks(null, langKey, null));
+            }
             preferenceDetailRepository.deleteByUserPrefMstId(pm.getId());
         });
         
