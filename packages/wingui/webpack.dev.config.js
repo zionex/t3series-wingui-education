@@ -6,6 +6,16 @@ const webpack = require("webpack");
 const VIEW_PATH = 'view'
 //const IGNORE_VIEW_PATH = 'view_ag'
 
+class BuildTimePlugin {
+  apply(compiler) {
+    compiler.hooks.done.tap('BuildTimePlugin', stats => {
+      setImmediate(() => {
+        console.log(`[${new Date().toLocaleString()}] Build Complete\n\n`);
+      });
+    });
+  }
+}
+
 module.exports = {
   mode: 'development',
   entry: {
@@ -54,7 +64,9 @@ module.exports = {
     new webpack.DefinePlugin({
       VIEW_PATH: JSON.stringify(VIEW_PATH),
       //IGNORE_VIEW_PATH: JSON.stringify(IGNORE_VIEW_PATH),
-    })],
+    }),
+    new BuildTimePlugin()
+  ],
   module: {
     rules: [
       {
