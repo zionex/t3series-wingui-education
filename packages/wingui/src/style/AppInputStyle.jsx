@@ -5,7 +5,7 @@ import { createStyles, makeStyles } from '@mui/styles';
  */
 export const DEF_INPUT_VARIANT = 'outlined';
 export const DEF_INPUT_SIZE = "small";
-export const INPUT_HEIGHT = 45
+export const INPUT_HEIGHT = 30
 export const INPUT_WIDTH = 200
 export const INPUT_PADDING = 0
 export const INPUT_BORDER_RADIUS = 6
@@ -104,6 +104,13 @@ export const useInputStyles = makeStyles((theme) =>
         width: 32,
         color: theme.themeData.palette.typography.color,
         padding: '6px'
+      },
+      "& .MuiInputBase-root:not(.MuiInputBase-multiline)": {
+        height: INPUT_HEIGHT,
+        minHeight: INPUT_HEIGHT,
+      },
+      "& fieldset.MuiOutlinedInput-notchedOutline": {
+        borderRadius: `${INPUT_BORDER_RADIUS}px !important`,
       },
     },
     AutoComplete: {
