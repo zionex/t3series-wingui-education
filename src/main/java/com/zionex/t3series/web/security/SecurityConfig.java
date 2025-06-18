@@ -48,6 +48,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private String[] accessAllUrl = {
             "/",
+            "/edu/**",
             "/js/**",
             "/css/**",
             "/fonts/**",

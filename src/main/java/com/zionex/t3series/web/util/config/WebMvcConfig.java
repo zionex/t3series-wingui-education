@@ -22,6 +22,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
     private final ExecPermissionInterceptor execPermissionInterceptor;
 
     private final String[] cachePathPattern = {
+            "**/edu/**",
             "**/js/**",
             "**/css/**",
             "**/fonts/**",
@@ -29,6 +30,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
     };
 
     private final String[] cacheUrlPattern = {
+            "/edu/*",
             "/js/*",
             "/css/*",
             "/fonts/*",
