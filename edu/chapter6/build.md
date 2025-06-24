@@ -31,3 +31,7 @@ Visual Studio Code(이하 VS Code) 개발 툴을 기준으로 설명합니다.
 
 4. **WAR(Web application ARchive) 파일 생성 확인**  
   - target 폴더 하위에 `T3series-wingui-버전.war` 파일이 생성되어야 합니다.
+
+
+###배포
+[배포](http://nightly.hq.zionex.com/docs/manual/system/installation/wingui-deploy.html)

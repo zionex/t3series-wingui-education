@@ -1,6 +1,8 @@
 ## 탭
 **샘플 파일명:**  `Sample05.jsx`
 
+![preview](../images/chapter3/Tab.png)
+
 ### TabContainer 
  > 탭을 감싸는 container. <br/>
  > Childrens 는 id를 key 값으로 구분함

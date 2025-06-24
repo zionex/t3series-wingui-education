@@ -1,6 +1,8 @@
 ## Java controller
 **샘플 파일명:**  `Practice02.jsx`,`PracticeController.java`
 
+![preview](../images/chapter4/Pratice02.png)
+
 >이 샘플에서는 Java 컨트롤러에서 저장 프로시저(SP)와 SQL 쿼리문을 호출하는 방법을 실습해볼 수 있습니다. SQL 쿼리문 호출 시 반드시 PreparedStatement를 사용해야 합니다. 또한, queryHandler의 save 메서드는 P_RT_ROLLBACK_FLAG와 P_RT_MSG 두 가지 OUTPUT 파라미터를 기본으로 포함하고 있으므로, 저장 프로시저에서도 이를 구현해야 합니다.
 
 ### 실행권한 체크 
@@ -18,7 +20,18 @@
 ```
 
 ### 저장
-- commonService.saveData()를 호출하여 공통 서비스에서 예외 처리가 될 수 있게 함.
+- `commonService.saveData()`를 호출하여 공통 서비스에서 예외 처리가 될 수 있게 함.
+
+- 시스템에서 저장(Insert/Update) 및 삭제(Delete) 작업을 수행하는 모든 프로시저는 트랜잭션 처리의 일관성 유지와 오류 메시지 전달을 위해 아래의 출력 파라미터를 반드시 포함해야 합니다.
+
+- `commonService.saveData()` 메서드는 @P_RT_ROLLBACK_FLAG, @P_RT_MSG 출력 파라미터를 무조건 포함하여 프로시저를 호출합니다
+
+#### 공통 출력 파라미터
+```sql
+@P_RT_ROLLBACK_FLAG NVARCHAR(10) = 'true' OUTPUT,
+@P_RT_MSG NVARCHAR(4000) = '' OUTPUT
+```
+
 ```java
     @ExecPermission(menuCd = "UI_PRACTICE_01", type = ServiceConstants.PERMISSION_TYPE_UPDATE)
     @PostMapping("/practice/s1")

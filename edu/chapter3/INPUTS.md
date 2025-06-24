@@ -3,6 +3,8 @@
 
 **파일명:**  `Sample06.jsx`
 
+![preview](../images/chapter3/INPUT.png)
+
 - type : text, number, select, multiSelect, autocomplete, check, radio, datetime, time, dataeRange, popover, action, custom
 
 ### input type
@@ -54,6 +56,8 @@
   - `value`: 초기값 설정.
 
   - `dateformat`: 날짜 포맷 지정.
+  
+  - `displayType`: `권장` (글로벌 포맷 설정 적용) 날짜 포맷 지정.  "year" | "yearMonth" | "date" | "datetime" (기본값: datetime). 
    
   - `options`: 선택 가능한 옵션 배열.
 

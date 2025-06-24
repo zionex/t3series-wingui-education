@@ -3,13 +3,20 @@
 
 ## Front-end
 
-HTML, CSS, JavaScript, JSX 등의 Front-end source의 indentation은 2 spaces를 기준으로 함. VSCode의 설정 예는 다음과 같음.
+HTML, CSS, JavaScript, JSX 등의 Front-end source의 indentation(들여쓰기)은 2 spaces를 기준으로 함. VSCode의 설정 예는 다음과 같음.
 
 ### [설정 방법]
 
 1. VSCode footer의 "Spaces: "설정 영역을 클릭.
+![step1](../images/chapter1/indentation1.png)
+
 2. "Indent Using Spaces"를 선택.
+![step2](../images/chapter1/indentation2.png)
+
 3. "2"를 선택.
+![step3](../images/chapter1/indentation3.png)
+
+
 
 이렇게 설정한 이후에는 2 spaces만큼씩 들여쓰기(indentation) 적용됨.
 
