@@ -5,7 +5,7 @@ import { createStyles, makeStyles } from '@mui/styles';
  */
 export const DEF_INPUT_VARIANT = 'outlined';
 export const DEF_INPUT_SIZE = "small";
-export const INPUT_HEIGHT = 30
+export const INPUT_HEIGHT = 35
 export const INPUT_WIDTH = 200
 export const INPUT_PADDING = 0
 export const INPUT_BORDER_RADIUS = 6

@@ -104,6 +104,7 @@ function Sample06() {
           <InputField name="nolabelInput" control={control} height={"35px"} ></InputField>
           <InputField name="ptext2" label={"Disabled"} control={control} disabled={true} value='Disabled' />
           <InputField name="ptext3" label={"Read Only"} control={control} readonly={true} value='Readonly' />
+          <InputField name="ptext4" label={"Width 100px"} control={control} readonly={true} width={"100px"} />
         </SearchRow>
         <SearchRow>
           <InputField type="select" name="pselect" label={transLangKey("SELECT")} control={control} inputStyle={{ width: '200px' }} options={options1} value={'option1'} />
@@ -113,7 +114,7 @@ function Sample06() {
         <SearchRow>
           <InputField name="pdate" label={"주차 표시"} value={new Date()} control={control} type='datetime' dateformat="yyyy-MM-dd ww"/>
           <InputField name="pdatetime" label={"DATETIME"} value={new Date()} control={control} type='datetime' showTimeSelect={true} />
-          <InputField name="pdateRange" label={["FROM", "TO"]} control={control} type='dateRange' dateformat='yyyy-MM-dd'/>
+          <InputField name="pdateRange" label={["FROM", "TO"]} control={control} type='dateRange' displayType='date'/>
           <InputField name="pselectMonth" label={transLangKey("selectMonth")} value={new Date()} control={control} type='datetime' openTo='month' />
           <InputField name="pselectYear" label={transLangKey("selectYear")} value={new Date()} control={control} type='datetime' openTo='year' />
           <InputField name="ptime" label={transLangKey("Time")} control={control} showWeekNumbers type='time' />

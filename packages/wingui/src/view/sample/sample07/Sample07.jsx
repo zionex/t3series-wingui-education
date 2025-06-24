@@ -28,38 +28,42 @@ function Sample07() {
     let widgets = [
       {
         "key": "1",
-        "title": transLangKey("TITEL01"),
+        "title": "TITEL01",
         "widgetId": "WI_SAMPLE_01",
         "data-grid":{"w":2,"h":44, "x":0,"y":0},
         "showTitleBar": false,
       },
       {
         "key": "2",
-        "title": transLangKey("TITEL02"),
+        "title": "TITEL02",
         "widgetId": "WI_SAMPLE_01",
         "data-grid":{"w":10,"h":10,"x":3,"y":0},
         "showTitleBar": true,
+        "info": "위젯 설명",
       },
       {
         "key": "3",
-        "title": transLangKey("TITEL03"),
+        "title": "TITEL03",
         "widgetId": "WI_SAMPLE_01",
         "data-grid":{"w":10,"h":10,"x":3,"y":10},
         "showTitleBar": true,
+        "info": "위젯 설명",
       },
       {
         "key": "4",
-        "title": transLangKey("TITEL04"),
+        "title": "TITEL04",
         "widgetId": "WI_SAMPLE_01",
         "data-grid":{"w":5,"h":24,"x":2,"y":20},
         "showTitleBar": true,
+        "info": "위젯 설명",
       },
       {
         "key": "5",
-        "title": transLangKey("TITEL05"),
+        "title": "TITEL05",
         "widgetId": "WI_SAMPLE_01",
         "data-grid":{"w":5,"h":24,"x": 9,"y":20},
         "showTitleBar": true,
+        "info": "위젯 설명",
       },
     ];
     return widgets;
@@ -71,13 +75,11 @@ function Sample07() {
   return (
     <ContentInner>
       <DashboardPanel
-        actionBar={false}
-        fitHeight={false}
-        isResizable={false}
-        isDraggable={false}
+        actionBar={true}
+        fitHeight={true}
+        isResizable={true}
+        isDraggable={true}
         title={""}
-        option={{ store: "PMG" }} 
-        id={"Executive_Dashboard"}
         widgets={makeWidgetPanel()}
         OnGetWidgets={OnGetWidgets}
       />
