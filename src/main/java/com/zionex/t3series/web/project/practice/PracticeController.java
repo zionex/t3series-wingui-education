@@ -252,4 +252,55 @@ public class PracticeController {
         return resultMap;
     }
 
+    private static Map<String, Object> createDataMap1(String plantId, String demandId, String routeCode, String routeName,
+                                                     String resourceCode, String resourceName, String planDate, String week, Integer qty, String holidayYn, String colCd, String editYn) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("PLANT_ID", plantId);
+        map.put("DEMAND_ID", demandId);
+        map.put("ROUTE_CODE", routeCode);
+        map.put("ROUTE_NAME", routeName);
+        map.put("RESOURCE_CODE", resourceCode);
+        map.put("RESOURCE_NAME", resourceName);
+        map.put("PLAN_DATE", planDate);
+        map.put("QTY", qty);
+        map.put("HOLIDAY_YN", holidayYn);
+        map.put("COL_CD", colCd);
+        map.put("EDIT_YN", editYn);
+        return map;
+    }
+
+
+    @ExecPermission(menuCd = "UI_PRACTICE_10", type = ServiceConstants.PERMISSION_TYPE_READ)
+    @PostMapping("/practice/q10")
+    public Map<String, Object> getData10(@RequestBody Map<String, Object> params, HttpServletRequest request) throws Exception {
+        List<Map<String, Object>> dataList = Arrays.asList(
+            createDataMap1("4205", "F0170006-K1-0001", "KRT-020101", "1차가공", "KRS-020110", "가공", "2025-07-03", "목", 273, "N", "#9dc7c7", "N"),
+            createDataMap1("4205", "F0170006-K1-0001", "KRT-020101", "1차가공", "KRS-020110", "가공", "2025-07-09", "수", 503, "N", null, "Y"),
+            createDataMap1("4205", "F0170006-K1-0001", "KRT-020101", "1차가공", "KRS-020110", "가공", "2025-07-15", "화", 403, "N", null, "Y"),
+            createDataMap1("4205", "F0170006-K1-0001", "KRT-020101", "1차가공", "KRS-020110", "가공", "2025-07-27", "일", 273, "Y", null, "N"),
+            createDataMap1("4205", "F0170006-K1-0001", "KRT-020101", "1차가공", "KRS-020110", "가공", "2025-08-01", "금", 10, "N",  null, "N"),
+            createDataMap1("4205", "F0170006-K1-0001", "KRT-020101", "1차가공", "KRS-020110", "가공", "2025-08-08", "금", -10, "N",  null, "N"),
+            createDataMap1("4205", "F0170006-K1-0001", "KRT-020101", "1차가공", "KRS-020110", "가공", "2025-08-21", "목", 58, "N",  null, "N"),
+            createDataMap1("4205", "F0170006-K1-0001", "KRT-020101", "1차가공", "KRS-020110", "가공", "2025-09-13", "토", 764, "Y", "#6c9454", "N"),
+            createDataMap1("4205", "F0170006-K1-0001", "KRT-020101", "1차가공", "KRS-020110", "가공", "2025-09-21", "일", 100, "Y",  null, "Y"),
+
+            createDataMap1("4205", "F0170006-K1-0001", "KRT-020101", "1차가공", "KRS-020121", "소형로", "2025-07-03", "목", 61, "N",  null, "Y"),
+            createDataMap1("4205", "F0170006-K1-0001", "KRT-020101", "1차가공", "KRS-020121", "소형로", "2025-07-09", "수", 83, "N",  null, "Y"),
+            createDataMap1("4205", "F0170006-K1-0001", "KRT-020101", "1차가공", "KRS-020121", "소형로", "2025-07-15", "화", -50, "N",  null, "N"),
+            createDataMap1("4205", "F0170006-K1-0001", "KRT-020101", "1차가공", "KRS-020121", "소형로", "2025-07-27", "일", 273, "Y",  null, "N"),
+            createDataMap1("4205", "F0170006-K1-0001", "KRT-020101", "1차가공", "KRS-020121", "소형로", "2025-08-01", "금", 10, "N",  null, "N"),
+            createDataMap1("4205", "F0170006-K1-0001", "KRT-020101", "1차가공", "KRS-020121", "소형로", "2025-08-08", "금", 9, "N", "#b36f7b", "N"),
+            createDataMap1("4205", "F0170006-K1-0001", "KRT-020101", "1차가공", "KRS-020121", "소형로", "2025-08-21", "목", 54, "N",  null, "N"),
+            createDataMap1("4205", "F0170006-K1-0001", "KRT-020101", "1차가공", "KRS-020121", "소형로", "2025-09-13", "토", 74, "Y",  null, "N"),
+            createDataMap1("4205", "F0170006-K1-0001", "KRT-020101", "1차가공", "KRS-020121", "소형로", "2025-09-21", "일", 110, "Y", null, "Y")
+            );
+
+        String headerColumn = "PLAN_DATE";
+        String[] groupCds = { "PLANT_ID", "DEMAND_ID", "ROUTE_CODE", "RESOURCE_CODE" };
+        String[] dataColumns = { "QTY", "COL_CD", "EDIT_YN" };
+        String[] measureCds = {};
+        String[] additionalHeaderColumns = {"PLAN_DATE","HOLIDAY_YN"};
+        return PivotUtil.pivotData(dataList, headerColumn, groupCds, dataColumns, measureCds, additionalHeaderColumns);
+    }
+
 }
