@@ -1,4 +1,4 @@
-## LookupTree
+## Grid LookupTree
 **샘플 파일명:**  `Practice09.jsx`, `areacodes.js`
 
 ![preview](../images/chapter4/LookupTree.png)
