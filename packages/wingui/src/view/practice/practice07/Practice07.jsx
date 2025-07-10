@@ -169,7 +169,12 @@ function Practice07() {
 
   // 저장
   function saveData() {
-    console.log("saveData")
+    //일괄 유효성 확인
+    let log = grid1.gridView.validateCells();
+    if (log && log.length > 0) {
+      showMessage(transLangKey("WARNING"), log[0].message);
+      return false;
+    }
   }  
 
   // 삭제
