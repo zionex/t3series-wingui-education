@@ -20,7 +20,36 @@ const HierarchyInputField = forwardRef((props, ref) => {
   const getRtnAllYn = (idx) => Array.isArray(rtnAllYn) ? rtnAllYn[idx] : rtnAllYn;
 
   useImperativeHandle(ref, () => ({
-    reset: () => reset(),
+      reset: () => {
+        if (!data || !items.length) return;
+
+        const initialValues = {};
+        const allOptions = [];
+
+        for (let i = 0; i < items.length; i++) {
+          const filteredOptions = getFilteredOptions(i, initialValues);
+          allOptions.push(filteredOptions);
+
+          const isAll = getAllFlag(i);
+          let firstValue;
+
+          if (types[i] === "multiSelect") {
+            firstValue = isAll
+              ? filteredOptions.map(opt => opt.value)
+              : filteredOptions.length > 0 ? [filteredOptions[0].value] : [];
+          } else {
+            firstValue = isAll
+              ? "ALL"
+              : filteredOptions.length > 0 ? filteredOptions[0].value : undefined;
+          }
+
+          initialValues[items[i]] = firstValue;
+        }
+
+        reset(initialValues);
+        setOptionsData(allOptions);
+        if (onChange) onChange(initialValues);
+      },
 
     getValues: () => {
       const rawValues = getValues();

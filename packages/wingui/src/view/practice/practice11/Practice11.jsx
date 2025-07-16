@@ -49,6 +49,12 @@ function Practice11() {
       ]);
     }
   }, [itemTreeInitialized]);
+
+  const refresh = () => {
+    hierarchyInputRef.current.reset();
+    reset();
+  };
+  
   
   const loadCombo = async () => {
     const areacodes = [
