@@ -11,7 +11,7 @@ function DashboardWidget28() {
   const normalized = value - min;
   const range = max - min;
 
-  // ✅ 데이터 (첫 번째 arc는 투명, plugin에서 gradient stroke)
+  // 데이터 (첫 번째 arc는 투명, plugin에서 gradient stroke)
   const data = {
     datasets: [
       {
@@ -22,7 +22,7 @@ function DashboardWidget28() {
     ],
   };
 
-  // ✅ 차트 옵션
+  // 차트 옵션
   const options = {
     responsive: true,
     maintainAspectRatio: false,
@@ -41,7 +41,7 @@ function DashboardWidget28() {
     },
   };
 
-  // ✅ Plugin (Gradient + Text)
+  // Plugin (Gradient + Text)
   const gaugePlugin = {
     id: "gaugePlugin",
     beforeDraw(chart) {
@@ -49,13 +49,13 @@ function DashboardWidget28() {
       const arc = chart.getDatasetMeta(0).data[0];
       if (!arc) return;
 
-      // ✅ Gradient 생성
+      // Gradient 생성
       const gradient = ctx.createLinearGradient(arc.x - arc.outerRadius, 0, arc.x + arc.outerRadius, 0);
       gradient.addColorStop(0, "#FF4500");
       gradient.addColorStop(0.5, "#FFD700");
       gradient.addColorStop(1, "#228B22");
 
-      // ✅ arc path 가져오기
+      // arc path 가져오기
       const { startAngle, endAngle, innerRadius, outerRadius, x, y } = arc.getProps(
         ["startAngle", "endAngle", "innerRadius", "outerRadius", "x", "y"],
         true
@@ -75,20 +75,20 @@ function DashboardWidget28() {
       const centerX = chartArea.width / 2 + chartArea.left;
       const centerY = chartArea.top + chartArea.height / 2;
 
-      // ✅ 반응형 폰트 크기 계산
-      const valueFontSize = Math.max(20, chartArea.width * 0.12);
+      // 반응형 폰트 크기 계산
+      const valueFontSize = Math.max(14, chartArea.width * 0.12);
       const statusFontSize = Math.max(12, chartArea.width * 0.06);
 
       ctx.save();
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
 
-      // ✅ 점수
+      // 점수
       ctx.font = `bold ${valueFontSize}px sans-serif`;
       ctx.fillStyle = "#333";
       ctx.fillText(value, centerX, centerY);
 
-      // ✅ 상태 텍스트
+      // 상태 텍스트
       ctx.font = `${statusFontSize}px sans-serif`;
       ctx.fillStyle = "#666";
       ctx.fillText("Very Good", centerX, centerY + valueFontSize * 0.8);
@@ -106,7 +106,7 @@ function DashboardWidget28() {
           width: "100%"
         }}
       >
-        {/* ✅ 차트 컨테이너 (relative로 min/max 배치) */}
+        {/* 차트 컨테이너 (relative로 min/max 배치) */}
         <Box sx={{ flex: 1, position: "relative", width: "100%", minHeight: "200px" }}>
           <ChartComponent
             type="doughnut"
@@ -116,7 +116,7 @@ function DashboardWidget28() {
             ref={chartRef}
           />
 
-          {/* ✅ min / max 절대 위치 */}
+          {/* min / max 절대 위치 */}
           <Box
             sx={{
               position: "absolute",

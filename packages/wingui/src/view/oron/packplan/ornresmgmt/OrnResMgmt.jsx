@@ -29,9 +29,9 @@ let resMgmtGridColumns = [
       { name: 'LINE_NM', dataType: 'text', headerText: 'PK_NAME', visible: true, editable: false, width: 80, textAlignment: "center" },
     ]
   },
-  { name: 'SHIFT_DIVS', dataType: 'text', headerText: 'SHIFT_DIVS', visible: false, editable: true, width: 50, textAlignment: "center", useDropdown: true, lookupDisplay: true },//콤보박스 처리
+  { name: 'SHIFT_DIVS', dataType: 'text', headerText: 'SHIFT_DIVS', visible: true, editable: true, width: 50, textAlignment: "center", useDropdown: true, lookupDisplay: true },//콤보박스 처리
   { name: 'WORK_TIME', dataType: 'number', headerText: 'WORK_TIME', visible: true, editable: true, width: 50 },
-  { name: 'SAT_TIME', dataType: 'number', headerText: 'SAT_TIME', visible: false, editable: true, width: 50 },
+  { name: 'SAT_TIME', dataType: 'number', headerText: 'SAT_TIME', visible: true, editable: true, width: 50 },
   { name: 'USE_YN', dataType: 'boolean', headerText: 'USE_YN', visible: true, editable: true, width: 60 },
   {
     name: 'EDIT', dataType: 'group', orientation: 'horizontal', headerText: 'FP_COL_AUDIT', headerVisible: true, hideChildHeaders: false, expandable: true, expanded: false,

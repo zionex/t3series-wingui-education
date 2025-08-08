@@ -134,7 +134,7 @@ function DashboardWidget05(props) {
 
       const centerX = chartArea.left + 60;
       const centerY = chartArea.top + 20;
-      const radius = 20;  // ✅ 도넛 크기 줄임 (기존 30 → 20)
+      const radius = 20;  // 도넛 크기 줄임 (기존 30 → 20)
       const endAngle = (rate / 100) * 2 * Math.PI;
 
       ctx.save();

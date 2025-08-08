@@ -17,8 +17,8 @@ function DashboardWidget17() {
     <WidgetContent>
       <div style={{
         display: "flex",
-        justifyContent: "center", // ✅ 가로 중앙
-        alignItems: "center",      // ✅ 세로 중앙
+        justifyContent: "center", // 가로 중앙
+        alignItems: "center",      // 세로 중앙
         width: "100%",
         height: "100%"
       }}>
@@ -28,7 +28,7 @@ function DashboardWidget17() {
           gridTemplateColumns: "120px repeat(12, 1fr)", // 첫 컬럼: 카테고리명 + 12칸
           gap: "6px",
           width: "95%", // Responsive 대응
-          maxWidth: "1000px" // ✅ 큰 화면에서도 너무 안 퍼지도록
+          maxWidth: "1000px" // 큰 화면에서도 너무 안 퍼지도록
         }}>
           {/* 첫 번째 행: 빈칸 + 월 라벨 */}
           <div></div>
@@ -61,7 +61,7 @@ function DashboardWidget17() {
               {cat.values.map((val, i) => (
                 <div key={i} style={{
                   height: "20px",
-                  backgroundColor: val ? "#81C784" : "#E57373", // ✅ 초록 / 빨강
+                  backgroundColor: val ? "#81C784" : "#E57373", // 초록 / 빨강
                   borderRadius: "4px"
                 }} />
               ))}

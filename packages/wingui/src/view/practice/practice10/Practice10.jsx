@@ -159,7 +159,8 @@ function Practice10() {
                   ret.styleName = `${dataCell.dataColumn.styleName} editable-column`;
                   ret.editable = true;
                 } else {
-                  ret.styleName = `${dataCell.dataColumn.styleName} ` + grid.dynamicCSSSelector({ "background": colcd });
+                  const colorKey = typeof colcd === 'string' ? colcd.replaceAll("#", "") : '';
+                  ret.styleName = `${dataCell.dataColumn.styleName} ` + grid.dynamicCSSSelector({ background: colcd }, `QTY_COLOR_${colorKey}`);
                   ret.editable = false;
                 }
 
