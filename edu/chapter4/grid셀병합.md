@@ -56,7 +56,7 @@ gridView.layoutByColumn("KorName").spanCallback = function (grid, layout, itemIn
 ```
 
 
-## ✅ 개발 시 셀 병합 시 주의사항
+## 개발 시 셀 병합 시 주의사항
 
 > ⚠️ **중요!**  
 현재 솔루션은 **컬럼 숨기기** 또는 **컬럼 순서 변경** 기능을 `contextMenu` 로 기본 제공하고 있어,  
@@ -73,7 +73,7 @@ gridView.layoutByColumn("KorName").spanCallback = function (grid, layout, itemIn
 
 ---
 
-### ✅ 예제 설명 (코드는 아래 참고)
+### 예제 설명 (코드는 아래 참고)
 
 - `"Total"` 문자열이 포함된 셀에만 병합 적용
 - **현재 컬럼 순서**를 기준으로 `startColumn`부터 `endColumn` 바로 앞까지 병합 범위 계산
