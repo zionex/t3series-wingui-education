@@ -1,6 +1,21 @@
 ## Inputs
 >솔루션에서 사용하는 다양한 input 스타일들을 모아 놓았습니다.
 
+- `select`, `multiSelect`, `checkbox`, `radio`처럼 **옵션(option)** 구조를 가진 입력 타입은  
+  label에 단순 문자열뿐 아니라 **React 컴포넌트**도 전달할 수 있습니다.  
+  (예: Typography, Icon 등을 사용해 색상이나 강조 스타일 적용 가능)
+
+```javascript
+<SelectInput
+  name="color"
+  label="색상 선택"
+  options={[
+    { value: 'blue', label: <Typography sx={{ color: "red" }}>빨간색</Typography> },
+    { value: 'red', label: <Typography sx={{ color: "red" }}>파란색</Typography> },
+  ]}
+/>
+```
+
 **파일명:**  `Sample06.jsx`
 
 ![preview](../images/chapter3/INPUT.png)
