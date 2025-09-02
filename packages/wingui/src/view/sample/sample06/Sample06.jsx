@@ -5,7 +5,7 @@ import {
   useViewStore, useContentStore
 } from '@wingui/common/imports';
 import MultiColumnListPopover from "@zionex/wingui-core/component/input/MultiColumnListPopover";
-import { IconButton,Chip,Avatar,Box } from "@mui/material";
+import { Typography } from "@mui/material";
 import { onErrorInput } from "@zionex/wingui-core/utils/common";
 import { WorkArea } from "@zionex/wingui-core";
 
@@ -53,10 +53,10 @@ function Sample06() {
   const [activeViewId] = useContentStore((state) => [state.activeViewId]);
   const [viewData, getViewInfo, setViewInfo] = useViewStore(state => [state.viewData, state.getViewInfo, state.setViewInfo]);
   const [options1, setOptions1] = useState([
-    { label: 'Option 1', value: 'option1' },
+    { label: <Typography sx={{ color: "red", fontWeight: 'bold' }}>Option 1</Typography>, value: 'option1' },
     { label: 'Option 2', value: 'option2' },
     { label: 'Option 3', value: 'option3' },
-    { label: 'Option 4', value: 'option4' },
+    { label: <Typography sx={{ color: "blue" }}>Option 4</Typography>, value: 'option4' },
     { label: 'Option 5', value: 'option5', class: 'rg-cal-week-sun' }
   ]);
 
